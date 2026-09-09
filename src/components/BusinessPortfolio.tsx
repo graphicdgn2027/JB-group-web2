@@ -1,0 +1,117 @@
+import React from "react";
+import { Link } from "react-router";
+import { ArrowRight, Car, Zap, Briefcase, Building2, Flame } from "lucide-react";
+import { motion } from "motion/react";
+
+const PORTFOLIO_ITEMS = [
+  {
+    id: "reliance-trade-international",
+    title: "Reliance Trade International",
+    icon: Zap,
+    img: "/assets/Our Businesses/reliance.png",
+    description: "Lubricants & Energy Storage. Serving automotive, industrial and aviation lubricant markets.",
+  },
+  {
+    id: "kabsons-industries",
+    title: "Kabsons Industries",
+    icon: Flame,
+    img: "/assets/Our Businesses/kabsonnew.png",
+    description: "LPG Bottling. Strengthening the Group's presence in Nepal's essential energy sector.",
+  },
+  {
+    id: "hipco-trading",
+    title: "HIPCO Trading",
+    icon: Car,
+    img: "/assets/Our Businesses/hipco.png",
+    description: "Electric Mobility. Representing Montra electric three-wheelers in Nepal.",
+  },
+  {
+    id: "jb-group-investments",
+    title: "JB Group Investments",
+    icon: Briefcase,
+    img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+    description: "Strategic Investments. Investing in future technology companies and the financial sector.",
+  },
+  {
+    id: "bnj-properties",
+    title: "BNJ Properties",
+    icon: Building2,
+    img: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80",
+    description: "Commercial Real Estate & Warehousing. Developing practical and strategically located facilities.",
+  },
+];
+
+const containerVariants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1 } },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 40 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+};
+
+const BusinessPortfolio = () => {
+  return (
+    <section className="py-24 bg-secondary dark:bg-background relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-brand-red/5 rounded-full blur-[120px] -z-10" />
+
+      <div className="container mx-auto px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-14"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            Our <span className="text-brand-red">Businesses</span>
+          </h2>
+          <p className="text-muted-foreground max-w-3xl">
+            JB Group is built on a simple belief: strong businesses are created by understanding
+            markets, serving customers reliably, empowering people, building enduring partnerships
+            and growing responsibly.
+          </p>
+        </motion.div>
+
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5"
+        >
+          {PORTFOLIO_ITEMS.map((item, index) => (
+            <motion.div variants={itemVariants} key={index}>
+              <Link
+                to={`/portfolio/${item.id}`}
+                className="group relative h-[340px] rounded-2xl overflow-hidden cursor-pointer block border border-border hover:border-brand-red/30 transition-all duration-500 shadow-sm hover:shadow-xl"
+              >
+                <div
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                  style={{ backgroundImage: `url('${item.img}')` }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-blue via-brand-blue/70 to-transparent opacity-90" />
+
+                <div className="absolute inset-0 p-6 flex flex-col justify-end">
+                  <div className="flex flex-col pr-12 relative h-full justify-end">
+                    <div className="w-10 h-10 rounded-xl bg-brand-red/20 backdrop-blur-sm flex items-center justify-center mb-4 border border-brand-red/30 shadow-[0_0_15px_rgba(203,151,51,0.2)]">
+                      <item.icon size={20} className="text-brand-red" />
+                    </div>
+                    <h3 className="text-lg font-bold text-white mb-2 tracking-wide">{item.title}</h3>
+                    <p className="text-[13px] text-white/60 line-clamp-3 leading-relaxed">{item.description}</p>
+                  </div>
+
+                  <button className="absolute bottom-6 right-6 bg-brand-red text-white w-9 h-9 rounded-lg flex items-center justify-center shrink-0 hover:bg-brand-red/80 transition-all group-hover:scale-110 shadow-[0_4px_15px_rgba(203,151,51,0.3)]">
+                    <ArrowRight size={16} className="stroke-[2.5]" />
+                  </button>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+export default BusinessPortfolio;
