@@ -11,7 +11,7 @@ const BusinessMegaMenu = ({ isOpen }: { isOpen: boolean }) => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="absolute top-full left-8 right-8 lg:right-auto lg:w-[900px] bg-brand-blue/95 backdrop-blur-2xl shadow-2xl rounded-2xl border border-white/10 p-8 flex z-40 origin-top-left"
+          className="absolute top-full left-8 right-8 lg:right-auto lg:w-[900px] bg-brand-blue/95 backdrop-blur-2xl shadow-2xl  border border-white/10 p-8 flex z-40 origin-top-left"
         >
           <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 text-white">
             {/* Trading & Energy */}
@@ -28,7 +28,7 @@ const BusinessMegaMenu = ({ isOpen }: { isOpen: boolean }) => {
                   <a
                     href={item.link}
                     key={idx}
-                    className="flex flex-col items-center justify-center p-5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-brand-red/30 cursor-pointer transition-all duration-300 group"
+                    className="flex flex-col items-center justify-center p-5  bg-white/5 hover:bg-white/10 border border-white/5 hover:border-brand-red/30 cursor-pointer transition-all duration-300 group"
                   >
                     <item.icon size={24} className="mb-3 text-brand-red group-hover:scale-110 transition-transform" />
                     <span className="text-xs font-medium text-center text-white/80 group-hover:text-white">
@@ -52,7 +52,7 @@ const BusinessMegaMenu = ({ isOpen }: { isOpen: boolean }) => {
                   <a
                     href={item.link}
                     key={idx}
-                    className="flex flex-col items-center justify-center p-5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-brand-red/30 cursor-pointer transition-all duration-300 group"
+                    className="flex flex-col items-center justify-center p-5  bg-white/5 hover:bg-white/10 border border-white/5 hover:border-brand-red/30 cursor-pointer transition-all duration-300 group"
                   >
                     <item.icon size={24} className="mb-3 text-brand-red group-hover:scale-110 transition-transform" />
                     <span className="text-xs font-medium text-center text-white/80 group-hover:text-white">

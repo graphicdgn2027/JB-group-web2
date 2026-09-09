@@ -10,7 +10,7 @@ const CSRNews = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Main Large Story */}
           <div className="md:col-span-2 group cursor-pointer">
-            <div className="relative h-80 rounded-2xl overflow-hidden mb-6">
+            <div className="relative h-80  overflow-hidden mb-6">
               <div 
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
                 style={{ backgroundImage: "url('https://images.unsplash.com/photo-1593113565694-c74b4344837a?w=1000&q=80')" }}
@@ -18,7 +18,7 @@ const CSRNews = () => {
               <div className="absolute inset-0 bg-black/20" />
             </div>
             <div className="flex gap-4 items-center mb-3">
-              <span className="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full">Community</span>
+              <span className="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 ">Community</span>
               <span className="text-sm text-gray-500">October 12, 2024</span>
             </div>
             <h3 className="text-2xl font-bold text-brand-blue mb-3 group-hover:text-brand-red transition">
@@ -35,7 +35,7 @@ const CSRNews = () => {
           {/* Smaller Stories Column */}
           <div className="flex flex-col gap-8">
             <div className="group cursor-pointer">
-              <div className="relative h-40 rounded-xl overflow-hidden mb-4">
+              <div className="relative h-40  overflow-hidden mb-4">
                 <div 
                   className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
                   style={{ backgroundImage: "url('https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80')" }}
@@ -51,7 +51,7 @@ const CSRNews = () => {
             </div>
             
             <div className="group cursor-pointer">
-              <div className="relative h-40 rounded-xl overflow-hidden mb-4">
+              <div className="relative h-40  overflow-hidden mb-4">
                 <div 
                   className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
                   style={{ backgroundImage: "url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=500&q=80')" }}

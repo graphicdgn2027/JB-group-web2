@@ -44,37 +44,48 @@ const Header = () => {
   ];
 
   return (
-    <header ref={headerRef} className="w-full fixed top-0 z-50">
+    <header ref={headerRef} className="w-full fixed top-0 z-50 transition-all duration-500 flex justify-center">
       {/* Main Nav */}
       <div
-        className={`w-full flex justify-between items-center px-8 py-4 transition-all duration-500 ${
+        className={`flex justify-between items-center transition-all duration-500 ${
           scrolled
-            ? isDark
-              ? "bg-brand-blue/95 backdrop-blur-xl shadow-lg shadow-black/20"
-              : "bg-white/95 backdrop-blur-xl shadow-lg shadow-black/5"
-            : "bg-transparent"
+            ? "w-[95%] md:w-[85%] lg:w-[80%] max-w-7xl py-3 px-6 mt-6 rounded-[10px] " + (isDark
+              ? "bg-brand-blue/80 backdrop-blur-lg shadow-xl shadow-black/20 border border-white/10"
+              : "bg-[#0A192F]/90 backdrop-blur-lg shadow-xl shadow-black/20 border border-white/10 text-white")
+            : "w-full py-4 px-8 rounded-none bg-transparent"
         }`}
       >
         {/* Left: Logo */}
-        <div className="flex-1 flex justify-start">
-          <a href="/" className="flex items-center ml-8 md:ml-16 lg:ml-24 transition-all duration-500">
-            <Logo variant={isDark || !scrolled ? "dark" : "light"} />
+        <div className="shrink-0 flex items-center">
+          <a href="/" className="flex items-center transition-all duration-500">
+            <Logo variant="dark" />
           </a>
         </div>
 
         {/* Center: Desktop Nav */}
-        <nav className="hidden lg:flex flex-1 justify-center gap-0.5 xl:gap-1 items-center text-sm font-medium">
-          {navItems.map((item, idx) => (
-            item.type === "dropdown" ? (
+        <nav className="hidden lg:flex flex-1 justify-center gap-0.5 xl:gap-1 items-center text-sm font-medium px-4 overflow-hidden">
+          {navItems.map((item, idx) => {
+            let isActive = false;
+            if (item.type === "dropdown") {
+              isActive = isBusinessesOpen;
+            } else if (!isBusinessesOpen) {
+              if (item.path === "/") {
+                isActive = location.pathname === "/" && (!location.hash || location.hash === "");
+              } else if (item.path?.startsWith("/#")) {
+                isActive = location.pathname === "/" && location.hash === item.path.substring(1);
+              } else {
+                isActive = location.pathname === item.path || (item.path !== "/" && location.pathname.startsWith(item.path as string));
+              }
+            }
+
+            return item.type === "dropdown" ? (
               <button
                 key={idx}
                 onClick={() => setIsBusinessesOpen(!isBusinessesOpen)}
-                className={`flex items-center gap-1 px-2 xl:px-4 py-2 rounded-lg transition-all relative group whitespace-nowrap ${
-                  isBusinessesOpen
+                className={`flex items-center gap-1 px-2 xl:px-4 py-2  transition-all relative group whitespace-nowrap ${
+                  isActive
                     ? "text-brand-red"
-                    : isDark || !scrolled
-                      ? "text-white/80 hover:text-white hover:bg-white/5"
-                      : "text-brand-blue/70 hover:text-brand-blue hover:bg-black/5"
+                    : "text-white/80 hover:text-white hover:bg-white/10"
                 }`}
               >
                 Businesses
@@ -84,7 +95,7 @@ const Header = () => {
                 />
                 <span
                   className={`absolute bottom-0 left-4 right-4 h-0.5 bg-brand-red transition-all duration-300 ${
-                    isBusinessesOpen ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                    isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
                   }`}
                 />
               </button>
@@ -92,36 +103,28 @@ const Header = () => {
               <a
                 key={idx}
                 href={item.path}
-                className={`px-2 xl:px-4 py-2 rounded-lg transition-all relative group whitespace-nowrap ${
-                  location.pathname === item.path || (item.path !== "/" && location.pathname.startsWith(item.path))
+                className={`px-2 xl:px-4 py-2  transition-all relative group whitespace-nowrap ${
+                  isActive
                     ? "text-brand-red"
-                    : isDark || !scrolled
-                      ? "text-white/80 hover:text-white hover:bg-white/5"
-                      : "text-brand-blue/70 hover:text-brand-blue hover:bg-black/5"
+                    : "text-white/80 hover:text-white hover:bg-white/10"
                 }`}
               >
                 {item.name}
                 <span className={`absolute bottom-0 left-4 right-4 h-0.5 bg-brand-red transition-all duration-300 ${
-                  location.pathname === item.path || (item.path !== "/" && location.pathname.startsWith(item.path))
-                    ? "opacity-100"
-                    : "opacity-0 group-hover:opacity-100"
+                  isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
                 }`} />
               </a>
-            )
-          ))}
+            );
+          })}
         </nav>
 
         {/* Right: Actions */}
-        <div className="hidden lg:flex flex-1 justify-end items-center gap-2 pr-8 md:pr-16 lg:pr-24">
+        <div className="hidden lg:flex shrink-0 justify-end items-center gap-2">
           {/* Theme Toggle */}
           {mounted && (
             <button
               onClick={() => setTheme(isDark ? "light" : "dark")}
-              className={`p-2 rounded-lg transition-all duration-300 ${
-                isDark || !scrolled
-                  ? "text-white/70 hover:text-white hover:bg-white/10"
-                  : "text-brand-blue/70 hover:text-brand-blue hover:bg-black/5"
-              }`}
+              className="p-2 transition-all duration-300 text-white/80 hover:text-white hover:bg-white/10 rounded-full"
               aria-label="Toggle theme"
             >
               {isDark ? <Sun size={18} /> : <Moon size={18} />}
@@ -129,17 +132,13 @@ const Header = () => {
           )}
 
           <button
-            className={`p-2 rounded-lg transition ${
-              isDark || !scrolled
-                ? "text-white/70 hover:text-white hover:bg-white/10"
-                : "text-brand-blue/70 hover:text-brand-blue hover:bg-black/5"
-            }`}
+            className="p-2 transition-all duration-300 text-white/80 hover:text-white hover:bg-white/10 rounded-full"
           >
             <Search size={18} />
           </button>
           <a
             href="/contact"
-            className="bg-brand-blue text-white hover:bg-brand-red hover:text-white px-6 py-2.5 text-xs font-bold tracking-wider uppercase transition-all duration-300 shadow-lg hover:-translate-y-0.5 border border-transparent ml-2"
+            className="bg-brand-blue text-white hover:bg-brand-red hover:text-white px-6 py-2.5 text-xs font-bold tracking-wider uppercase transition-all duration-300 shadow-lg hover:-translate-y-0.5 border border-white/20 ml-2"
           >
             Contact
           </a>
@@ -150,11 +149,7 @@ const Header = () => {
           {mounted && (
             <button
               onClick={() => setTheme(isDark ? "light" : "dark")}
-              className={`p-2 rounded-lg transition ${
-                isDark || !scrolled
-                  ? "text-white hover:bg-white/10"
-                  : "text-brand-blue hover:bg-black/5"
-              }`}
+              className="p-2 transition text-white hover:bg-white/10 rounded-full"
               aria-label="Toggle theme"
             >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
@@ -162,11 +157,7 @@ const Header = () => {
           )}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className={`p-2 rounded-lg transition ${
-              isDark || !scrolled
-                ? "text-white hover:bg-white/10"
-                : "text-brand-blue hover:bg-black/5"
-            }`}
+            className="p-2 transition text-white hover:bg-white/10 rounded-full"
           >
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -187,7 +178,7 @@ const Header = () => {
               <button
                 key={idx}
                 onClick={() => setIsBusinessesOpen(!isBusinessesOpen)}
-                className={`w-full text-left py-3 px-4 rounded-lg transition flex items-center justify-between ${
+                className={`w-full text-left py-3 px-4  transition flex items-center justify-between ${
                   isDark
                     ? "text-white/80 hover:text-white hover:bg-white/5"
                     : "text-brand-blue/80 hover:text-brand-blue hover:bg-black/5"
@@ -203,7 +194,7 @@ const Header = () => {
               <a
                 key={idx}
                 href={item.path}
-                className={`block py-3 px-4 rounded-lg transition ${
+                className={`block py-3 px-4  transition ${
                   location.pathname === item.path || (item.path !== "/" && location.pathname.startsWith(item.path))
                     ? "text-brand-red font-semibold bg-black/5"
                     : isDark

@@ -12,7 +12,7 @@ const TrustedPartners = () => {
   const marqueeItems = [...partners, ...partners, ...partners];
 
   return (
-    <section className="py-16 bg-background border-b border-border overflow-hidden relative">
+    <section className="py-6 bg-background border-b border-border overflow-hidden relative">
       {/* Gold accent line top */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-brand-red" />
 
@@ -20,7 +20,7 @@ const TrustedPartners = () => {
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="container mx-auto px-6 mb-12 text-center"
+        className="container mx-auto px-6 mb-4 text-center"
       >
         <h3 className="text-xs md:text-sm font-bold text-brand-red uppercase tracking-[0.3em]">
           Brands & Partnerships

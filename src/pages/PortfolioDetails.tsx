@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { useParams, Link } from "react-router";
-import { ArrowLeft, Car, Cpu, Zap, Briefcase, Stethoscope, Store, Building2, HardHat, CheckCircle2, Quote } from "lucide-react";
+import { ArrowLeft, ArrowRight, Car, Cpu, Zap, Briefcase, Stethoscope, Store, Building2, HardHat, CheckCircle2, Quote } from "lucide-react";
 import Header from "../components/Header";
 import ContactFooter from "../components/ContactFooter";
 import { motion, useScroll, useTransform } from "motion/react";
@@ -184,7 +184,7 @@ const PortfolioDetails = () => {
       <Header />
       
       {/* Magazine Cover Hero */}
-      <section className="pt-32 pb-16 lg:pt-48 lg:pb-32 bg-brand-blue text-white relative min-h-[70vh] flex items-center border-b-[16px] border-brand-red overflow-hidden">
+      <section className="h-[350px] pt-20 bg-brand-blue text-white relative flex items-center border-b-[16px] border-brand-red overflow-hidden">
         <div className="absolute inset-0 bg-black/40 z-10"></div>
         <img 
           src={data.img} 
@@ -192,23 +192,31 @@ const PortfolioDetails = () => {
           className="absolute inset-0 w-full h-full object-cover filter contrast-125 saturate-50"
         />
         
-        <div className="container mx-auto px-6 relative z-20">
-          <div className="max-w-5xl border-l-4 border-brand-red pl-8 md:pl-16">
-            <Link to="/" className="inline-flex items-center text-gray-300 hover:text-white mb-8 transition-colors uppercase tracking-[0.2em] text-xs font-bold">
-              <ArrowLeft className="mr-2" size={16} /> Portfolio Index
-            </Link>
-            
+        {/* Top Right Link */}
+        <div className="absolute top-28 right-6 md:right-12 lg:right-auto lg:left-[calc(50%+300px)] xl:left-[calc(50%+400px)] z-30">
+          <Link to="/" className="inline-flex items-center text-gray-300 hover:text-white transition-colors uppercase tracking-[0.2em] text-xs font-bold bg-black/20 px-4 py-2 rounded-full backdrop-blur-sm border border-white/10">
+            Portfolio Index <ArrowRight className="ml-2" size={16} />
+          </Link>
+        </div>
+
+        <div className="container mx-auto px-6 relative z-20 flex flex-col justify-center h-full pt-16 w-full max-w-6xl">
+          
+          <div className="w-[90%] md:w-[75%] lg:w-[60%] border-l-4 border-brand-red pl-6 md:pl-12 lg:pl-16">
             {data.logo && (
-              <div className="mb-8">
-                <img src={data.logo} alt={`${data.title} Logo`} className="h-20 object-contain filter brightness-0 invert drop-shadow-xl" />
+              <div className="mb-4">
+                <img 
+                  src={data.logo} 
+                  alt={`${data.title} Logo`} 
+                  className="h-12 md:h-16 object-contain filter brightness-0 invert drop-shadow-xl" 
+                  onError={(e) => e.currentTarget.style.display = 'none'}
+                />
               </div>
             )}
-
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-6xl md:text-8xl lg:text-9xl font-black mb-6 tracking-tighter leading-[0.9] text-white drop-shadow-2xl"
+              className="text-2xl md:text-3xl lg:text-4xl font-medium mb-3 tracking-tight leading-[1.2] text-white drop-shadow-2xl line-clamp-2"
             >
               {data.title.split(' ')[0]} <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-yellow-500">
@@ -220,7 +228,7 @@ const PortfolioDetails = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl md:text-2xl text-gray-200 font-light uppercase tracking-widest leading-relaxed max-w-3xl drop-shadow-lg"
+              className="text-sm md:text-base text-gray-200 font-light uppercase tracking-[0.15em] leading-relaxed max-w-3xl drop-shadow-lg"
             >
               {data.description}
             </motion.p>

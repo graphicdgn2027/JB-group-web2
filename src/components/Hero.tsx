@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { ChevronRight } from "lucide-react";
 
 import { motion, useScroll, useTransform } from "motion/react";
 
@@ -77,10 +78,10 @@ const Hero = () => {
         className="relative z-10 container mx-auto px-6 text-center flex flex-col items-center mt-12"
       >
         {/* Sleek Pill Badge */}
-        <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border-white/10 mb-6 transition-all hover:bg-white/10">
+        <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-1.5  glass border-white/10 mb-6 transition-all hover:bg-white/10">
           <div className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+            <span className="animate-ping absolute inline-flex h-full w-full  bg-accent opacity-75"></span>
+            <span className="relative inline-flex  h-2 w-2 bg-accent"></span>
           </div>
           <span className="text-xs font-semibold text-gray-200 tracking-wider uppercase">Since 1982</span>
         </motion.div>
@@ -102,6 +103,22 @@ const Hero = () => {
           JB Group is a diversified business group built on more than four decades of entrepreneurship, market knowledge and trusted relationships in Nepal.
         </motion.p>
 
+        {/* Action Button */}
+        <motion.div variants={itemVariants} className="mt-4">
+          <a 
+            href="/about" 
+            className="group relative inline-flex items-center gap-3 text-sm font-medium uppercase tracking-[0.15em] text-white transition-all"
+          >
+            <div className="w-10 h-10 rounded-full border-[1.5px] border-white/80 flex items-center justify-center transition-all duration-300 group-hover:bg-white group-hover:text-black group-hover:border-white">
+              <ChevronRight size={16} strokeWidth={2.5} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+            </div>
+            <span className="relative pb-1">
+              LEARN MORE
+              <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-white transition-all duration-300 group-hover:w-full"></span>
+            </span>
+          </a>
+        </motion.div>
+
 
       </motion.div>
 
@@ -113,7 +130,7 @@ const Hero = () => {
           <button
             key={idx}
             onClick={() => setCurrentImg(idx)}
-            className={`h-1.5 rounded-full transition-all duration-500 ${idx === currentImg ? "bg-accent w-8" : "bg-white/30 w-2 hover:bg-white/60"}`}
+            className={`h-1.5  transition-all duration-500 ${idx === currentImg ? "bg-accent w-8" : "bg-white/30 w-2 hover:bg-white/60"}`}
             aria-label={`Go to slide ${idx + 1}`}
           />
         ))}

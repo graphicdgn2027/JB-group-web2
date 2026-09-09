@@ -9,16 +9,20 @@ const ContactFooter = () => {
 
 
       {/* New Footer */}
-      <footer className="bg-brand-blue text-white pt-24 pb-8 rounded-t-[3rem] mt-20 relative overflow-hidden">
+      <footer className="bg-brand-blue text-white pt-12 pb-8 relative overflow-hidden">
         <div className="container mx-auto px-6 relative z-10">
 
           {/* Top CTA Section */}
-          <div className="flex flex-col md:flex-row justify-between items-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-bold max-w-lg mb-8 md:mb-0">
-              Interested in partnering with<br />JB Group?
-            </h2>
-            <a href="/contact" className="bg-white text-brand-blue hover:bg-gray-100 px-8 py-4 font-bold flex items-center gap-3 transition">
-              Contact Us <ArrowRight size={18} />
+          <div className="flex flex-col md:flex-row justify-between items-end mb-12 relative">
+            <div className="mb-6 md:mb-0 relative z-10">
+              <span className="text-brand-red text-xs font-bold tracking-[0.3em] uppercase mb-2 block">Let's Work Together</span>
+              <h2 className="text-4xl md:text-6xl lg:text-7xl font-light max-w-3xl leading-[1.1] tracking-tight">
+                Interested in partnering <br />
+                <span className="text-brand-red font-medium">with JB Group?</span>
+              </h2>
+            </div>
+            <a href="/contact" className="bg-white text-brand-blue hover:bg-brand-red hover:text-white px-10 py-5 font-bold tracking-widest uppercase text-sm flex items-center gap-3 transition-all duration-300 shadow-2xl hover:shadow-brand-red/20 group relative z-10">
+              Contact Us <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform duration-300" />
             </a>
           </div>
 
@@ -39,7 +43,7 @@ const ContactFooter = () => {
               </p>
               <div className="flex gap-3">
                 {[Linkedin, Twitter, Facebook, Instagram, Youtube].map((Icon, idx) => (
-                  <a key={idx} href="#" className="w-10 h-10 rounded-none bg-white/5 flex items-center justify-center hover:bg-brand-red hover:shadow-[0_0_15px_rgba(203,151,51,0.3)] transition-all duration-300">
+                  <a key={idx} href="#" className="w-10 h-10 -none bg-white/5 flex items-center justify-center hover:bg-brand-red hover:shadow-[0_0_15px_rgba(203,151,51,0.3)] transition-all duration-300">
                     <Icon size={18} />
                   </a>
                 ))}

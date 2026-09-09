@@ -6,7 +6,7 @@ const GlobalPresence = () => {
   return (
     <section className="py-24 relative overflow-hidden bg-background text-foreground">
       {/* Decorative gradient orb */}
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[120px] -z-10" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-accent/10  blur-[120px] -z-10" />
 
       <div className="container mx-auto px-6 text-center">
         <motion.h2 
@@ -39,18 +39,18 @@ const GlobalPresence = () => {
           
           {/* Pins */}
           <div className="absolute top-1/4 left-1/4 group cursor-pointer">
-            <div className="w-5 h-5 bg-primary rounded-full shadow-[0_0_15px_rgba(203,151,51,0.8)] animate-pulse" />
-            <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-3 glass px-4 py-2 rounded-lg shadow-xl text-sm font-bold whitespace-nowrap text-white border-white/20 transition-all">North America</div>
+            <div className="w-5 h-5 bg-primary  shadow-[0_0_15px_rgba(203,151,51,0.8)] animate-pulse" />
+            <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-3 glass px-4 py-2  shadow-xl text-sm font-bold whitespace-nowrap text-white border-white/20 transition-all">North America</div>
           </div>
           
           <div className="absolute top-1/3 left-1/2 group cursor-pointer">
-            <div className="w-5 h-5 bg-accent rounded-full shadow-[0_0_15px_rgba(203,151,51,0.8)] animate-pulse" />
-            <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-3 glass px-4 py-2 rounded-lg shadow-xl text-sm font-bold whitespace-nowrap text-white border-white/20 transition-all">Europe</div>
+            <div className="w-5 h-5 bg-accent  shadow-[0_0_15px_rgba(203,151,51,0.8)] animate-pulse" />
+            <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-3 glass px-4 py-2  shadow-xl text-sm font-bold whitespace-nowrap text-white border-white/20 transition-all">Europe</div>
           </div>
           
           <div className="absolute top-1/2 right-1/3 group cursor-pointer">
-            <div className="w-5 h-5 bg-primary rounded-full shadow-[0_0_15px_rgba(203,151,51,0.8)] animate-pulse" />
-            <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-3 glass px-4 py-2 rounded-lg shadow-xl text-sm font-bold whitespace-nowrap text-white border-white/20 transition-all">Asia</div>
+            <div className="w-5 h-5 bg-primary  shadow-[0_0_15px_rgba(203,151,51,0.8)] animate-pulse" />
+            <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-3 glass px-4 py-2  shadow-xl text-sm font-bold whitespace-nowrap text-white border-white/20 transition-all">Asia</div>
           </div>
         </motion.div>
 

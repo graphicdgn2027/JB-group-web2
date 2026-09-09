@@ -35,7 +35,7 @@ const IndustriesGrid = () => {
           {/* Main Large Card - ESG */}
           <motion.div
             variants={itemVariants}
-            className="md:col-span-2 md:row-span-2 relative rounded-2xl overflow-hidden group border border-border hover:border-brand-red/30 transition-all duration-500"
+            className="md:col-span-2 md:row-span-2 relative  overflow-hidden group border border-border hover:border-brand-red/30 transition-all duration-500"
           >
             <div
               className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
@@ -43,7 +43,7 @@ const IndustriesGrid = () => {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-brand-blue via-brand-blue/50 to-transparent" />
             <div className="absolute inset-0 p-8 flex flex-col justify-end text-white">
-              <div className="w-12 h-12 rounded-full bg-brand-red/20 backdrop-blur-sm flex items-center justify-center mb-4 border border-brand-red/30">
+              <div className="w-12 h-12  bg-brand-red/20 backdrop-blur-sm flex items-center justify-center mb-4 border border-brand-red/30">
                 <Leaf size={24} className="text-brand-red" />
               </div>
               <h3 className="text-2xl font-bold mb-2">ESG & Sustainability</h3>
@@ -55,7 +55,7 @@ const IndustriesGrid = () => {
           </motion.div>
 
           {/* Environment */}
-          <motion.div variants={itemVariants} className="md:col-span-1 md:row-span-1 relative rounded-2xl overflow-hidden group border border-border hover:border-brand-red/30 transition-all duration-500">
+          <motion.div variants={itemVariants} className="md:col-span-1 md:row-span-1 relative  overflow-hidden group border border-border hover:border-brand-red/30 transition-all duration-500">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-[#0d2b1a] dark:to-[#1a3a25]" />
             <div className="absolute inset-0 p-6 flex flex-col text-emerald-900 dark:text-white">
               <h3 className="text-lg font-bold mb-2">Environment</h3>
@@ -65,7 +65,7 @@ const IndustriesGrid = () => {
           </motion.div>
 
           {/* Social */}
-          <motion.div variants={itemVariants} className="md:col-span-1 md:row-span-1 relative rounded-2xl overflow-hidden group border border-border hover:border-brand-red/30 transition-all duration-500">
+          <motion.div variants={itemVariants} className="md:col-span-1 md:row-span-1 relative  overflow-hidden group border border-border hover:border-brand-red/30 transition-all duration-500">
             <div className="absolute inset-0 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-[#1a2040] dark:to-[#0d1638]" />
             <div className="absolute inset-0 p-6 flex flex-col text-slate-900 dark:text-white">
               <h3 className="text-lg font-bold mb-2">Social</h3>
@@ -75,7 +75,7 @@ const IndustriesGrid = () => {
           </motion.div>
 
           {/* Digital */}
-          <motion.div variants={itemVariants} className="md:col-span-1 md:row-span-1 relative rounded-2xl overflow-hidden group border border-border hover:border-brand-red/30 transition-all duration-500">
+          <motion.div variants={itemVariants} className="md:col-span-1 md:row-span-1 relative  overflow-hidden group border border-border hover:border-brand-red/30 transition-all duration-500">
             <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&q=80')" }} />
             <div className="absolute inset-0 bg-brand-blue/80" />
             <div className="absolute inset-0 p-6 flex flex-col text-white">
@@ -86,7 +86,7 @@ const IndustriesGrid = () => {
           </motion.div>
 
           {/* Governance */}
-          <motion.div variants={itemVariants} className="md:col-span-1 md:row-span-1 relative rounded-2xl overflow-hidden group border border-border hover:border-brand-red/30 transition-all duration-500">
+          <motion.div variants={itemVariants} className="md:col-span-1 md:row-span-1 relative  overflow-hidden group border border-border hover:border-brand-red/30 transition-all duration-500">
             <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-[#0d1638] dark:to-[#050a1a]" />
             <div className="absolute inset-0 p-6 flex flex-col text-gray-900 dark:text-white">
               <Shield size={20} className="mb-2 text-brand-red" />

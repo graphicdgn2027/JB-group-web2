@@ -1,5 +1,6 @@
-import React, { useRef, useState, useEffect } from "react";
+import React from "react";
 import { motion } from "motion/react";
+import { useIsMobile } from "../hooks/useIsMobile";
 
 const TIMELINE_DATA = [
   { year: "1982", title: "Foundation", desc: "Reliance Trade International begins its journey in Nepal with lubricants and trading." },
@@ -12,112 +13,69 @@ const TIMELINE_DATA = [
 ];
 
 const CorporateTimeline = () => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [isDown, setIsDown] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (!scrollRef.current) return;
-    setIsDown(true);
-    setStartX(e.pageX - scrollRef.current.offsetLeft);
-    setScrollLeft(scrollRef.current.scrollLeft);
-  };
-
-  const handleMouseLeave = () => setIsDown(false);
-  const handleMouseUp = () => setIsDown(false);
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDown || !scrollRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 2;
-    scrollRef.current.scrollLeft = scrollLeft - walk;
-  };
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const handleWheel = (e: WheelEvent) => {
-      if (e.deltaY !== 0) { e.preventDefault(); el.scrollLeft += e.deltaY; }
-    };
-    el.addEventListener("wheel", handleWheel, { passive: false });
-    return () => el.removeEventListener("wheel", handleWheel);
-  }, []);
+  const isMobile = useIsMobile();
 
   return (
-    <section
-      className="py-24 bg-secondary dark:bg-background overflow-hidden select-none relative"
-      onMouseLeave={handleMouseLeave}
-      onMouseUp={handleMouseUp}
-    >
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-brand-red/5 rounded-full blur-[120px] -z-10" />
+    <section className="py-12 bg-white relative overflow-hidden text-foreground">
+      <div className="container mx-auto px-6 max-w-7xl">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+          
+          {/* Left Sticky Header */}
+          <div className="lg:w-1/3">
+            <div className="sticky top-24">
+              <h3 className="text-xs font-bold tracking-[0.2em] text-accent mb-2 uppercase">
+                Since 1982
+              </h3>
+              <h2 className="text-4xl lg:text-5xl font-black text-brand-blue mb-4 leading-[1] tracking-tight uppercase">
+                The<br />Journey.
+              </h2>
+              <div className="w-12 h-1 bg-brand-red mb-4"></div>
+              <p className="text-muted-foreground text-base font-light leading-relaxed">
+                Four Decades of Experience.<br /> One Continuing Journey.
+              </p>
+            </div>
+          </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="container mx-auto px-6 text-center mb-24"
-      >
-        <h2 className="text-4xl font-bold text-foreground">
-          Our <span className="text-brand-red">Journey</span>
-        </h2>
-        <p className="text-muted-foreground mt-3 font-medium">
-          Since 1982 – Four Decades of Experience. One Continuing Journey.
-        </p>
-        <p className="text-muted-foreground/50 mt-2 text-sm animate-pulse">← Drag to explore our history →</p>
-      </motion.div>
-
-      <div
-        ref={scrollRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        className={`relative max-w-full overflow-x-auto px-10 pb-10 ${isDown ? "cursor-grabbing" : "cursor-grab"}`}
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-      >
-        <div className="relative flex w-max min-w-full justify-center mx-auto">
-          <div className="absolute top-[176px] left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-brand-red/50 to-transparent" />
-
-          {TIMELINE_DATA.map((item, index) => (
-            <motion.div
-              initial={{ opacity: 0, y: index % 2 === 0 ? -30 : 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+          {/* Right Vertical Timeline */}
+          <div className="lg:w-2/3">
+            <motion.div 
+              initial={{ height: isMobile ? "auto" : 0 }}
+              whileInView={{ height: "auto" }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.08 }}
-              key={index}
-              className="flex flex-col items-center w-72 relative group px-4"
+              transition={{ duration: 1.5, ease: "easeOut" }}
+              className="relative border-l border-border/40 ml-2 md:ml-6 py-2 overflow-visible"
             >
-              <div className="h-44 flex flex-col justify-end items-center pb-8 w-full text-center transition-all duration-300 group-hover:-translate-y-2">
-                {index % 2 === 0 ? (
-                  <>
-                    <div className="text-3xl font-bold text-brand-red mb-2 tracking-tight group-hover:scale-110 transition-transform origin-bottom drop-shadow-[0_0_10px_rgba(203,151,51,0.3)]">
-                      {item.year}
+              <div className="space-y-8">
+                {TIMELINE_DATA.map((item, index) => (
+                  <motion.div 
+                    key={index}
+                    initial={{ opacity: 0, y: isMobile ? 10 : 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ duration: 0.5, delay: isMobile ? 0 : index * 0.15 }}
+                    className="relative pl-6 md:pl-10"
+                  >
+                    {/* Timeline Dot */}
+                    <div className="absolute left-[-4px] top-1.5 w-2 h-2 bg-brand-red ring-4 ring-white"></div>
+                    
+                    {/* Content */}
+                    <div>
+                      <span className="text-xs font-bold tracking-[0.2em] text-accent uppercase block mb-1">
+                        {item.year}
+                      </span>
+                      <h4 className="text-xl md:text-2xl font-black text-brand-blue mb-2 tracking-tight">
+                        {item.title}
+                      </h4>
+                      <p className="text-muted-foreground font-light leading-relaxed text-base max-w-2xl">
+                        {item.desc}
+                      </p>
                     </div>
-                    <h4 className="font-bold text-foreground mb-2 text-lg">{item.title}</h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-                  </>
-                ) : null}
-              </div>
-
-              <div className="relative flex items-center justify-center z-10 h-8 w-full">
-                <div className="absolute w-12 h-12 bg-brand-red/20 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping transition-all duration-500" />
-                <div className="absolute w-8 h-8 bg-brand-red/30 rounded-full opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-150 transition-all duration-300" />
-                <div className="w-4 h-4 bg-brand-red rounded-full shadow-[0_0_15px_rgba(203,151,51,0.5)] relative z-10 group-hover:scale-150 group-hover:bg-brand-blue dark:group-hover:bg-white border-2 border-background transition-all duration-300" />
-              </div>
-
-              <div className="h-44 flex flex-col justify-start items-center pt-8 w-full text-center transition-all duration-300 group-hover:translate-y-2">
-                {index % 2 !== 0 ? (
-                  <>
-                    <h4 className="font-bold text-foreground mb-2 text-lg">{item.title}</h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed mb-3">{item.desc}</p>
-                    <div className="text-3xl font-bold text-brand-red tracking-tight group-hover:scale-110 transition-transform origin-top drop-shadow-[0_0_10px_rgba(203,151,51,0.3)]">
-                      {item.year}
-                    </div>
-                  </>
-                ) : null}
+                  </motion.div>
+                ))}
               </div>
             </motion.div>
-          ))}
+          </div>
+          
         </div>
       </div>
     </section>

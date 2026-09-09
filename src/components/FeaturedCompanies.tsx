@@ -54,7 +54,7 @@ const itemVariants = {
 const FeaturedCompanies = () => {
   return (
     <section className="py-24 bg-background relative overflow-hidden">
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-brand-red/5 rounded-full blur-[120px] -z-10" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-brand-red/5  blur-[120px] -z-10" />
 
       <div className="container mx-auto px-6">
         <motion.div
@@ -89,7 +89,7 @@ const FeaturedCompanies = () => {
                     style={{ backgroundImage: `url('${company.img}')` }}
                   />
                   <div className="absolute inset-0 bg-brand-blue/20 dark:bg-brand-blue/30" />
-                  <div className="absolute top-4 left-4 bg-brand-red/90 backdrop-blur-sm px-3 py-1 text-xs font-bold rounded-md text-white uppercase tracking-wider">
+                  <div className="absolute top-4 left-4 bg-brand-red/90 backdrop-blur-sm px-3 py-1 text-xs font-bold  text-white uppercase tracking-wider">
                     {company.industry}
                   </div>
                 </div>

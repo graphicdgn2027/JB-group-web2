@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "../components/Header";
 import ContactFooter from "../components/ContactFooter";
-import { Quote } from "lucide-react";
+import { Quote, ArrowRight } from "lucide-react";
 import { motion } from "motion/react";
 
 const LeadershipPage = () => {
@@ -10,25 +10,37 @@ const LeadershipPage = () => {
       <Header />
       
       {/* Magazine Cover Hero */}
-      <section className="pt-32 pb-16 lg:pt-48 lg:pb-32 bg-brand-blue text-white relative min-h-[60vh] flex items-center border-b-[16px] border-brand-red">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=2000&q=80')] opacity-20 mix-blend-overlay bg-cover bg-center grayscale" />
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="max-w-4xl border-l border-white/20 pl-8 md:pl-16">
+      <section className="h-[350px] pt-20 bg-brand-blue text-white relative flex items-center border-b-[16px] border-brand-red overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=2000&q=80')] opacity-20 mix-blend-overlay bg-cover bg-center grayscale filter contrast-125 saturate-50" />
+        <div className="absolute inset-0 bg-black/40 z-10"></div>
+        
+        {/* Top Right Link */}
+        <div className="absolute top-28 right-6 md:right-12 lg:right-auto lg:left-[calc(50%+300px)] xl:left-[calc(50%+400px)] z-30">
+          <a href="/" className="inline-flex items-center text-gray-300 hover:text-white transition-colors uppercase tracking-[0.2em] text-xs font-bold bg-black/20 px-4 py-2 rounded-full backdrop-blur-sm border border-white/10">
+            Return Home <ArrowRight className="ml-2" size={16} />
+          </a>
+        </div>
+
+        <div className="container mx-auto px-6 relative z-20 flex flex-col justify-center h-full pt-16 w-full max-w-6xl">
+          <div className="w-[90%] md:w-[75%] lg:w-[60%] border-l-4 border-brand-red pl-6 md:pl-12 lg:pl-16">
             <motion.h1 
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-6xl md:text-8xl lg:text-9xl font-black mb-6 tracking-tighter leading-[0.9]"
+              className="text-2xl md:text-3xl lg:text-4xl font-medium mb-3 tracking-tight leading-[1.2] text-white drop-shadow-2xl line-clamp-2"
             >
-              The <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-yellow-500">Leadership</span>
+              The <br/>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-yellow-500">
+                Leadership
+              </span>
             </motion.h1>
             <motion.p 
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl md:text-3xl text-gray-300 font-light uppercase tracking-widest"
+              className="text-sm md:text-base text-gray-200 font-light uppercase tracking-[0.15em] leading-relaxed max-w-3xl drop-shadow-lg"
             >
-              Generations of Enterprise. <br/>One Shared Vision.
+              Generations of Enterprise. One Shared Vision.
             </motion.p>
           </div>
         </div>
