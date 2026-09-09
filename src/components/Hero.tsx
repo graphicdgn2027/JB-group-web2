@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { ArrowRight, PlayCircle } from "lucide-react";
+
 import { motion, useScroll, useTransform } from "motion/react";
 
 const HERO_IMAGES = [
@@ -102,49 +102,10 @@ const Hero = () => {
           JB Group is a diversified business group built on more than four decades of entrepreneurship, market knowledge and trusted relationships in Nepal.
         </motion.p>
 
-        {/* Modern Buttons */}
-        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-center gap-4">
-          <motion.button 
-            whileHover={{ scale: 1.05 }} 
-            whileTap={{ scale: 0.95 }}
-            className="group flex items-center justify-center gap-2 bg-brand-blue text-white hover:bg-brand-red px-8 py-4 font-bold transition-colors duration-300 shadow-lg border border-transparent rounded-sm"
-          >
-            Our Business Sectors <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-          </motion.button>
-          <motion.button 
-            whileHover={{ scale: 1.05 }} 
-            whileTap={{ scale: 0.95 }}
-            className="group flex items-center justify-center gap-2 bg-transparent text-white border border-white hover:bg-white hover:text-brand-blue px-8 py-4 font-bold transition-colors duration-300 shadow-lg rounded-sm"
-          >
-            <PlayCircle size={18} className="transition-transform group-hover:scale-110" /> Corporate Legacy
-          </motion.button>
-        </motion.div>
+
       </motion.div>
 
-      {/* Floating Stats - Parallax */}
-      <motion.div 
-        style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "-100%"]) }}
-        className="absolute top-32 left-10 lg:left-20 glass-card px-6 py-5 hidden xl:block z-10 w-48 text-left hover:-translate-y-2 transition-transform duration-300"
-      >
-        <div className="text-3xl font-extrabold text-foreground">45+</div>
-        <div className="text-xs text-accent font-medium uppercase tracking-widest mt-1">Years of Legacy</div>
-      </motion.div>
 
-      <motion.div 
-        style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "-50%"]) }}
-        className="absolute top-1/2 -translate-y-1/2 right-10 lg:right-20 glass-card px-6 py-5 hidden xl:block z-10 w-48 text-left hover:-translate-y-2 transition-transform duration-300"
-      >
-        <div className="text-3xl font-extrabold text-foreground">6+</div>
-        <div className="text-xs text-accent font-medium uppercase tracking-widest mt-1">Diverse Industries</div>
-      </motion.div>
-
-      <motion.div 
-        style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "-150%"]) }}
-        className="absolute bottom-32 left-10 lg:left-20 glass-card px-6 py-5 hidden xl:block z-10 w-48 text-left hover:-translate-y-2 transition-transform duration-300"
-      >
-        <div className="text-3xl font-extrabold text-foreground">100+</div>
-        <div className="text-xs text-accent font-medium uppercase tracking-widest mt-1">Our Employees</div>
-      </motion.div>
 
       {/* Elegant Slider Indicators */}
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-3 z-10">
