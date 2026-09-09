@@ -4,7 +4,6 @@ import Hero from "../components/Hero";
 import TrustedPartners from "../components/TrustedPartners";
 import BusinessPortfolio from "../components/BusinessPortfolio";
 import AboutGroup from "../components/AboutGroup";
-import FeaturedCompanies from "../components/FeaturedCompanies";
 import CorporateTimeline from "../components/CorporateTimeline";
 import Leadership from "../components/Leadership";
 import ContactFooter from "../components/ContactFooter";
@@ -21,7 +20,6 @@ function App() {
       <div id="about">
         <AboutGroup />
       </div>
-      <FeaturedCompanies />
       <div id="journey">
         <CorporateTimeline />
       </div>
