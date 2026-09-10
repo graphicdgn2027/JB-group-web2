@@ -42,7 +42,17 @@ const PORTFOLIO_ITEMS = [
   },
 ];
 
-const BusinessPortfolio = () => {
+interface BusinessPortfolioProps {
+  titleLine1?: string;
+  titleLine2?: string;
+  subtitle?: string;
+}
+
+const BusinessPortfolio: React.FC<BusinessPortfolioProps> = ({
+  titleLine1 = "Our",
+  titleLine2 = "Businesses",
+  subtitle = "Diversification & Growth"
+}) => {
   const isMobile = useIsMobile();
 
   const containerVariants = {
@@ -55,7 +65,7 @@ const BusinessPortfolio = () => {
     show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
   return (
-    <section className="py-24 bg-secondary dark:bg-background relative overflow-hidden">
+    <section className="py-16 bg-secondary dark:bg-background relative overflow-hidden">
       <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-brand-red/5  blur-[120px] -z-10" />
 
       <div className="container mx-auto px-6">
@@ -63,17 +73,17 @@ const BusinessPortfolio = () => {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-border/40 pb-12"
+          className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-border/40 pb-12"
         >
-          <div className="md:w-1/2">
+          <div className="lg:w-4/12 md:w-1/2">
             <h3 className="text-sm font-bold tracking-[0.2em] text-accent mb-4 uppercase">
-              Diversification & Growth
+              {subtitle}
             </h3>
-            <h2 className="text-5xl md:text-[4.5rem] font-black text-brand-blue leading-[0.9] tracking-tight uppercase">
-              Our<br />Businesses.
+            <h2 className="text-5xl lg:text-6xl font-black text-brand-blue leading-[0.9] tracking-tight uppercase">
+              {titleLine1}<br />{titleLine2}.
             </h2>
           </div>
-          <div className="md:w-1/2 md:pl-8 lg:pl-16">
+          <div className="lg:w-8/12 md:w-1/2 md:pl-8 lg:pl-16">
             <div className="w-12 h-1 bg-brand-red mb-6"></div>
             <p className="text-muted-foreground text-lg font-light leading-relaxed">
               JB Group is built on a simple belief: strong businesses are created by understanding

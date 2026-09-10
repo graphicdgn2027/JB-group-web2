@@ -9,14 +9,14 @@ const ContactFooter = () => {
 
 
       {/* New Footer */}
-      <footer className="bg-brand-blue text-white pt-12 pb-8 relative overflow-hidden">
+      <footer className="bg-brand-blue text-white pt-12 pb-8 relative overflow-hidden border-t-[10px] border-[#cb9733]">
         <div className="container mx-auto px-6 relative z-10">
 
           {/* Top CTA Section */}
           <div className="flex flex-col md:flex-row justify-between items-end mb-12 relative">
             <div className="mb-6 md:mb-0 relative z-10">
               <span className="text-brand-red text-xs font-bold tracking-[0.3em] uppercase mb-2 block">Let's Work Together</span>
-              <h2 className="text-4xl md:text-6xl lg:text-7xl font-light max-w-3xl leading-[1.1] tracking-tight">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-light max-w-3xl leading-[1.1] tracking-tight">
                 Interested in partnering <br />
                 <span className="text-brand-red font-medium">with JB Group?</span>
               </h2>
@@ -29,7 +29,7 @@ const ContactFooter = () => {
           <div className="w-full h-px bg-white/10 mb-20"></div>
 
           {/* Links Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-24">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
             {/* Col 1 */}
             <div>
               <div className="mb-6">

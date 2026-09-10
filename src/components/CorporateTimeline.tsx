@@ -16,12 +16,12 @@ const CorporateTimeline = () => {
   const isMobile = useIsMobile();
 
   return (
-    <section className="py-12 bg-white relative overflow-hidden text-foreground">
+    <section className="py-16 bg-white relative overflow-hidden text-foreground">
       <div className="container mx-auto px-6 max-w-7xl">
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
           
           {/* Left Sticky Header */}
-          <div className="lg:w-1/3">
+          <div className="lg:w-4/12">
             <div className="sticky top-24">
               <h3 className="text-xs font-bold tracking-[0.2em] text-accent mb-2 uppercase">
                 Since 1982
@@ -37,7 +37,7 @@ const CorporateTimeline = () => {
           </div>
 
           {/* Right Vertical Timeline */}
-          <div className="lg:w-2/3">
+          <div className="lg:w-8/12">
             <motion.div 
               initial={{ height: isMobile ? "auto" : 0 }}
               whileInView={{ height: "auto" }}

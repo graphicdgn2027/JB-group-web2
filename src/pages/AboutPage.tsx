@@ -1,18 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router";
 import { ArrowLeft, ArrowRight, Quote } from "lucide-react";
 import Header from "../components/Header";
 import ContactFooter from "../components/ContactFooter";
+import CorporateTimeline from "../components/CorporateTimeline";
+import BusinessPortfolio from "../components/BusinessPortfolio";
 import { motion } from "motion/react";
 
 const AboutPage = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div className="min-h-screen font-sans bg-background text-foreground selection:bg-brand-red selection:text-white">
       <Header />
 
       {/* Editorial Hero Section */}
       <section className="h-[350px] pt-20 bg-brand-blue text-white relative flex items-center border-b-[16px] border-brand-red overflow-hidden">
-        <div className="absolute inset-0 bg-black/40 z-10"></div>
+        <div className="absolute inset-0 bg-brand-blue/70 z-10"></div>
         <img
           src="/assets/company profile/company profile pic.png"
           alt="JB Group"
@@ -161,6 +166,10 @@ const AboutPage = () => {
           </div>
         </div>
       </section>
+
+      <CorporateTimeline />
+
+      <BusinessPortfolio titleLine1="Our" titleLine2="Businesses" subtitle="Diversification & Growth" />
 
       <ContactFooter />
     </div>

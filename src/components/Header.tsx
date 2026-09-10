@@ -3,10 +3,11 @@ import { Search, ChevronDown, Menu, X, Sun, Moon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Logo from "./Logo";
 import BusinessMegaMenu from "./BusinessMegaMenu";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isBusinessesOpen, setIsBusinessesOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -34,6 +35,21 @@ const Header = () => {
 
   const isDark = theme === "dark";
 
+  // Smooth scroll to hash section — works both on same page and when navigating from other pages
+  const handleHashNav = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
+    if (path.startsWith("/#")) {
+      const hash = path.substring(1); // e.g. "#journey"
+      if (location.pathname === "/") {
+        // Already on home page — just smooth scroll
+        e.preventDefault();
+        const el = document.querySelector(hash);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      // If on another page, let the normal href navigate (HomePage will handle scroll after load)
+    }
+    setMobileOpen(false);
+  };
+
   const navItems = [
     { type: "link", name: "Home", path: "/" },
     { type: "link", name: "About", path: "/about" },
@@ -52,7 +68,7 @@ const Header = () => {
             ? "w-[95%] md:w-[85%] lg:w-[80%] max-w-7xl py-3 px-6 mt-6 rounded-[10px] " + (isDark
               ? "bg-brand-blue/80 backdrop-blur-lg shadow-xl shadow-black/20 border border-white/10"
               : "bg-[#0A192F]/90 backdrop-blur-lg shadow-xl shadow-black/20 border border-white/10 text-white")
-            : "w-full py-4 px-8 rounded-none bg-transparent"
+            : "w-full py-4 px-4 md:px-8 lg:px-[6.25vw] rounded-none bg-transparent"
         }`}
       >
         {/* Left: Logo */}
@@ -103,6 +119,7 @@ const Header = () => {
               <a
                 key={idx}
                 href={item.path}
+                onClick={(e) => handleHashNav(e, item.path as string)}
                 className={`px-2 xl:px-4 py-2  transition-all relative group whitespace-nowrap ${
                   isActive
                     ? "text-brand-red"
@@ -201,7 +218,7 @@ const Header = () => {
                       ? "text-white/80 hover:text-white hover:bg-white/5"
                       : "text-brand-blue/80 hover:text-brand-blue hover:bg-black/5"
                 }`}
-                onClick={() => setMobileOpen(false)}
+                onClick={(e) => handleHashNav(e, item.path as string)}
               >
                 {item.name}
               </a>

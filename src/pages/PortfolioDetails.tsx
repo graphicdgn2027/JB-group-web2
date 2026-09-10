@@ -1,8 +1,9 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { useParams, Link } from "react-router";
 import { ArrowLeft, ArrowRight, Car, Cpu, Zap, Briefcase, Stethoscope, Store, Building2, HardHat, CheckCircle2, Quote } from "lucide-react";
 import Header from "../components/Header";
 import ContactFooter from "../components/ContactFooter";
+import BusinessPortfolio from "../components/BusinessPortfolio";
 import { motion, useScroll, useTransform } from "motion/react";
 
 const PORTFOLIO_DATA: Record<string, any> = {
@@ -161,6 +162,11 @@ const PORTFOLIO_DATA: Record<string, any> = {
 
 const PortfolioDetails = () => {
   const { id } = useParams();
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
+
   const data = PORTFOLIO_DATA[id?.toLowerCase() || ""];
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -185,7 +191,7 @@ const PortfolioDetails = () => {
       
       {/* Magazine Cover Hero */}
       <section className="h-[350px] pt-20 bg-brand-blue text-white relative flex items-center border-b-[16px] border-brand-red overflow-hidden">
-        <div className="absolute inset-0 bg-black/40 z-10"></div>
+        <div className="absolute inset-0 bg-brand-blue/70 z-10"></div>
         <img 
           src={data.img} 
           alt={data.title} 
@@ -309,7 +315,7 @@ const PortfolioDetails = () => {
             <div className="space-y-32">
               {data.features.map((feature: any, idx: number) => (
                 <div key={idx} className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                  <div className={`lg:col-span-7 ${idx % 2 !== 0 ? 'lg:order-2' : ''}`}>
+                  <div className={`lg:col-span-5 ${idx % 2 !== 0 ? 'lg:order-2' : ''}`}>
                     <div className="bg-white p-2 shadow-2xl border border-border/50">
                       <img 
                         src={feature.image} 
@@ -318,7 +324,7 @@ const PortfolioDetails = () => {
                       />
                     </div>
                   </div>
-                  <div className={`lg:col-span-5 ${idx % 2 !== 0 ? 'lg:order-1 lg:text-right' : ''}`}>
+                  <div className={`lg:col-span-7 ${idx % 2 !== 0 ? 'lg:order-1 lg:text-right' : ''}`}>
                     <div className={`border-brand-red mb-6 ${idx % 2 !== 0 ? 'border-r-4 pr-6' : 'border-l-4 pl-6'}`}>
                       <h4 className="text-4xl font-black text-foreground tracking-tight">{feature.title}</h4>
                     </div>
@@ -381,6 +387,8 @@ const PortfolioDetails = () => {
           </div>
         </section>
       )}
+
+      <BusinessPortfolio titleLine1="Our Related" titleLine2="Businesses" subtitle="Explore More" />
 
       <ContactFooter />
     </div>
