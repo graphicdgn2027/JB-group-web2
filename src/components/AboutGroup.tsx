@@ -77,21 +77,21 @@ const AboutGroup = () => {
           <motion.div variants={itemVariants} className="lg:w-8/12 flex flex-col">
             <div>
               <h3 className="text-sm font-bold tracking-[0.2em] text-accent mb-4 uppercase">
-                Believing · Growing · Leading
+                About JB Group
               </h3>
-              
+
               <h2 className="text-5xl lg:text-6xl font-black text-brand-blue mb-10 leading-[0.9] tracking-tight uppercase">
-                About<br />The Group.
+                Why<br />We Are.
               </h2>
 
               <div className="border-t border-border/40 pt-10">
                 <div className="text-muted-foreground leading-relaxed space-y-6 text-lg font-light">
                   <p>
-                    <span className="float-left text-7xl leading-[0.8] font-black text-brand-blue mr-3 mt-1">J</span>
-                    B Group represents the next chapter of a business journey that began in Nepal in 1982 with Reliance Trade International Pvt. Ltd. What began as a focused trading business importing quality lubricants into Nepal has evolved over more than four decades.
+                    <span className="float-left text-7xl leading-[0.8] font-black text-brand-blue mr-3 mt-1">W</span>
+                    e exist to build businesses that last, rooted in a journey that began in Nepal in 1982 with Reliance Trade International Pvt. Ltd. What began as a focused trading business importing quality lubricants into Nepal has evolved over more than four decades into a purpose-driven group.
                   </p>
                   <p>
-                    This evolution comes through market knowledge, disciplined execution, trusted partnerships, and a commitment to understanding changing customer needs. Today, the Group's businesses span lubricants and energy storage solutions, LPG bottling, electric mobility, commercial real estate, and strategic investments in future-oriented sectors.
+                    Our reason for being is simple: to create lasting value through market knowledge, disciplined execution, trusted partnerships, and a genuine commitment to understanding changing customer needs. Today, that purpose drives businesses spanning lubricants and energy storage solutions, LPG bottling, electric mobility, commercial real estate, and strategic investments in future-oriented sectors.
                   </p>
                   <p>
                     JB Group is built on a simple belief: strong businesses are created by understanding markets, serving customers reliably, empowering people, building enduring partnerships and growing responsibly.

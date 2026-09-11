@@ -9,7 +9,6 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isBusinessesOpen, setIsBusinessesOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -17,18 +16,15 @@ const Header = () => {
 
   useEffect(() => {
     setMounted(true);
-    const handleScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    
+
     const handleClickOutside = (event: MouseEvent) => {
       if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
         setIsBusinessesOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    
+
     return () => {
-      window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
@@ -37,15 +33,17 @@ const Header = () => {
 
   // Smooth scroll to hash section — works both on same page and when navigating from other pages
   const handleHashNav = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
-    if (path.startsWith("/#")) {
-      const hash = path.substring(1); // e.g. "#journey"
-      if (location.pathname === "/") {
-        // Already on home page — just smooth scroll
+    const hashIndex = path.indexOf("#");
+    if (hashIndex !== -1) {
+      const pagePath = path.substring(0, hashIndex) || "/";
+      const hash = path.substring(hashIndex); // e.g. "#journey"
+      if (location.pathname === pagePath) {
+        // Already on the target page — just smooth scroll
         e.preventDefault();
         const el = document.querySelector(hash);
         if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
       }
-      // If on another page, let the normal href navigate (HomePage will handle scroll after load)
+      // If on another page, let the normal href navigate (target page handles scroll after load)
     }
     setMobileOpen(false);
   };
@@ -54,23 +52,15 @@ const Header = () => {
     { type: "link", name: "Home", path: "/" },
     { type: "link", name: "About", path: "/about" },
     { type: "dropdown", name: "Businesses" },
-    { type: "link", name: "Journey", path: "/#journey" },
-    { type: "link", name: "Brand & Business Partner", path: "/#brands" },
+    { type: "link", name: "Brand & Businesses Partners", path: "/brand-partners" },
     { type: "link", name: "Leadership", path: "/leadership" },
+    { type: "link", name: "Contact Us", path: "/contact" },
   ];
 
   return (
-    <header ref={headerRef} className="w-full fixed top-0 z-50 transition-all duration-500 flex justify-center">
+    <header ref={headerRef} className="w-full absolute top-0 left-0 z-50 flex justify-center">
       {/* Main Nav */}
-      <div
-        className={`flex justify-between items-center transition-all duration-500 ${
-          scrolled
-            ? "w-[95%] md:w-[85%] lg:w-[80%] max-w-7xl py-3 px-6 mt-6 rounded-[10px] " + (isDark
-              ? "bg-brand-blue/80 backdrop-blur-lg shadow-xl shadow-black/20 border border-white/10"
-              : "bg-[#0A192F]/90 backdrop-blur-lg shadow-xl shadow-black/20 border border-white/10 text-white")
-            : "w-full py-4 px-4 md:px-8 lg:px-[6.25vw] rounded-none bg-transparent"
-        }`}
-      >
+      <div className="flex justify-between items-center w-full py-4 px-4 md:px-8 lg:px-[6.25vw] rounded-none bg-transparent">
         {/* Left: Logo */}
         <div className="shrink-0 flex items-center">
           <a href="/" className="flex items-center transition-all duration-500">
@@ -147,18 +137,6 @@ const Header = () => {
               {isDark ? <Sun size={18} /> : <Moon size={18} />}
             </button>
           )}
-
-          <button
-            className="p-2 transition-all duration-300 text-white/80 hover:text-white hover:bg-white/10 rounded-full"
-          >
-            <Search size={18} />
-          </button>
-          <a
-            href="/contact"
-            className="bg-brand-blue text-white hover:bg-brand-red hover:text-white px-6 py-2.5 text-xs font-bold tracking-wider uppercase transition-all duration-300 shadow-lg hover:-translate-y-0.5 border border-white/20 ml-2"
-          >
-            Contact
-          </a>
         </div>
 
         {/* Mobile Right Icons */}
@@ -224,12 +202,6 @@ const Header = () => {
               </a>
             )
           ))}
-          <a
-            href="/contact"
-            className="block mt-4 text-center bg-brand-blue text-white hover:bg-brand-red hover:text-white px-6 py-3 font-bold transition-all duration-300 shadow-lg border border-transparent"
-          >
-            Contact
-          </a>
         </div>
       )}
 

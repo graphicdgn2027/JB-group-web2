@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import Logo from "../components/Logo";
+import relianceLogo from "@/assets/full_reliance_logo.png";
 import Header from "../components/Header";
 import Hero from "../components/Hero";
-import TrustedPartners from "../components/TrustedPartners";
 import BusinessPortfolio from "../components/BusinessPortfolio";
 import AboutGroup from "../components/AboutGroup";
-import CorporateTimeline from "../components/CorporateTimeline";
-import Leadership from "../components/Leadership";
+import MissionVision from "../components/MissionVision";
 import ContactFooter from "../components/ContactFooter";
 
 function App() {
@@ -46,21 +44,28 @@ function App() {
           <motion.div
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
-            className="fixed inset-0 z-[100] bg-brand-blue flex items-center justify-center flex-col"
+            className="fixed inset-0 z-[100] flex items-center justify-center flex-col px-6 bg-white"
           >
-            <motion.div
-              animate={{ opacity: [0.5, 1, 0.5], scale: [0.98, 1, 0.98] }}
-              transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-            >
-              <Logo variant="dark" heightClass="h-16 md:h-20" />
-            </motion.div>
-            <motion.p
+            <motion.img
+              src={relianceLogo}
+              alt="Reliance Trade International"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="text-white/60 text-sm tracking-widest uppercase mt-6"
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="h-16 md:h-20 w-auto max-w-full object-contain"
+            />
+            <div
+              style={{ borderRadius: 9999 }}
+              className="mt-8 h-[3px] w-48 md:w-64 overflow-hidden bg-neutral-200"
             >
-            </motion.p>
+              <motion.div
+                style={{ borderRadius: 9999 }}
+                className="h-full bg-gradient-to-r from-brand-blue to-accent"
+                initial={{ width: "0%" }}
+                animate={{ width: "100%" }}
+                transition={{ duration: 1.4, ease: [0.4, 0, 0.2, 1] }}
+              />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -71,24 +76,16 @@ function App() {
         {/* We don't wrap Hero in whileInView because it's at the very top and should load immediately after the loading screen */}
         <Hero />
 
-        <motion.div id="brands" initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionVariants}>
-          <TrustedPartners />
-        </motion.div>
-
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionVariants}>
-          <BusinessPortfolio />
-        </motion.div>
-
         <motion.div id="about" initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionVariants}>
           <AboutGroup />
         </motion.div>
 
-        <motion.div id="journey" initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionVariants}>
-          <CorporateTimeline />
+        <motion.div id="brands" initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionVariants}>
+          <MissionVision />
         </motion.div>
 
-        <motion.div id="leadership" initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionVariants}>
-          <Leadership />
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionVariants}>
+          <BusinessPortfolio />
         </motion.div>
 
         <ContactFooter />

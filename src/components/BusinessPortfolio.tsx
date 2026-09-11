@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router";
-import { ArrowRight, ChevronRight, Car, Zap, Briefcase, Building2, Flame } from "lucide-react";
+import { Car, Zap, Briefcase, Building2, Flame } from "lucide-react";
 import { motion } from "motion/react";
 import { useIsMobile } from "../hooks/useIsMobile";
 
@@ -101,32 +101,55 @@ const BusinessPortfolio: React.FC<BusinessPortfolioProps> = ({
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5"
         >
           {PORTFOLIO_ITEMS.map((item, index) => (
-            <motion.div variants={itemVariants} key={index}>
+            <motion.div
+              variants={itemVariants}
+              key={index}
+              className="h-full"
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            >
               <Link
                 to={`/portfolio/${item.id}`}
-                className="group relative h-[340px]  overflow-hidden cursor-pointer block border border-border hover:border-brand-red/30 transition-all duration-500 shadow-sm hover:shadow-xl"
+                aria-label={`View ${item.title} details`}
+                style={{ borderRadius: 16 }}
+                className="group relative flex flex-col h-full overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-accent bg-card border border-border/60 shadow-[0_4px_20px_rgba(10,42,102,0.06)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(10,42,102,0.15)] hover:border-accent/40"
               >
-                <div
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                  style={{ backgroundImage: `url('${item.img}')` }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-blue via-brand-blue/70 to-transparent opacity-90" />
-
-                <div className="absolute inset-0 p-6 flex flex-col justify-end">
-                  <div className="flex flex-col relative h-full justify-end">
-                    <div className="w-10 h-10  bg-brand-red/20 backdrop-blur-sm flex items-center justify-center mb-4 border border-brand-red/30 shadow-[0_0_15px_rgba(203,151,51,0.2)]">
-                      <item.icon size={20} className="text-brand-red" />
-                    </div>
-                    <h3 className="text-lg font-bold text-white mb-2 tracking-wide drop-shadow-md">{item.title}</h3>
-                    <div className="flex items-end justify-between gap-4">
-                      <p className="text-sm font-medium text-white/90 line-clamp-3 leading-relaxed drop-shadow-md flex-1">{item.description}</p>
-                      
-                      <div className="w-10 h-10 shrink-0 bg-[#cb9733] flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shadow-lg mb-1">
-                        <ArrowRight size={20} className="text-white" />
-                      </div>
-                    </div>
-                  </div>
+                {/* Image — shown clean, no overlay */}
+                <div className="relative h-64 lg:h-72 overflow-hidden bg-secondary">
+                  <img
+                    src={item.img}
+                    alt={item.title}
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                  />
+                  {/* Light shine sweep */}
+                  <span className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-0 transition-transform duration-1000 ease-out group-hover:translate-x-[400%]" />
+                  {/* Soft tint fades in on hover */}
+                  <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-brand-blue/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  <span className="absolute top-3 right-3 text-[11px] font-bold tracking-widest text-white bg-black/30 backdrop-blur-md px-2.5 py-1 transition-all duration-300 group-hover:bg-accent group-hover:scale-110" style={{ borderRadius: 9999 }}>
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
                 </div>
+
+                {/* Content */}
+                <div className="relative flex flex-col flex-1 min-h-[180px] p-6 pt-10">
+                  <div
+                    style={{ borderRadius: 12 }}
+                    className="absolute -top-6 left-5 w-12 h-12 bg-brand-blue flex items-center justify-center shadow-lg ring-4 ring-card transition-all duration-500 group-hover:bg-accent group-hover:-translate-y-1 group-hover:rotate-[-8deg] group-hover:scale-110"
+                  >
+                    <item.icon size={20} className="text-white transition-transform duration-500 group-hover:rotate-[8deg]" />
+                  </div>
+                  <h3 className="text-base font-bold text-brand-blue dark:text-white mb-2 leading-snug transition-colors duration-300 group-hover:text-accent">
+                    <span className="bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-[length:0%_1.5px] bg-[position:0_100%] transition-[background-size] duration-500 group-hover:bg-[length:100%_1.5px]">
+                      {item.title}
+                    </span>
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 flex-1 transition-colors duration-300 group-hover:text-foreground/80">
+                    {item.description}
+                  </p>
+                </div>
+
+                {/* Gold progress bar sweeps across the bottom on hover */}
+                <span className="absolute bottom-0 left-0 h-[3px] w-0 bg-accent transition-all duration-500 ease-out group-hover:w-full" />
               </Link>
             </motion.div>
           ))}

@@ -1,144 +1,259 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { ChevronRight } from "lucide-react";
+import React, { useState, useEffect, useCallback } from "react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 
-import { motion, useScroll, useTransform } from "motion/react";
+const SLIDE_DURATION = 6500;
 
-const HERO_IMAGES = [
-  "/assets/hero-image/hipco-trading.png",
-  "/assets/hero-image/kabsonnew.png",
-  "/assets/hero-image/mobil.png",
+const SLIDES = [
+  {
+    id: "group",
+    image: "/assets/hero-image/kabsonnew.png",
+    eyebrow: "Since 1982",
+    label: "JB Group",
+    titleTop: "Four Decades of Enterprise.",
+    titleBottom: "One Vision for the Future.",
+    description:
+      "JB Group is a diversified business group built on more than four decades of entrepreneurship, market knowledge and trusted relationships in Nepal.",
+    cta: { label: "Learn More", href: "/about" },
+  },
+  {
+    id: "kabsons",
+    image: "/assets/hero-image/kabsonnew.png",
+    eyebrow: "Manufacturing",
+    label: "Kabsons Industries",
+    titleTop: "Engineered for Scale.",
+    titleBottom: "Built to Last.",
+    description:
+      "Industrial manufacturing and LPG bottling capacity that powers homes and businesses across the country, with uncompromising safety standards.",
+    cta: { label: "Our Businesses", href: "/businesses" },
+  },
+  {
+    id: "hipco",
+    image: "/assets/hero-image/hipco-trading.png",
+    eyebrow: "Trading & Distribution",
+    label: "Hipco Trading",
+    titleTop: "Global Brands.",
+    titleBottom: "Local Expertise.",
+    description:
+      "A trusted distribution network connecting world-class products to markets across Nepal through decades of relationships and reach.",
+    cta: { label: "Brand Partners", href: "/brand-partners" },
+  },
+  {
+    id: "mobil",
+    image: "/assets/hero-image/mobil.png",
+    eyebrow: "Lubricants",
+    label: "Mobil Nepal",
+    titleTop: "Performance That",
+    titleBottom: "Moves Industry.",
+    description:
+      "Authorised distribution of world-leading lubricants, keeping vehicles, plants and machinery running at peak efficiency.",
+    cta: { label: "Explore Portfolio", href: "/businesses" },
+  },
 ];
 
 const Hero = () => {
-  const [currentImg, setCurrentImg] = useState(0);
-  const heroRef = useRef<HTMLElement>(null);
-  
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
+  const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState(1);
+  const [paused, setPaused] = useState(false);
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentImg((prev) => (prev + 1) % HERO_IMAGES.length);
-    }, 6000);
-    return () => clearInterval(timer);
+  const goTo = useCallback((next: number) => {
+    setIndex((prev) => {
+      const target = (next + SLIDES.length) % SLIDES.length;
+      setDirection(target === prev ? 1 : target > prev ? 1 : -1);
+      return target;
+    });
   }, []);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
+  const next = useCallback(() => goTo(index + 1), [goTo, index]);
+  const prev = useCallback(() => goTo(index - 1), [goTo, index]);
+
+  useEffect(() => {
+    if (paused) return;
+    const timer = setTimeout(() => setIndex((p) => (p + 1) % SLIDES.length), SLIDE_DURATION);
+    return () => clearTimeout(timer);
+  }, [index, paused]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") prev();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [next, prev]);
+
+  const slide = SLIDES[index];
+
+  const container = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.11, delayChildren: 0.25 } },
+    exit: { transition: { staggerChildren: 0.04, staggerDirection: -1 } },
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 32, filter: "blur(8px)" },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.2,
-      },
+      y: 0,
+      filter: "blur(0px)",
+      transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const },
+    },
+    exit: {
+      opacity: 0,
+      y: -18,
+      filter: "blur(6px)",
+      transition: { duration: 0.4, ease: [0.4, 0, 1, 1] as const },
     },
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 40, filter: "blur(10px)" },
-    visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 1, ease: [0.16, 1, 0.3, 1] } },
-  };
-
   return (
-    <section ref={heroRef} className="relative w-full h-screen min-h-[700px] flex flex-col items-center justify-center overflow-hidden bg-background">
-
-      {/* Background Images Slider with Parallax */}
-      <motion.div style={{ y: backgroundY }} className="absolute inset-0 w-full h-[120%] -top-[10%]">
-        {HERO_IMAGES.map((img, index) => (
-          <div
-            key={img}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentImg ? "opacity-100" : "opacity-0"}`}
+    <section
+      className="relative w-full h-screen min-h-[640px] flex items-center overflow-hidden bg-background"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      {/* Background slider with Ken Burns drift */}
+      <div className="absolute inset-0">
+        <AnimatePresence initial={false}>
+          <motion.div
+            key={index}
+            className="absolute inset-0"
+            initial={{ opacity: 0, scale: 1.14, x: direction * 50 }}
+            animate={{
+              opacity: 1,
+              scale: 1.04,
+              x: 0,
+              transition: {
+                opacity: { duration: 1.1 },
+                x: { duration: 1.2, ease: [0.16, 1, 0.3, 1] as const },
+                scale: { duration: 7.5, ease: "linear" },
+              },
+            }}
+            exit={{ opacity: 0, transition: { duration: 0.9 } }}
           >
-            <img
-              src={img}
-              alt="Hero Background"
-              className="w-full h-full object-cover scale-105"
-            />
-          </div>
-        ))}
-      </motion.div>
-
-      {/* Dark Overlay to ensure text legibility over images */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black/80 z-0"></div>
-
-      {/* Content */}
-      <motion.div 
-        style={{ y: textY, opacity }}
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="relative z-10 container mx-auto px-6 text-center flex flex-col items-center mt-12"
-      >
-        {/* Sleek Pill Badge */}
-        <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-1.5  glass border-white/10 mb-6 transition-all hover:bg-white/10">
-          <div className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full  bg-accent opacity-75"></span>
-            <span className="relative inline-flex  h-2 w-2 bg-accent"></span>
-          </div>
-          <span className="text-xs font-semibold text-gray-200 tracking-wider uppercase">Since 1982</span>
-        </motion.div>
-
-        {/* Title */}
-        <motion.h2 variants={itemVariants} className="text-xl md:text-2xl font-bold tracking-widest text-accent mb-4 uppercase drop-shadow-md">
-          JB Group
-        </motion.h2>
-
-        <motion.h1 className="text-4xl md:text-6xl lg:text-7xl tracking-tight mb-6 leading-[1.1] text-white overflow-hidden">
-          <motion.span variants={itemVariants} className="block drop-shadow-lg font-normal">Four Decades of Enterprise.</motion.span>
-          <motion.span variants={itemVariants} className="block mt-2 font-bold drop-shadow-sm">
-            One Vision for the Future.
-          </motion.span>
-        </motion.h1>
-
-        {/* Subtitle */}
-        <motion.p variants={itemVariants} className="text-base md:text-lg text-gray-300 max-w-3xl mx-auto mb-8 leading-relaxed font-light drop-shadow">
-          JB Group is a diversified business group built on more than four decades of entrepreneurship, market knowledge and trusted relationships in Nepal.
-        </motion.p>
-
-        {/* Action Button */}
-        <motion.div variants={itemVariants} className="mt-4">
-          <a 
-            href="/about" 
-            className="group relative inline-flex items-center gap-3 text-sm font-medium uppercase tracking-[0.15em] text-white transition-all"
-          >
-            <div className="w-10 h-10 rounded-full border-[1.5px] border-white/80 flex items-center justify-center transition-all duration-300 group-hover:bg-white group-hover:text-black group-hover:border-white">
-              <ChevronRight size={16} strokeWidth={2.5} className="transition-transform duration-300 group-hover:translate-x-0.5" />
-            </div>
-            <span className="relative pb-1">
-              LEARN MORE
-              <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-white transition-all duration-300 group-hover:w-full"></span>
-            </span>
-          </a>
-        </motion.div>
-
-
-      </motion.div>
-
-
-
-      {/* Elegant Slider Indicators */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-3 z-10">
-        {HERO_IMAGES.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => setCurrentImg(idx)}
-            className={`h-1.5  transition-all duration-500 ${idx === currentImg ? "bg-accent w-8" : "bg-white/30 w-2 hover:bg-white/60"}`}
-            aria-label={`Go to slide ${idx + 1}`}
-          />
-        ))}
+            <img src={slide.image} alt="" className="w-full h-full object-cover" />
+          </motion.div>
+        </AnimatePresence>
       </div>
 
+      {/* Soft dark overall tint to calm bright/saturated photos */}
+      <div className="absolute inset-0 bg-[#0a2a66]/40" />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(6,24,64,0.90) 0%, rgba(8,34,86,0.75) 32%, rgba(12,48,120,0.35) 58%, rgba(12,48,120,0.08) 80%)",
+        }}
+      />
+      {/* Top shade so header nav stays legible */}
+      <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#061840]/60 to-transparent" />
+
+      {/* Content */}
+      <div className="relative z-10 container mx-auto px-6 md:px-10">
+        <div className="max-w-3xl">
+          <AnimatePresence mode="wait">
+            <motion.div key={index} variants={container} initial="hidden" animate="visible" exit="exit">
+              <motion.div variants={item} className="inline-flex items-center gap-3 mb-6">
+                <span className="h-px w-10 bg-accent" />
+                <span className="text-xs font-semibold tracking-[0.25em] uppercase text-accent">
+                  {slide.eyebrow}
+                </span>
+              </motion.div>
+
+              <motion.h2
+                variants={item}
+                className="text-sm md:text-base font-bold tracking-[0.3em] uppercase text-white/70 mb-4"
+              >
+                {slide.label}
+              </motion.h2>
+
+              <h1 className="text-4xl md:text-6xl lg:text-7xl tracking-tight mb-6 leading-[1.08] text-white drop-shadow-[0_2px_20px_rgba(0,0,0,0.35)]">
+                <motion.span variants={item} className="block font-light text-accent">
+                  {slide.titleTop}
+                </motion.span>
+                <motion.span variants={item} className="block mt-1 font-bold">
+                  {slide.titleBottom}
+                </motion.span>
+              </h1>
+
+              <motion.p
+                variants={item}
+                className="text-base md:text-lg text-white/80 max-w-2xl mb-10 leading-relaxed font-light"
+              >
+                {slide.description}
+              </motion.p>
+
+              <motion.div variants={item}>
+                <a
+                  href={slide.cta.href}
+                  className="group inline-flex items-center gap-3 text-sm font-medium uppercase tracking-[0.15em] text-white"
+                >
+                  <span className="w-11 h-11 rounded-full border-[1.5px] border-white/50 flex items-center justify-center transition-all duration-300 group-hover:bg-accent group-hover:border-accent group-hover:text-white">
+                    <ChevronRight
+                      size={16}
+                      strokeWidth={2.5}
+                      className="transition-transform duration-300 group-hover:translate-x-0.5"
+                    />
+                  </span>
+                  <span className="relative pb-1">
+                    {slide.cta.label}
+                    <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-accent transition-all duration-300 group-hover:w-full" />
+                  </span>
+                </a>
+              </motion.div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {/* Side arrows */}
+      {[
+        { onClick: prev, label: "Previous slide", Icon: ChevronLeft, side: "left-4 md:left-6" },
+        { onClick: next, label: "Next slide", Icon: ChevronRight, side: "right-4 md:right-6" },
+      ].map(({ onClick, label, Icon, side }) => (
+        <button
+          key={label}
+          onClick={onClick}
+          aria-label={label}
+          style={{ borderRadius: 9999 }}
+          className={`hidden sm:flex absolute ${side} top-1/2 -translate-y-1/2 z-20 w-12 h-12 items-center justify-center bg-white/10 border border-white/20 text-white backdrop-blur-md shadow-lg transition-all duration-300 hover:bg-accent hover:border-accent hover:scale-110`}
+        >
+          <Icon size={22} strokeWidth={2} />
+        </button>
+      ))}
+
+      {/* Pill indicator */}
+      <div
+        style={{ borderRadius: 9999 }}
+        className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-3 py-2 bg-black/25 backdrop-blur-md border border-white/10"
+      >
+        {SLIDES.map((s, i) => (
+          <button
+            key={s.id}
+            onClick={() => goTo(i)}
+            aria-label={`Go to slide ${i + 1}: ${s.label}`}
+            style={{ borderRadius: 9999 }}
+            className={`relative h-2 overflow-hidden transition-all duration-500 ${
+              i === index ? "w-10 bg-white/30" : "w-2 bg-white/50 hover:bg-white/80"
+            }`}
+          >
+            {i === index && (
+              <motion.span
+                key={`bar-${index}-${paused}`}
+                style={{ borderRadius: 9999 }}
+                className="absolute inset-y-0 left-0 bg-accent"
+                initial={{ width: "0%" }}
+                animate={{ width: paused ? "40%" : "100%" }}
+                transition={{ duration: paused ? 0.4 : SLIDE_DURATION / 1000, ease: "linear" }}
+              />
+            )}
+          </button>
+        ))}
+      </div>
     </section>
   );
 };
 
 export default Hero;
-

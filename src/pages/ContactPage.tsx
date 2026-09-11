@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import ContactFooter from '../components/ContactFooter';
-import BusinessPortfolio from '../components/BusinessPortfolio';
 import { MapPin, Phone, Mail, Clock, ArrowRight, CheckCircle, Send, ChevronDown, Linkedin, Facebook, Instagram, Youtube } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -73,6 +72,8 @@ const ContactPage = () => {
       border: 'border-[#cb9733]/20',
       glow: 'hover:shadow-[#cb9733]/15',
       ring: 'bg-[#cb9733]/10 border-[#cb9733]/20 group-hover:bg-[#cb9733]/20',
+      textColor: 'text-[#cb9733]',
+      iconColor: 'text-[#cb9733]',
     },
     {
       icon: Mail,
@@ -85,6 +86,8 @@ const ContactPage = () => {
       border: 'border-brand-blue/15',
       glow: 'hover:shadow-brand-blue/15',
       ring: 'bg-brand-blue/8 border-brand-blue/15 group-hover:bg-brand-blue/15',
+      textColor: 'text-brand-blue dark:text-blue-400',
+      iconColor: 'text-brand-blue dark:text-blue-400',
     },
     {
       icon: MapPin,
@@ -97,6 +100,8 @@ const ContactPage = () => {
       border: 'border-[#cb9733]/20',
       glow: 'hover:shadow-[#cb9733]/15',
       ring: 'bg-[#cb9733]/10 border-[#cb9733]/20 group-hover:bg-[#cb9733]/20',
+      textColor: 'text-[#cb9733]',
+      iconColor: 'text-[#cb9733]',
     },
     {
       icon: Clock,
@@ -109,7 +114,19 @@ const ContactPage = () => {
       border: 'border-brand-blue/15',
       glow: 'hover:shadow-brand-blue/15',
       ring: 'bg-brand-blue/8 border-brand-blue/15 group-hover:bg-brand-blue/15',
+      textColor: 'text-brand-blue dark:text-blue-400',
+      iconColor: 'text-brand-blue dark:text-blue-400',
     },
+  ];
+
+  const COMPANIES = [
+    { id: '', label: 'Please select a company...' },
+    { id: 'jb_group', label: 'JB Group (General)' },
+    { id: 'reliance_trade', label: 'Reliance Trade International' },
+    { id: 'lpg', label: 'LPG Bottling & Distribution' },
+    { id: 'ev', label: 'Electric Mobility' },
+    { id: 'real_estate', label: 'Commercial Real Estate' },
+    { id: 'other', label: 'Other' }
   ];
 
   return (
@@ -121,11 +138,7 @@ const ContactPage = () => {
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=2000&q=80')] opacity-15 mix-blend-overlay bg-cover bg-center" />
         <div className="absolute inset-0 bg-gradient-to-r from-brand-blue via-brand-blue/90 to-brand-blue/70 z-10" />
 
-        <div className="absolute top-28 right-6 md:right-12 lg:right-auto lg:left-[calc(50%+300px)] xl:left-[calc(50%+400px)] z-30">
-          <a href="/" className="inline-flex items-center text-gray-300 hover:text-white transition-colors uppercase tracking-[0.2em] text-xs font-bold bg-black/20 px-4 py-2 rounded-full backdrop-blur-sm border border-white/10">
-            Return Home <ArrowRight className="ml-2" size={16} />
-          </a>
-        </div>
+
 
         <div className="container mx-auto px-6 relative z-20 w-full max-w-6xl">
           <div className="w-[90%] md:w-[70%] border-l-4 border-[#cb9733] pl-8">
@@ -170,23 +183,23 @@ const ContactPage = () => {
                     {/* shimmer */}
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
 
-                    <div className="flex items-center justify-between">
-                      <motion.div
-                        className={`w-10 h-10 rounded-xl border flex items-center justify-center transition-all duration-300 ${card.ring}`}
-                        animate={{ rotate: 0 }}
-                        whileHover={{ rotate: [0, -12, 12, -6, 6, 0] }}
-                        transition={{ duration: 0.5 }}
-                      >
-                        <card.icon size={18} className="text-[#cb9733]" />
-                      </motion.div>
-                      <span className="text-[9px] font-bold uppercase tracking-widest text-[#cb9733] bg-[#cb9733]/10 border border-[#cb9733]/20 px-2 py-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap">
-                        {card.action}
-                      </span>
-                    </div>
+                      <div className="flex items-center justify-between mb-2">
+                        <motion.div
+                          className={`w-12 h-12 rounded-xl border flex items-center justify-center transition-all duration-300 ${card.ring}`}
+                          animate={{ rotate: 0 }}
+                          whileHover={{ rotate: [0, -12, 12, -6, 6, 0] }}
+                          transition={{ duration: 0.5 }}
+                        >
+                          <card.icon size={22} className={card.iconColor} />
+                        </motion.div>
+                        <span className={`text-[10px] font-bold uppercase tracking-widest bg-white/50 dark:bg-black/20 border px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap ${card.textColor} ${card.border}`}>
+                          {card.action}
+                        </span>
+                      </div>
 
-                    <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">{card.label}</p>
-                    <p className="text-xs font-bold text-foreground leading-snug group-hover:text-[#cb9733] transition-colors duration-300">{card.value}</p>
-                    <p className="text-[10px] text-muted-foreground">{card.sub}</p>
+                      <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">{card.label}</p>
+                      <p className={`text-lg md:text-xl font-bold leading-snug transition-colors duration-300 ${card.textColor}`}>{card.value}</p>
+                      <p className="text-sm text-muted-foreground">{card.sub}</p>
 
                     {/* bottom glow sweep */}
                     <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#cb9733]/60 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
@@ -194,42 +207,21 @@ const ContactPage = () => {
                 ))}
               </div>
 
-              {/* Social Media Card */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.35, type: 'spring', stiffness: 200, damping: 18 }}
-                className="rounded-2xl bg-brand-blue text-white p-6 relative overflow-hidden"
-              >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[#cb9733]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+              {/* Follow Us Card */}
+              <div className="rounded-2xl border border-border bg-card p-5 flex flex-col gap-3 shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden group">
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-[#cb9733]/5 to-transparent pointer-events-none" />
                 <div className="relative z-10">
-                  <p className="text-[#cb9733] text-[10px] font-bold tracking-[0.3em] uppercase mb-1">Connect With Us</p>
-                  <h3 className="text-white text-base font-bold mb-1">Follow JB Group</h3>
-                  <p className="text-white/50 text-xs font-light mb-4">Stay updated with our latest news, milestones and opportunities.</p>
-
-                  <div className="grid grid-cols-4 gap-2">
-                    {[
-                      { Icon: Linkedin,  label: 'LinkedIn',  href: '#', color: 'hover:bg-blue-600' },
-                      { Icon: Facebook,  label: 'Facebook',  href: '#', color: 'hover:bg-blue-500' },
-                      { Icon: Instagram, label: 'Instagram', href: '#', color: 'hover:bg-pink-500' },
-                      { Icon: Youtube,   label: 'YouTube',   href: '#', color: 'hover:bg-red-600' },
-                    ].map(({ Icon, label, href, color }, i) => (
-                      <motion.a
-                        key={i}
-                        href={href}
-                        title={label}
-                        whileHover={{ scale: 1.12, y: -3 }}
-                        whileTap={{ scale: 0.92 }}
-                        className={`flex flex-col items-center gap-1.5 p-3 rounded-xl bg-white/5 border border-white/10 ${color} border-transparent transition-all duration-250 group`}
-                      >
-                        <Icon size={18} className="text-white/70 group-hover:text-white transition-colors" />
-                        <span className="text-[9px] text-white/40 group-hover:text-white/80 font-medium tracking-wide transition-colors">{label}</span>
-                      </motion.a>
-                    ))}
-                  </div>
+                  <p className="text-[11px] font-bold text-[#cb9733] uppercase tracking-widest mb-1">Connect With Us</p>
+                  <h3 className="text-lg font-bold text-foreground">Follow JB Group</h3>
                 </div>
-              </motion.div>
+                <div className="flex gap-3 mt-1 relative z-10">
+                  {[Linkedin, Facebook, Instagram, Youtube].map((Icon, idx) => (
+                    <a key={idx} href="#" className="w-10 h-10 bg-brand-blue flex items-center justify-center text-white hover:bg-[#cb9733] hover:shadow-[0_0_15px_rgba(203,151,51,0.3)] transition-all duration-300">
+                      <Icon size={18} />
+                    </a>
+                  ))}
+                </div>
+              </div>
 
               {/* Google Map */}
               <div id="map" className="rounded-2xl overflow-hidden border border-border shadow-md" style={{ height: '220px' }}>
@@ -277,7 +269,8 @@ const ContactPage = () => {
                       <h2 className="text-2xl font-bold text-foreground">Send Us a Message</h2>
                     </div>
 
-                    <form onSubmit={handleSubmit} noValidate className="space-y-5">
+                    <form onSubmit={handleSubmit} noValidate className="space-y-6 bg-card p-6 md:p-10 rounded-3xl border border-border shadow-2xl relative overflow-hidden">
+                      <div className="absolute top-0 left-0 w-full h-1.5 bg-brand-blue"></div>
 
                       {/* Inquiry Dropdown */}
                       <div>
@@ -342,12 +335,24 @@ const ContactPage = () => {
                         </div>
                       </div>
 
-                      {/* Company */}
+                      {/* Company Dropdown */}
                       <div>
                         <label className="block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Company / Organization (Optional)</label>
-                        <input type="text" name="company" value={formData.company}
-                          onChange={handleChange} onFocus={() => setFocused('company')} onBlur={() => setFocused(null)}
-                          placeholder="Your company name" className={inputClass('company')} />
+                        <div className="relative">
+                          <select
+                            name="company"
+                            value={formData.company}
+                            onChange={handleChange}
+                            onFocus={() => setFocused('company')}
+                            onBlur={() => setFocused(null)}
+                            className={`${inputClass('company')} appearance-none pr-10 cursor-pointer`}
+                          >
+                            {COMPANIES.map(c => (
+                              <option key={c.id} value={c.id} className="bg-background text-foreground">{c.label}</option>
+                            ))}
+                          </select>
+                          <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                        </div>
                       </div>
 
                       {/* Message */}
@@ -391,7 +396,6 @@ const ContactPage = () => {
         </div>
       </section>
 
-      <BusinessPortfolio titleLine1="Our" titleLine2="Businesses" subtitle="Diversification & Growth" />
       <ContactFooter />
     </div>
   );

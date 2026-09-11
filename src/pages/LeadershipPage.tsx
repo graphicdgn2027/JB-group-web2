@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import Header from "../components/Header";
 import ContactFooter from "../components/ContactFooter";
-import BusinessPortfolio from "../components/BusinessPortfolio";
 import { Quote, ArrowRight } from "lucide-react";
 import { motion } from "motion/react";
 
@@ -18,12 +17,6 @@ const LeadershipPage = () => {
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=2000&q=80')] opacity-20 mix-blend-overlay bg-cover bg-center grayscale filter contrast-125 saturate-50" />
         <div className="absolute inset-0 bg-brand-blue/70 z-10"></div>
         
-        {/* Top Right Link */}
-        <div className="absolute top-28 right-6 md:right-12 lg:right-auto lg:left-[calc(50%+300px)] xl:left-[calc(50%+400px)] z-30">
-          <a href="/" className="inline-flex items-center text-gray-300 hover:text-white transition-colors uppercase tracking-[0.2em] text-xs font-bold bg-black/20 px-4 py-2 rounded-full backdrop-blur-sm border border-white/10">
-            Return Home <ArrowRight className="ml-2" size={16} />
-          </a>
-        </div>
 
         <div className="container mx-auto px-6 relative z-20 flex flex-col justify-center h-full pt-16 w-full max-w-6xl">
           <div className="w-[90%] md:w-[75%] lg:w-[60%] border-l-4 border-brand-red pl-6 md:pl-12 lg:pl-16">
@@ -88,7 +81,7 @@ const LeadershipPage = () => {
             <div className="w-16 h-1 bg-brand-red mx-auto mt-6"></div>
           </div>
           
-          <div className="space-y-32">
+          <div className="flex flex-col gap-16 md:gap-24">
             
             {/* Subhas Jajodia */}
             <motion.div
@@ -135,20 +128,20 @@ const LeadershipPage = () => {
               transition={{ duration: 0.8 }}
               className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start"
             >
-              <div className="lg:col-span-3 lg:col-start-10 lg:order-2 relative group">
+              <div className="lg:col-span-3 relative group">
                 <div className="aspect-[3/4] overflow-hidden shadow-2xl relative z-10 border-[8px] border-white dark:border-[#1a2555]">
                   <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=800&q=80" alt="Mr. Ashish Jajodia" className="w-full h-full object-cover filter contrast-125 saturate-50 transition-all duration-700 group-hover:scale-105 group-hover:saturate-100" />
                 </div>
-                <div className="absolute top-10 -right-10 w-full h-full bg-brand-red/10 -z-10" />
+                <div className="absolute top-10 -left-10 w-full h-full bg-brand-blue/10 -z-10" />
               </div>
-              
-              <div className="lg:col-span-9 lg:col-start-1 lg:order-1 lg:pr-10 pt-8 lg:text-right">
+
+              <div className="lg:col-span-9 lg:pl-10 pt-8">
                 <div className="border-b-2 border-brand-red pb-6 mb-8">
                   <h3 className="text-5xl md:text-6xl font-black text-foreground tracking-tighter mb-2">Ashish Jajodia</h3>
                   <p className="text-xl tracking-widest uppercase text-muted-foreground font-bold">Joint Managing Director</p>
                 </div>
-                
-                <div className="prose prose-lg text-muted-foreground font-light leading-relaxed md:columns-2 gap-10 text-left">
+
+                <div className="prose prose-lg text-muted-foreground font-light leading-relaxed md:columns-2 gap-10">
                   <p className="first-letter:text-5xl first-letter:font-bold first-letter:text-brand-red first-letter:float-left first-letter:mr-2 first-letter:mt-[-0.1em]">
                     Mr. Ashish Jajodia represents the fourth generation of the family’s entrepreneurial journey and plays an active role in JB Group’s strategic direction, diversification and business development.
                   </p>
@@ -214,8 +207,6 @@ const LeadershipPage = () => {
           <div className="w-px h-12 bg-brand-red mx-auto"></div>
         </div>
       </section>
-
-      <BusinessPortfolio titleLine1="Our" titleLine2="Businesses" subtitle="Diversification & Growth" />
 
       <ContactFooter />
     </div>

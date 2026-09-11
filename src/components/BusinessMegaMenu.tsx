@@ -17,7 +17,7 @@ const BusinessMegaMenu = ({ isOpen }: { isOpen: boolean }) => {
             {/* Trading & Energy */}
             <div className="lg:col-span-7 lg:border-r border-white/10 lg:pr-8">
               <h3 className="font-semibold text-sm uppercase tracking-widest text-brand-red mb-6">
-                Trading, Mobility & Energy
+                Industries, Trading, Mobility & Energy
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {[

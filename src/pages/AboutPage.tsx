@@ -4,11 +4,18 @@ import { ArrowLeft, ArrowRight, Quote } from "lucide-react";
 import Header from "../components/Header";
 import ContactFooter from "../components/ContactFooter";
 import CorporateTimeline from "../components/CorporateTimeline";
-import BusinessPortfolio from "../components/BusinessPortfolio";
 import { motion } from "motion/react";
 
 const AboutPage = () => {
   useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const el = document.querySelector(hash);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+    }
     window.scrollTo(0, 0);
   }, []);
   return (
@@ -24,12 +31,7 @@ const AboutPage = () => {
           className="absolute inset-0 w-full h-full object-cover filter contrast-125 saturate-50"
         />
 
-        {/* Top Right Link */}
-        <div className="absolute top-28 right-6 md:right-12 lg:right-auto lg:left-[calc(50%+300px)] xl:left-[calc(50%+400px)] z-30">
-          <Link to="/" className="inline-flex items-center text-gray-300 hover:text-white transition-colors uppercase tracking-[0.2em] text-xs font-bold bg-black/20 px-4 py-2 rounded-full backdrop-blur-sm border border-white/10">
-            Return Home <ArrowRight className="ml-2" size={16} />
-          </Link>
-        </div>
+
 
         <div className="container mx-auto px-6 relative z-20 flex flex-col justify-center h-full pt-16 w-full max-w-6xl">
           <div className="w-[90%] md:w-[75%] lg:w-[60%] border-l-4 border-brand-red pl-6 md:pl-12 lg:pl-16">
@@ -63,7 +65,7 @@ const AboutPage = () => {
         <div className="absolute top-0 right-0 w-1/3 h-full bg-muted/30 -z-10" />
 
         <div className="container mx-auto px-6 max-w-6xl">
-          <div className="flex flex-col lg:flex-row gap-16">
+          <div className="flex flex-col lg:flex-row gap-16 mb-16">
 
             {/* Left Column: Main Editorial Text */}
             <div className="lg:w-2/3">
@@ -80,18 +82,10 @@ const AboutPage = () => {
                   Our journey has always been about more than products. It is about trust, relationships, reliability and the confidence to grow. As we expand into new sectors, we carry forward the entrepreneurial spirit that has defined our family for generations, blending traditional values with modern business practices.
                 </p>
               </div>
-
-              {/* Editorial Pull Quote */}
-              <div className="my-16 py-12 border-t border-b border-brand-red/30 relative">
-                <Quote size={80} className="absolute top-4 left-0 text-brand-red/10 -z-10" />
-                <h3 className="text-3xl md:text-4xl font-bold text-foreground leading-snug font-serif italic text-center max-w-3xl mx-auto">
-                  "Our journey has always been about more than products. It is about trust, relationships, reliability and the confidence to grow."
-                </h3>
-              </div>
             </div>
 
             {/* Right Column: Editorial Sidebar */}
-            <div className="lg:w-1/3 space-y-12">
+            <div className="lg:w-1/3">
               <div className="p-10 bg-brand-blue text-white shadow-2xl relative overflow-hidden border border-brand-blue">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-brand-red/20 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
                 <h4 className="text-2xl font-bold mb-6 flex items-center gap-4 uppercase tracking-widest text-sm text-brand-red">
@@ -112,39 +106,57 @@ const AboutPage = () => {
                   </li>
                 </ul>
               </div>
+            </div>
+          </div>
 
-              <div className="p-8 border border-border bg-card rounded-2xl shadow-sm">
-                <h4 className="text-xl font-bold mb-4 text-foreground uppercase tracking-widest text-sm">Vision</h4>
-                <p className="text-muted-foreground font-light leading-relaxed">
-                  To build a trusted, diversified and future-ready business group that creates sustainable value through excellence, innovation, responsible growth and enduring relationships.
-                </p>
-              </div>
+          {/* Centered Quote */}
+          <div className="mb-16 py-12 border-t border-b border-brand-red/30 relative text-center">
+            <Quote size={80} className="absolute top-4 left-1/2 -translate-x-1/2 text-brand-red/10 -z-10" />
+            <h3 className="text-3xl md:text-4xl font-bold text-foreground leading-snug font-serif italic max-w-4xl mx-auto">
+              "Our journey has always been about more than products. It is about trust, relationships, reliability and the confidence to grow."
+            </h3>
+          </div>
 
-              <div className="p-8 border border-border bg-card rounded-2xl shadow-sm">
-                <h4 className="text-xl font-bold mb-4 text-foreground uppercase tracking-widest text-sm">Mission</h4>
-                <p className="text-muted-foreground font-light leading-relaxed">
-                  To create lasting value by delivering dependable products, operating with integrity, embracing innovation and continuously improving the way we do business.
-                </p>
-              </div>
+          {/* Vision and Mission (One Row) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <div className="p-8 rounded-2xl shadow-lg border border-[#cb9733]/20 relative overflow-hidden group hover:border-[#cb9733]/50 transition-colors bg-card text-center">
+              <div className="absolute top-0 left-0 w-full h-1.5 bg-[#cb9733]"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-[#cb9733]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <h4 className="text-xl font-bold mb-4 text-brand-blue dark:text-blue-400 uppercase tracking-widest justify-center flex items-center gap-3">
+                Vision
+              </h4>
+              <p className="text-muted-foreground font-light leading-relaxed relative z-10">
+                To build a trusted, diversified and future-ready business group that creates sustainable value through excellence, innovation, responsible growth and enduring relationships.
+              </p>
             </div>
 
+            <div className="p-8 rounded-2xl shadow-lg border border-brand-blue/20 relative overflow-hidden group hover:border-brand-blue/50 transition-colors bg-card text-center">
+              <div className="absolute top-0 left-0 w-full h-1.5 bg-brand-blue"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-brand-blue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <h4 className="text-xl font-bold mb-4 text-[#cb9733] uppercase tracking-widest justify-center flex items-center gap-3">
+                Mission
+              </h4>
+              <p className="text-muted-foreground font-light leading-relaxed relative z-10">
+                To create lasting value by delivering dependable products, operating with integrity, embracing innovation and continuously improving the way we do business.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Core Values Editorial Grid */}
-      <section className="py-24 bg-muted relative overflow-hidden">
+      <section className="py-12 bg-muted relative overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[20vw] font-black text-brand-blue/5 whitespace-nowrap pointer-events-none select-none">
           CORE VALUES
         </div>
 
         <div className="container mx-auto px-6 max-w-6xl relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-black text-foreground mb-6">The Pillars of Our Success</h2>
-            <div className="w-24 h-1 bg-brand-red mx-auto"></div>
+          <div className="text-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">The Pillars of Our Success</h2>
+            <div className="w-16 h-1 bg-brand-red mx-auto"></div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
               { title: "Integrity", desc: "We conduct business honestly, ethically and transparently." },
               { title: "Quality", desc: "We believe quality is a responsibility, not an option." },
@@ -152,24 +164,50 @@ const AboutPage = () => {
               { title: "Customer Focus", desc: "We listen, understand and respond to evolving customer needs." },
               { title: "Innovation", desc: "We embrace new ideas, technologies and opportunities." },
               { title: "Responsibility", desc: "We pursue growth that creates value for business and society." }
-            ].map((value, idx) => (
-              <motion.div
-                key={idx}
-                whileHover={{ y: -5 }}
-                className="bg-card p-8 border-t-4 border-brand-red shadow-lg transition-transform"
-              >
-                <div className="text-5xl font-serif text-brand-red/20 mb-4 font-black">{`0${idx + 1}`}</div>
-                <h3 className="text-2xl font-bold text-foreground mb-3">{value.title}</h3>
-                <p className="text-muted-foreground font-light">{value.desc}</p>
-              </motion.div>
-            ))}
+            ].map((value, idx) => {
+              // Determine card colors based on index
+              let bgClass = "bg-card"; // Default white/card
+              let textClass = "text-foreground";
+              let descClass = "text-muted-foreground";
+              let iconContainerClass = "bg-brand-red/5 group-hover:bg-brand-red/10";
+              let iconClass = "bg-brand-red";
+
+              if (idx === 1) { // Center top
+                bgClass = "bg-brand-blue";
+                textClass = "text-white";
+                descClass = "text-white/80";
+                iconContainerClass = "bg-white/10 group-hover:bg-white/20";
+                iconClass = "bg-white";
+              } else if (idx === 4) { // Center bottom
+                bgClass = "bg-[#cb9733]";
+                textClass = "text-white";
+                descClass = "text-white/90";
+                iconContainerClass = "bg-white/20 group-hover:bg-white/30";
+                iconClass = "bg-white";
+              }
+
+              return (
+                <motion.div
+                  key={idx}
+                  whileHover={{ y: -3, scale: 1.02 }}
+                  className={`group ${bgClass} p-6 rounded-2xl border border-border hover:border-brand-red/30 shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden flex flex-col justify-center items-center text-center h-full`}
+                >
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-red to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-4 transition-colors ${iconContainerClass}`}>
+                     <div className={`w-3 h-3 rounded-full ${iconClass}`} />
+                  </div>
+                  <h3 className={`text-xl font-bold mb-2 ${textClass}`}>{value.title}</h3>
+                  <p className={`text-sm font-light leading-relaxed ${descClass}`}>{value.desc}</p>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      <CorporateTimeline />
-
-      <BusinessPortfolio titleLine1="Our" titleLine2="Businesses" subtitle="Diversification & Growth" />
+      <div id="journey">
+        <CorporateTimeline />
+      </div>
 
       <ContactFooter />
     </div>

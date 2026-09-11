@@ -6,6 +6,7 @@ import PortfolioDetails from "./pages/PortfolioDetails.tsx";
 import ContactPage from "./pages/ContactPage.tsx";
 import AboutPage from "./pages/AboutPage.tsx";
 import LeadershipPage from "./pages/LeadershipPage.tsx";
+import BrandPartnersPage from "./pages/BrandPartnersPage.tsx";
 import "./styles/index.css";
 
 createRoot(document.getElementById("root")!).render(
@@ -17,6 +18,7 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/portfolio/:id" element={<PortfolioDetails />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/leadership" element={<LeadershipPage />} />
+        <Route path="/brand-partners" element={<BrandPartnersPage />} />
       </Routes>
     </BrowserRouter>
   </ThemeProvider>
