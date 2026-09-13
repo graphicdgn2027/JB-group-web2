@@ -93,7 +93,7 @@ const LeadershipPage = () => {
             >
               <div className="lg:col-span-3 relative group">
                 <div className="aspect-[3/4] overflow-hidden shadow-2xl relative z-10 border-[8px] border-white dark:border-[#1a2555]">
-                  <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&q=80" alt="Mr. Subhas Jajodia" className="w-full h-full object-cover filter contrast-125 saturate-50 transition-all duration-700 group-hover:scale-105 group-hover:saturate-100" />
+                  <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&q=80" alt="Mr. Subhas Jajodia" className="w-full h-full object-cover filter grayscale contrast-125 transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0 group-hover:saturate-100" />
                 </div>
                 <div className="absolute top-10 -left-10 w-full h-full bg-brand-blue/10 -z-10" />
               </div>
@@ -129,8 +129,8 @@ const LeadershipPage = () => {
               className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start"
             >
               <div className="lg:col-span-3 relative group">
-                <div className="aspect-[3/4] overflow-hidden shadow-2xl relative z-10 border-[8px] border-white dark:border-[#1a2555]">
-                  <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=800&q=80" alt="Mr. Ashish Jajodia" className="w-full h-full object-cover filter contrast-125 saturate-50 transition-all duration-700 group-hover:scale-105 group-hover:saturate-100" />
+                <div className="aspect-[3/4] overflow-hidden shadow-2xl relative z-10 border-[8px] border-white dark:border-[#1a2555] flex items-center justify-center bg-zinc-900">
+                  <img src="/assets/Leadership/Ashish Jajodia.jpeg" alt="Mr. Ashish Jajodia" className="w-full h-full object-cover object-top filter grayscale contrast-125 transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0 group-hover:saturate-100" />
                 </div>
                 <div className="absolute top-10 -left-10 w-full h-full bg-brand-blue/10 -z-10" />
               </div>

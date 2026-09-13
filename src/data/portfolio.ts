@@ -43,10 +43,10 @@ export const PORTFOLIO_DATA: Record<string, any> = {
       }
     ],
     brands: [
-      { name: "Mobil", logo: "/assets/reliance-gallery/mobil.png" },
-      { name: "IPOL", logo: "/assets/reliance-gallery/ipol.jpg" },
-      { name: "Volta", logo: "/assets/reliance-gallery/volta.jpg" },
-      { name: "Eastman", logo: "/assets/reliance-gallery/eastman.jpg" }
+      { name: "Mobil", logo: "/assets/reliance-gallery/logo/Mobil-logo.png" },
+      { name: "IPOL", logo: "/assets/reliance-gallery/logo/ipol-Logo.png" },
+      { name: "Volta", logo: "/assets/reliance-gallery/logo/logo-01.png" },
+      { name: "Eastman", logo: "/assets/reliance-gallery/logo/Eastman Logo.png" }
     ],
     gallery: [
       "/assets/reliance-gallery/cover-image.png",
@@ -60,7 +60,7 @@ export const PORTFOLIO_DATA: Record<string, any> = {
     id: "kabsons-industries",
     title: "Kabsons Industries",
     icon: Zap,
-    img: "https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?w=1600&q=80",
+    img: "/assets/Kabsons/cover.png",
     description: "LPG Bottling. Strengthening the Group's presence in Nepal's essential energy sector.",
     overview: "Kabsons Industries Pvt. Ltd. represents JB Group's presence in Nepal's LPG sector and marks an important step in the Group's diversification into essential energy businesses. The company operates an LPG bottling facility in Dhading and supports the supply of LPG to the Nepalese market through disciplined operations, safety-focused processes and dependable service. Kabsons reflects JB Group's approach to diversification: identify a meaningful opportunity, invest strategically, strengthen operations and build long-term value.",
     details: [
@@ -76,7 +76,7 @@ export const PORTFOLIO_DATA: Record<string, any> = {
       { label: "Operation", value: "Bottling" }
     ],
     brands: [
-      { name: "Shreemaya Gas", logo: "/assets/shreemaya.png", fallbackText: "Shreemaya Gas" }
+      { name: "Shreemaya Gas", logo: "/assets/Kabsons/shreemaya logo-np.png", fallbackText: "Shreemaya Gas" }
     ],
     gallery: [
       "https://images.unsplash.com/photo-1563720223185-11003d516935?w=800&q=80",

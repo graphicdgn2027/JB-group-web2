@@ -1,18 +1,26 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Search, ChevronDown, Menu, X, Sun, Moon } from "lucide-react";
+import { ChevronDown, Menu, X, Sun, Moon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Logo from "./Logo";
 import BusinessMegaMenu from "./BusinessMegaMenu";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation } from "react-router";
+import { useSection } from "../content/ContentProvider";
+
+/** The Businesses dropdown is generated, so it sits at a fixed slot in the menu. */
+const DROPDOWN_INDEX = 2;
+
+type NavEntry =
+  | { type: "dropdown"; key: string }
+  | { type: "link"; key: string; name: string; path: string };
 
 const Header = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const [isBusinessesOpen, setIsBusinessesOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
+  const nav = useSection("nav");
 
   useEffect(() => {
     setMounted(true);
@@ -48,13 +56,17 @@ const Header = () => {
     setMobileOpen(false);
   };
 
-  const navItems = [
-    { type: "link", name: "Home", path: "/" },
-    { type: "link", name: "About", path: "/about" },
-    { type: "dropdown", name: "Businesses" },
-    { type: "link", name: "Brand & Businesses Partners", path: "/brand-partners" },
-    { type: "link", name: "Leadership", path: "/leadership" },
-    { type: "link", name: "Contact Us", path: "/contact" },
+  const links: NavEntry[] = nav.items.map((item) => ({
+    type: "link" as const,
+    key: item.id,
+    name: item.label,
+    path: item.href,
+  }));
+
+  const navItems: NavEntry[] = [
+    ...links.slice(0, DROPDOWN_INDEX),
+    { type: "dropdown", key: "businesses" },
+    ...links.slice(DROPDOWN_INDEX),
   ];
 
   return (
@@ -70,7 +82,7 @@ const Header = () => {
 
         {/* Center: Desktop Nav */}
         <nav className="hidden lg:flex flex-1 justify-center gap-0.5 xl:gap-1 items-center text-sm font-medium px-4 overflow-hidden">
-          {navItems.map((item, idx) => {
+          {navItems.map((item) => {
             let isActive = false;
             if (item.type === "dropdown") {
               isActive = isBusinessesOpen;
@@ -80,13 +92,13 @@ const Header = () => {
               } else if (item.path?.startsWith("/#")) {
                 isActive = location.pathname === "/" && location.hash === item.path.substring(1);
               } else {
-                isActive = location.pathname === item.path || (item.path !== "/" && location.pathname.startsWith(item.path as string));
+                isActive = location.pathname === item.path || (item.path !== "/" && location.pathname.startsWith(item.path));
               }
             }
 
             return item.type === "dropdown" ? (
               <button
-                key={idx}
+                key={item.key}
                 onClick={() => setIsBusinessesOpen(!isBusinessesOpen)}
                 className={`flex items-center gap-1 px-2 xl:px-4 py-2  transition-all relative group whitespace-nowrap ${
                   isActive
@@ -107,9 +119,9 @@ const Header = () => {
               </button>
             ) : (
               <a
-                key={idx}
+                key={item.key}
                 href={item.path}
-                onClick={(e) => handleHashNav(e, item.path as string)}
+                onClick={(e) => handleHashNav(e, item.path)}
                 className={`px-2 xl:px-4 py-2  transition-all relative group whitespace-nowrap ${
                   isActive
                     ? "text-brand-red"
@@ -168,10 +180,10 @@ const Header = () => {
               : "bg-white/95 border-gray-200"
           }`}
         >
-          {navItems.map((item, idx) => (
+          {navItems.map((item) => (
             item.type === "dropdown" ? (
               <button
-                key={idx}
+                key={item.key}
                 onClick={() => setIsBusinessesOpen(!isBusinessesOpen)}
                 className={`w-full text-left py-3 px-4  transition flex items-center justify-between ${
                   isDark
@@ -187,7 +199,7 @@ const Header = () => {
               </button>
             ) : (
               <a
-                key={idx}
+                key={item.key}
                 href={item.path}
                 className={`block py-3 px-4  transition ${
                   location.pathname === item.path || (item.path !== "/" && location.pathname.startsWith(item.path))
@@ -196,7 +208,7 @@ const Header = () => {
                       ? "text-white/80 hover:text-white hover:bg-white/5"
                       : "text-brand-blue/80 hover:text-brand-blue hover:bg-black/5"
                 }`}
-                onClick={(e) => handleHashNav(e, item.path as string)}
+                onClick={(e) => handleHashNav(e, item.path)}
               >
                 {item.name}
               </a>

@@ -1,21 +1,24 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useMemo } from "react";
 import { useParams, Link } from "react-router";
-import { ArrowLeft, ArrowRight, Car, Cpu, Zap, Briefcase, Stethoscope, Store, Building2, HardHat, CheckCircle2, Quote } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Header from "../components/Header";
 import ContactFooter from "../components/ContactFooter";
-import { motion, useScroll, useTransform } from "motion/react";
-
-import { PORTFOLIO_DATA } from "../data/portfolio";
+import { motion } from "motion/react";
+import { usePublishedBusinesses } from "../content/ContentProvider";
 
 const PortfolioDetails = () => {
   const { id } = useParams();
-  
+  const businesses = usePublishedBusinesses();
+  const containerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
 
-  const data = PORTFOLIO_DATA[id?.toLowerCase() || ""];
-  const containerRef = useRef<HTMLDivElement>(null);
+  const data = useMemo(
+    () => businesses.find((b) => b.slug.toLowerCase() === (id ?? "").toLowerCase()),
+    [businesses, id]
+  );
 
   if (!data) {
     return (
@@ -30,48 +33,48 @@ const PortfolioDetails = () => {
     );
   }
 
-  const Icon = data.icon;
+  const [firstWord, ...restWords] = data.title.split(" ");
 
   return (
     <div ref={containerRef} className="min-h-screen font-sans bg-background text-foreground overflow-x-hidden selection:bg-brand-red selection:text-white">
       <Header />
-      
+
       {/* Magazine Cover Hero */}
       <section className="h-[350px] pt-20 bg-brand-blue text-white relative flex items-center border-b-[16px] border-brand-red overflow-hidden">
         <div className="absolute inset-0 bg-brand-blue/70 z-10"></div>
-        <img 
-          src={data.img} 
-          alt={data.title} 
+        <img
+          src={data.heroImage}
+          alt={data.title}
           className="absolute inset-0 w-full h-full object-cover filter contrast-125 saturate-50"
         />
-        
+
 
         <div className="container mx-auto px-6 relative z-20 flex flex-col justify-center h-full pt-16 w-full max-w-6xl">
-          
+
           <div className="w-[90%] md:w-[75%] lg:w-[60%] border-l-4 border-brand-red pl-6 md:pl-12 lg:pl-16">
             {data.logo && (
               <div className="mb-4">
-                <img 
-                  src={data.logo} 
-                  alt={`${data.title} Logo`} 
-                  className="h-12 md:h-16 object-contain filter brightness-0 invert drop-shadow-xl" 
+                <img
+                  src={data.logo}
+                  alt={`${data.title} Logo`}
+                  className="h-12 md:h-16 object-contain filter brightness-0 invert drop-shadow-xl"
                   onError={(e) => e.currentTarget.style.display = 'none'}
                 />
               </div>
             )}
-            <motion.h1 
+            <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               className="text-2xl md:text-3xl lg:text-4xl font-medium mb-3 tracking-tight leading-[1.2] text-white drop-shadow-2xl line-clamp-2"
             >
-              {data.title.split(' ')[0]} <br/>
+              {firstWord} <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-yellow-500">
-                {data.title.split(' ').slice(1).join(' ')}
+                {restWords.join(" ")}
               </span>
             </motion.h1>
-            
-            <motion.p 
+
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -87,11 +90,11 @@ const PortfolioDetails = () => {
       <section className="py-24 bg-background relative">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
-            
+
             {/* Left Column: Editorial Overview */}
             <div className="lg:w-2/3">
               <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-brand-red mb-8 border-b border-border pb-4">The Overview</h2>
-              
+
               <div className="prose prose-lg md:prose-xl max-w-none text-muted-foreground font-light leading-relaxed md:columns-2 gap-12">
                 <p className="first-letter:text-8xl first-letter:font-black first-letter:text-brand-red first-letter:float-left first-letter:mr-4 first-letter:mt-[-0.15em] first-letter:leading-[0.8]">
                   {data.overview}
@@ -99,27 +102,29 @@ const PortfolioDetails = () => {
               </div>
 
               {/* Focus Areas Pull-out */}
-              <div className="my-20 p-12 border-t-4 border-b border-brand-red bg-muted/30">
-                <h3 className="text-2xl font-black text-foreground mb-8 uppercase tracking-widest text-center">Key Focus Areas</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
-                  {data.details.map((detail: string, idx: number) => (
-                    <div key={idx} className="flex items-start gap-4">
-                      <div className="w-1.5 h-1.5 rounded-full bg-brand-red mt-2.5 shrink-0"></div>
-                      <span className="font-light text-lg text-foreground">{detail}</span>
-                    </div>
-                  ))}
+              {data.details.length > 0 && (
+                <div className="my-20 p-12 border-t-4 border-b border-brand-red bg-muted/30">
+                  <h3 className="text-2xl font-black text-foreground mb-8 uppercase tracking-widest text-center">Key Focus Areas</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
+                    {data.details.map((detail, idx) => (
+                      <div key={idx} className="flex items-start gap-4">
+                        <div className="w-1.5 h-1.5 rounded-full bg-brand-red mt-2.5 shrink-0"></div>
+                        <span className="font-light text-lg text-foreground">{detail}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Right Column: Editorial Sidebar (Stats & CTA) */}
             <div className="lg:w-1/3">
               <div className="sticky top-32 space-y-12">
-                
+
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 gap-6">
-                  {data.stats.map((stat: any, idx: number) => (
-                    <div key={idx} className="border-l-2 border-brand-red pl-6 py-2">
+                  {data.stats.map((stat) => (
+                    <div key={stat.id} className="border-l-2 border-brand-red pl-6 py-2">
                       <div className="text-4xl font-serif font-black text-foreground mb-1 tracking-tight">{stat.value}</div>
                       <div className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{stat.label}</div>
                     </div>
@@ -138,13 +143,13 @@ const PortfolioDetails = () => {
 
               </div>
             </div>
-            
+
           </div>
         </div>
       </section>
 
       {/* Photo Essay Section (Features) */}
-      {data.features && data.features.length > 0 && (
+      {data.features.length > 0 && (
         <section className="py-24 bg-muted border-t border-border relative">
           <div className="container mx-auto px-6 max-w-6xl">
             <div className="mb-20 text-center">
@@ -154,13 +159,13 @@ const PortfolioDetails = () => {
             </div>
 
             <div className="space-y-32">
-              {data.features.map((feature: any, idx: number) => (
-                <div key={idx} className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+              {data.features.map((feature, idx) => (
+                <div key={feature.id} className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                   <div className={`lg:col-span-5 ${idx % 2 !== 0 ? 'lg:order-2' : ''}`}>
                     <div className="bg-white p-2 shadow-2xl border border-border/50">
-                      <img 
-                        src={feature.image} 
-                        alt={feature.title} 
+                      <img
+                        src={feature.image}
+                        alt={feature.title}
                         className="w-full h-auto object-contain filter contrast-125 transition-transform duration-700 hover:scale-105"
                       />
                     </div>
@@ -181,23 +186,23 @@ const PortfolioDetails = () => {
       )}
 
       {/* Editorial Gallery Grid */}
-      {!data.features && data.gallery && data.gallery.length > 0 && (
+      {data.features.length === 0 && data.gallery.length > 0 && (
         <section className="py-24 bg-muted border-t border-border">
           <div className="container mx-auto px-6 max-w-6xl">
             <div className="mb-16">
               <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-brand-red mb-4">Gallery</h2>
               <h3 className="text-5xl font-black text-foreground uppercase tracking-tighter">Visual Archive</h3>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {data.gallery.map((img: string, idx: number) => (
-                <div 
-                  key={idx} 
+              {data.gallery.map((img, idx) => (
+                <div
+                  key={idx}
                   className={`relative overflow-hidden group border-[8px] border-white shadow-xl ${idx === 0 || idx === 3 ? 'md:col-span-2 lg:col-span-2 aspect-[16/9]' : 'aspect-square'}`}
                 >
-                  <img 
-                    src={img} 
-                    alt={`${data.title} archive ${idx + 1}`} 
+                  <img
+                    src={img}
+                    alt={`${data.title} archive ${idx + 1}`}
                     className="w-full h-full object-cover filter contrast-125 saturate-50 transition-all duration-700 group-hover:scale-105 group-hover:saturate-100"
                   />
                 </div>
@@ -208,18 +213,18 @@ const PortfolioDetails = () => {
       )}
 
       {/* Brand Partners */}
-      {data.brands && data.brands.length > 0 && (
+      {data.brands.length > 0 && (
         <section className="py-32 bg-brand-blue text-white relative">
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none mix-blend-overlay"></div>
           <div className="container mx-auto px-6 max-w-6xl relative z-10">
             <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-brand-red mb-16 text-center border-b border-white/10 pb-8">Featured Partners</h2>
-            
+
             <div className="flex flex-wrap justify-center items-center gap-16">
-              {data.brands.map((brand: any, idx: number) => (
-                <div key={idx} className="group cursor-pointer">
-                  <img 
-                    src={brand.logo} 
-                    alt={brand.name} 
+              {data.brands.map((brand) => (
+                <div key={brand.id} className="group cursor-pointer">
+                  <img
+                    src={brand.logo}
+                    alt={brand.name}
                     className="h-24 md:h-32 object-contain filter grayscale opacity-50 transition-all duration-500 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 drop-shadow-2xl"
                   />
                 </div>
@@ -235,4 +240,3 @@ const PortfolioDetails = () => {
 };
 
 export default PortfolioDetails;
-

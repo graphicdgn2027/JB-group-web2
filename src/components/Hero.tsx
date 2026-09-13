@@ -3,77 +3,41 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-
-const SLIDE_DURATION = 6500;
-
-const SLIDES = [
-  {
-    id: "group",
-    image: "/assets/hero-image/kabsonnew.png",
-    eyebrow: "Since 1982",
-    label: "JB Group",
-    titleTop: "Four Decades of Enterprise.",
-    titleBottom: "One Vision for the Future.",
-    description:
-      "JB Group is a diversified business group built on more than four decades of entrepreneurship, market knowledge and trusted relationships in Nepal.",
-    cta: { label: "Learn More", href: "/about" },
-  },
-  {
-    id: "kabsons",
-    image: "/assets/hero-image/kabsonnew.png",
-    eyebrow: "Manufacturing",
-    label: "Kabsons Industries",
-    titleTop: "Engineered for Scale.",
-    titleBottom: "Built to Last.",
-    description:
-      "Industrial manufacturing and LPG bottling capacity that powers homes and businesses across the country, with uncompromising safety standards.",
-    cta: { label: "Our Businesses", href: "/businesses" },
-  },
-  {
-    id: "hipco",
-    image: "/assets/hero-image/hipco-trading.png",
-    eyebrow: "Trading & Distribution",
-    label: "Hipco Trading",
-    titleTop: "Global Brands.",
-    titleBottom: "Local Expertise.",
-    description:
-      "A trusted distribution network connecting world-class products to markets across Nepal through decades of relationships and reach.",
-    cta: { label: "Brand Partners", href: "/brand-partners" },
-  },
-  {
-    id: "mobil",
-    image: "/assets/hero-image/mobil.png",
-    eyebrow: "Lubricants",
-    label: "Mobil Nepal",
-    titleTop: "Performance That",
-    titleBottom: "Moves Industry.",
-    description:
-      "Authorised distribution of world-leading lubricants, keeping vehicles, plants and machinery running at peak efficiency.",
-    cta: { label: "Explore Portfolio", href: "/businesses" },
-  },
-];
+import { useSection } from "../content/ContentProvider";
 
 const Hero = () => {
+  const { slides, slideDurationMs } = useSection("hero");
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [paused, setPaused] = useState(false);
 
-  const goTo = useCallback((next: number) => {
-    setIndex((prev) => {
-      const target = (next + SLIDES.length) % SLIDES.length;
-      setDirection(target === prev ? 1 : target > prev ? 1 : -1);
-      return target;
-    });
-  }, []);
+  const count = slides.length;
+
+  const goTo = useCallback(
+    (next: number) => {
+      if (count === 0) return;
+      setIndex((prev) => {
+        const target = (next + count) % count;
+        setDirection(target === prev ? 1 : target > prev ? 1 : -1);
+        return target;
+      });
+    },
+    [count]
+  );
 
   const next = useCallback(() => goTo(index + 1), [goTo, index]);
   const prev = useCallback(() => goTo(index - 1), [goTo, index]);
 
+  // Editing the slide list can leave the index past the end.
   useEffect(() => {
-    if (paused) return;
-    const timer = setTimeout(() => setIndex((p) => (p + 1) % SLIDES.length), SLIDE_DURATION);
+    if (index >= count && count > 0) setIndex(0);
+  }, [count, index]);
+
+  useEffect(() => {
+    if (paused || count <= 1) return;
+    const timer = setTimeout(() => setIndex((p) => (p + 1) % count), slideDurationMs);
     return () => clearTimeout(timer);
-  }, [index, paused]);
+  }, [index, paused, count, slideDurationMs]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -83,8 +47,6 @@ const Hero = () => {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [next, prev]);
-
-  const slide = SLIDES[index];
 
   const container = {
     hidden: {},
@@ -107,6 +69,9 @@ const Hero = () => {
       transition: { duration: 0.4, ease: [0.4, 0, 1, 1] as const },
     },
   };
+
+  const slide = slides[Math.min(index, count - 1)];
+  if (!slide) return null;
 
   return (
     <section
@@ -185,73 +150,78 @@ const Hero = () => {
                 {slide.description}
               </motion.p>
 
-              <motion.div variants={item}>
-                <a
-                  href={slide.cta.href}
-                  className="group inline-flex items-center gap-3 text-sm font-medium uppercase tracking-[0.15em] text-white"
-                >
-                  <span className="w-11 h-11 rounded-full border-[1.5px] border-white/50 flex items-center justify-center transition-all duration-300 group-hover:bg-accent group-hover:border-accent group-hover:text-white">
-                    <ChevronRight
-                      size={16}
-                      strokeWidth={2.5}
-                      className="transition-transform duration-300 group-hover:translate-x-0.5"
-                    />
-                  </span>
-                  <span className="relative pb-1">
-                    {slide.cta.label}
-                    <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-accent transition-all duration-300 group-hover:w-full" />
-                  </span>
-                </a>
-              </motion.div>
+              {slide.ctaLabel && (
+                <motion.div variants={item}>
+                  <a
+                    href={slide.ctaHref}
+                    className="group inline-flex items-center gap-3 text-sm font-medium uppercase tracking-[0.15em] text-white"
+                  >
+                    <span className="w-11 h-11 rounded-full border-[1.5px] border-white/50 flex items-center justify-center transition-all duration-300 group-hover:bg-accent group-hover:border-accent group-hover:text-white">
+                      <ChevronRight
+                        size={16}
+                        strokeWidth={2.5}
+                        className="transition-transform duration-300 group-hover:translate-x-0.5"
+                      />
+                    </span>
+                    <span className="relative pb-1">
+                      {slide.ctaLabel}
+                      <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-accent transition-all duration-300 group-hover:w-full" />
+                    </span>
+                  </a>
+                </motion.div>
+              )}
             </motion.div>
           </AnimatePresence>
         </div>
       </div>
 
       {/* Side arrows */}
-      {[
-        { onClick: prev, label: "Previous slide", Icon: ChevronLeft, side: "left-4 md:left-6" },
-        { onClick: next, label: "Next slide", Icon: ChevronRight, side: "right-4 md:right-6" },
-      ].map(({ onClick, label, Icon, side }) => (
-        <button
-          key={label}
-          onClick={onClick}
-          aria-label={label}
-          style={{ borderRadius: 9999 }}
-          className={`hidden sm:flex absolute ${side} top-1/2 -translate-y-1/2 z-20 w-12 h-12 items-center justify-center bg-white/10 border border-white/20 text-white backdrop-blur-md shadow-lg transition-all duration-300 hover:bg-accent hover:border-accent hover:scale-110`}
-        >
-          <Icon size={22} strokeWidth={2} />
-        </button>
-      ))}
-
-      {/* Pill indicator */}
-      <div
-        style={{ borderRadius: 9999 }}
-        className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-3 py-2 bg-black/25 backdrop-blur-md border border-white/10"
-      >
-        {SLIDES.map((s, i) => (
+      {count > 1 &&
+        [
+          { onClick: prev, label: "Previous slide", Icon: ChevronLeft, side: "left-4 md:left-6" },
+          { onClick: next, label: "Next slide", Icon: ChevronRight, side: "right-4 md:right-6" },
+        ].map(({ onClick, label, Icon, side }) => (
           <button
-            key={s.id}
-            onClick={() => goTo(i)}
-            aria-label={`Go to slide ${i + 1}: ${s.label}`}
+            key={label}
+            onClick={onClick}
+            aria-label={label}
             style={{ borderRadius: 9999 }}
-            className={`relative h-2 overflow-hidden transition-all duration-500 ${
-              i === index ? "w-10 bg-white/30" : "w-2 bg-white/50 hover:bg-white/80"
-            }`}
+            className={`hidden sm:flex absolute ${side} top-1/2 -translate-y-1/2 z-20 w-12 h-12 items-center justify-center bg-white/10 border border-white/20 text-white backdrop-blur-md shadow-lg transition-all duration-300 hover:bg-accent hover:border-accent hover:scale-110`}
           >
-            {i === index && (
-              <motion.span
-                key={`bar-${index}-${paused}`}
-                style={{ borderRadius: 9999 }}
-                className="absolute inset-y-0 left-0 bg-accent"
-                initial={{ width: "0%" }}
-                animate={{ width: paused ? "40%" : "100%" }}
-                transition={{ duration: paused ? 0.4 : SLIDE_DURATION / 1000, ease: "linear" }}
-              />
-            )}
+            <Icon size={22} strokeWidth={2} />
           </button>
         ))}
-      </div>
+
+      {/* Pill indicator */}
+      {count > 1 && (
+        <div
+          style={{ borderRadius: 9999 }}
+          className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-3 py-2 bg-black/25 backdrop-blur-md border border-white/10"
+        >
+          {slides.map((s, i) => (
+            <button
+              key={s.id}
+              onClick={() => goTo(i)}
+              aria-label={`Go to slide ${i + 1}: ${s.label}`}
+              style={{ borderRadius: 9999 }}
+              className={`relative h-2 overflow-hidden transition-all duration-500 ${
+                i === index ? "w-10 bg-white/30" : "w-2 bg-white/50 hover:bg-white/80"
+              }`}
+            >
+              {i === index && (
+                <motion.span
+                  key={`bar-${index}-${paused}`}
+                  style={{ borderRadius: 9999 }}
+                  className="absolute inset-y-0 left-0 bg-accent"
+                  initial={{ width: "0%" }}
+                  animate={{ width: paused ? "40%" : "100%" }}
+                  transition={{ duration: paused ? 0.4 : slideDurationMs / 1000, ease: "linear" }}
+                />
+              )}
+            </button>
+          ))}
+        </div>
+      )}
     </section>
   );
 };

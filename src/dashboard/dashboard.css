@@ -1,0 +1,66 @@
+/*
+ * Dashboard-scoped styling.
+ *
+ * The public site's theme layer sets `button { border-radius: 0 !important }`
+ * globally and swaps every colour token when `.dark` is on <html>. The admin UI
+ * should look the same regardless of which theme a visitor last chose, so it
+ * opts out of both: fixed light surface colours and restored button radii.
+ */
+
+.dash,
+.dash * {
+  border-color: #e2e8f0;
+}
+
+.dash {
+  --dash-bg: #f6f7f9;
+  --dash-panel: #ffffff;
+  --dash-border: #e2e8f0;
+  --dash-text: #0f172a;
+  --dash-muted: #64748b;
+  --dash-brand: #111d43;
+  --dash-gold: #cb9733;
+
+  background: var(--dash-bg);
+  color: var(--dash-text);
+  color-scheme: light;
+}
+
+.dash button {
+  border-radius: 0.5rem !important;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.dash input,
+.dash textarea,
+.dash select {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--dash-text);
+  background: #ffffff;
+}
+
+.dash input::placeholder,
+.dash textarea::placeholder {
+  color: #94a3b8;
+}
+
+.dash h1,
+.dash h2,
+.dash h3,
+.dash h4 {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+/* Keep the admin readable even though <html> may carry the site's .dark class. */
+.dash ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.dash ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
