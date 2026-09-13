@@ -1,12 +1,19 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { toast } from "sonner";
 import {
+  AlertCircle,
+  CheckCircle2,
   ChevronDown,
-  ChevronUp,
+  GripVertical,
   ImageIcon,
+  Info,
   Loader2,
   Plus,
+  RotateCcw,
   Trash2,
   Upload,
+  UploadCloud,
   X,
 } from "lucide-react";
 import { useMediaLibrary } from "../media";
@@ -20,17 +27,19 @@ export const Panel: React.FC<{
   children: React.ReactNode;
   actions?: React.ReactNode;
 }> = ({ title, description, children, actions }) => (
-  <section className="bg-white border border-slate-200 rounded-xl mb-5 overflow-hidden">
-    <header className="flex items-start justify-between gap-4 px-5 py-4 border-b border-slate-200 bg-slate-50/70">
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900">{title}</h3>
+  <section className="dash-card mb-8 overflow-hidden">
+    <header className="flex items-start justify-between gap-4 px-6 py-5 border-b border-slate-100 bg-white/50">
+      <div className="min-w-0">
+        <h3 className="text-[15px] font-bold text-slate-900 tracking-tight">{title}</h3>
         {description && (
-          <p className="text-xs text-slate-500 mt-0.5 max-w-2xl">{description}</p>
+          <p className="text-[13px] text-slate-500 mt-1.5 max-w-2xl leading-relaxed">
+            {description}
+          </p>
         )}
       </div>
-      {actions}
+      {actions && <div className="shrink-0">{actions}</div>}
     </header>
-    <div className="p-5 space-y-4">{children}</div>
+    <div className="p-6 space-y-5">{children}</div>
   </section>
 );
 
@@ -51,16 +60,16 @@ export const Field: React.FC<{
   children: React.ReactNode;
 }> = ({ label, hint, children }) => (
   <label className="block">
-    <span className="block text-xs font-semibold text-slate-700 mb-1.5">{label}</span>
+    <span className="block text-[12.5px] font-semibold text-slate-700 mb-1.5">{label}</span>
     {children}
-    {hint && <span className="block text-[11px] text-slate-400 mt-1">{hint}</span>}
+    {hint && <span className="block text-[11px] text-[var(--dash-muted-2)] mt-1.5 leading-relaxed">{hint}</span>}
   </label>
 );
 
 /* ------------------------------------------------------------------ inputs */
 
 const inputCls =
-  "w-full border border-slate-300 rounded-lg px-3 py-2 outline-none transition focus:border-[#cb9733] focus:ring-2 focus:ring-[#cb9733]/20";
+  "w-full border border-[var(--dash-border-strong)] rounded-[10px] px-3.5 py-2.5 outline-none bg-white text-[13.5px] transition-all focus:border-[#cb9733] focus:ring-4 focus:ring-[var(--dash-gold-ring)] hover:border-slate-400";
 
 export const TextInput: React.FC<{
   value: string;
@@ -113,17 +122,23 @@ export const Select: React.FC<{
   onChange: (v: string) => void;
   options: { value: string; label: string }[];
 }> = ({ value, onChange, options }) => (
-  <select
-    className={`${inputCls} cursor-pointer`}
-    value={value}
-    onChange={(e) => onChange(e.target.value)}
-  >
-    {options.map((o) => (
-      <option key={o.value} value={o.value}>
-        {o.label}
-      </option>
-    ))}
-  </select>
+  <div className="relative">
+    <select
+      className={`${inputCls} appearance-none pr-9 cursor-pointer`}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    >
+      {options.map((o) => (
+        <option key={o.value} value={o.value}>
+          {o.label}
+        </option>
+      ))}
+    </select>
+    <ChevronDown
+      size={15}
+      className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
+    />
+  </div>
 );
 
 export const Toggle: React.FC<{
@@ -134,20 +149,21 @@ export const Toggle: React.FC<{
   <button
     type="button"
     onClick={() => onChange(!checked)}
-    className="inline-flex items-center gap-2.5 text-sm text-slate-700"
+    className="inline-flex items-center gap-2.5 text-[13px] font-medium text-slate-700 group"
   >
     <span
-      className={`relative w-10 h-6 rounded-full transition-colors ${
-        checked ? "bg-[#cb9733]" : "bg-slate-300"
-      }`}
-      style={{ borderRadius: 9999 }}
+      className="relative w-10 h-[22px] rounded-full transition-colors duration-200 shrink-0"
+      style={{
+        borderRadius: 9999,
+        background: checked ? "var(--dash-gold)" : "#cbd1db",
+      }}
     >
       <span
-        className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform"
-        style={{ borderRadius: 9999, transform: checked ? "translateX(16px)" : "none" }}
+        className="absolute top-[2px] left-[2px] w-[18px] h-[18px] bg-white shadow transition-transform duration-200"
+        style={{ borderRadius: 9999, transform: checked ? "translateX(18px)" : "none" }}
       />
     </span>
-    {label}
+    <span className="group-hover:text-slate-900 transition-colors">{label}</span>
   </button>
 );
 
@@ -156,10 +172,13 @@ export const Toggle: React.FC<{
 type ButtonVariant = "primary" | "ghost" | "danger" | "subtle";
 
 const variantCls: Record<ButtonVariant, string> = {
-  primary: "bg-[#111d43] text-white hover:bg-[#1b2a5e] disabled:opacity-50",
-  subtle: "bg-slate-100 text-slate-700 hover:bg-slate-200",
-  ghost: "text-slate-600 hover:bg-slate-100 border border-slate-300",
-  danger: "text-red-600 hover:bg-red-50 border border-red-200",
+  primary:
+    "bg-[var(--dash-brand)] text-white shadow-sm hover:bg-[var(--dash-brand-2)] hover:shadow disabled:opacity-45 disabled:shadow-none",
+  subtle: "bg-slate-100 text-slate-700 hover:bg-slate-200 disabled:opacity-45",
+  ghost:
+    "text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-[var(--dash-border-strong)] disabled:opacity-45",
+  danger:
+    "text-[var(--dash-danger)] hover:bg-[var(--dash-danger-soft)] border border-[var(--dash-danger-border)] disabled:opacity-45",
 };
 
 export const Button: React.FC<{
@@ -175,7 +194,31 @@ export const Button: React.FC<{
     title={title}
     disabled={disabled}
     onClick={onClick}
-    className={`inline-flex items-center gap-2 px-3.5 py-2 text-sm font-medium transition disabled:cursor-not-allowed ${variantCls[variant]}`}
+    className={`inline-flex items-center gap-2 px-3.5 py-2 text-[13px] font-semibold transition disabled:cursor-not-allowed whitespace-nowrap ${variantCls[variant]}`}
+  >
+    {children}
+  </button>
+);
+
+/** Small square icon-only button used inside list rows. */
+const IconButton: React.FC<{
+  onClick?: () => void;
+  disabled?: boolean;
+  title: string;
+  tone?: "default" | "danger";
+  children: React.ReactNode;
+}> = ({ onClick, disabled, title, tone = "default", children }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    disabled={disabled}
+    title={title}
+    aria-label={title}
+    className={`p-1.5 transition disabled:opacity-25 disabled:cursor-not-allowed ${
+      tone === "danger"
+        ? "text-slate-400 hover:text-[var(--dash-danger)] hover:bg-[var(--dash-danger-soft)]"
+        : "text-slate-400 hover:text-slate-800 hover:bg-slate-100"
+    }`}
   >
     {children}
   </button>
@@ -190,6 +233,7 @@ const MediaPicker: React.FC<{
   const { items, loading, error, upload, remove } = useMediaLibrary();
   const [busy, setBusy] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleFiles = async (files: FileList | null) => {
@@ -200,17 +244,24 @@ const MediaPicker: React.FC<{
       const urls = await upload(files);
       if (urls[0]) onPick(urls[0]);
     } catch (e) {
-      setLocalError(e instanceof Error ? e.message : String(e));
+      const msg = e instanceof Error ? e.message : String(e);
+      setLocalError(msg);
+      toast.error("Upload failed", { description: msg });
     } finally {
       setBusy(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-900/50">
-      <div className="bg-white w-full max-w-3xl max-h-[80vh] rounded-xl flex flex-col overflow-hidden">
-        <header className="flex items-center justify-between px-5 py-3.5 border-b border-slate-200">
-          <h3 className="text-sm font-semibold text-slate-900">Media library</h3>
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-900/55 backdrop-blur-[2px] dash-fade-up">
+      <div className="bg-white w-full max-w-3xl max-h-[82vh] rounded-2xl flex flex-col overflow-hidden shadow-2xl border border-slate-200">
+        <header className="flex items-center justify-between px-5 py-4 border-b border-slate-200 bg-[var(--dash-panel-alt)]">
+          <div>
+            <h3 className="text-sm font-semibold text-slate-900">Media library</h3>
+            <p className="text-[11px] text-[var(--dash-muted)] mt-0.5">
+              Pick an existing image or upload a new one.
+            </p>
+          </div>
           <div className="flex items-center gap-2">
             <Button onClick={() => fileRef.current?.click()} disabled={busy} variant="primary">
               {busy ? <Loader2 size={15} className="animate-spin" /> : <Upload size={15} />}
@@ -218,7 +269,7 @@ const MediaPicker: React.FC<{
             </Button>
             <button
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-slate-700"
+              className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg"
               aria-label="Close"
             >
               <X size={18} />
@@ -236,42 +287,77 @@ const MediaPicker: React.FC<{
         />
 
         {(error || localError) && (
-          <p className="px-5 py-2.5 text-xs text-red-600 bg-red-50 border-b border-red-100">
+          <p className="px-5 py-2.5 text-xs text-[var(--dash-danger)] bg-[var(--dash-danger-soft)] border-b border-[var(--dash-danger-border)]">
             {localError || error}
           </p>
         )}
 
-        <div className="p-5 overflow-y-auto">
+        <div
+          className="p-5 overflow-y-auto flex-1"
+          onDragOver={(e) => {
+            e.preventDefault();
+            if (isSupabaseConfigured) setDragOver(true);
+          }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={(e) => {
+            e.preventDefault();
+            setDragOver(false);
+            void handleFiles(e.dataTransfer.files);
+          }}
+        >
           {!isSupabaseConfigured && (
             <p className="text-sm text-slate-500">
               Connect Supabase to upload and store images.
             </p>
           )}
+
+          {isSupabaseConfigured && (
+            <div
+              onClick={() => fileRef.current?.click()}
+              className={`mb-4 rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-1.5 py-6 cursor-pointer transition-colors ${
+                dragOver
+                  ? "border-[#cb9733] bg-[var(--dash-gold-soft)]"
+                  : "border-slate-200 hover:border-slate-300 bg-slate-50/60"
+              }`}
+            >
+              <UploadCloud size={22} className={dragOver ? "text-[#cb9733]" : "text-slate-400"} />
+              <p className="text-xs font-medium text-slate-600">
+                Drag images here, or click to browse
+              </p>
+            </div>
+          )}
+
           {loading && <p className="text-sm text-slate-500">Loading…</p>}
           {!loading && isSupabaseConfigured && items.length === 0 && (
-            <p className="text-sm text-slate-500">
-              No images yet. Use Upload to add your first one.
+            <p className="text-sm text-slate-400 text-center py-6">
+              No images uploaded yet.
             </p>
           )}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {items.map((m) => (
-              <div key={m.name} className="group relative border border-slate-200 rounded-lg overflow-hidden">
+              <div
+                key={m.name}
+                className="group relative border border-slate-200 rounded-xl overflow-hidden hover:border-[#cb9733]/50 hover:shadow-md transition-all"
+              >
                 <button
                   type="button"
                   onClick={() => onPick(m.url)}
-                  className="block w-full aspect-square bg-slate-50"
+                  className="block w-full aspect-square bg-slate-50 relative"
                 >
                   <img src={m.url} alt={m.name} className="w-full h-full object-contain" />
+                  <span className="absolute inset-0 bg-[var(--dash-brand)]/0 group-hover:bg-[var(--dash-brand)]/5 transition-colors" />
                 </button>
                 <button
                   type="button"
                   title="Delete permanently"
                   onClick={() => void remove(m.name)}
-                  className="absolute top-1.5 right-1.5 p-1.5 bg-white/90 text-red-600 opacity-0 group-hover:opacity-100 transition"
+                  className="absolute top-1.5 right-1.5 p-1.5 bg-white/95 text-[var(--dash-danger)] opacity-0 group-hover:opacity-100 transition rounded-lg shadow-sm"
                 >
                   <Trash2 size={13} />
                 </button>
-                <p className="px-2 py-1.5 text-[10px] text-slate-500 truncate">{m.name}</p>
+                <p className="px-2 py-1.5 text-[10px] text-slate-500 truncate border-t border-slate-100">
+                  {m.name}
+                </p>
               </div>
             ))}
           </div>
@@ -292,9 +378,9 @@ export const ImageInput: React.FC<{
 
   return (
     <div>
-      <span className="block text-xs font-semibold text-slate-700 mb-1.5">{label}</span>
+      <span className="block text-[12.5px] font-semibold text-slate-700 mb-1.5">{label}</span>
       <div className="flex gap-3">
-        <div className="w-20 h-20 shrink-0 border border-slate-200 rounded-lg bg-slate-50 overflow-hidden flex items-center justify-center">
+        <div className="w-20 h-20 shrink-0 border border-slate-200 rounded-xl bg-slate-50 overflow-hidden flex items-center justify-center">
           {value ? (
             <img
               src={value}
@@ -322,7 +408,7 @@ export const ImageInput: React.FC<{
           </div>
         </div>
       </div>
-      {hint && <p className="text-[11px] text-slate-400 mt-1">{hint}</p>}
+      {hint && <p className="text-[11px] text-[var(--dash-muted-2)] mt-1.5 leading-relaxed">{hint}</p>}
       {picking && (
         <MediaPicker
           onClose={() => setPicking(false)}
@@ -372,19 +458,23 @@ export const StringListEditor: React.FC<{
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-semibold text-slate-700">{label}</span>
+      <div className="flex items-center justify-between mb-2.5">
+        <span className="text-[12.5px] font-semibold text-slate-700">{label}</span>
         <Button onClick={() => onChange([...list, ""])}>
           <Plus size={14} /> {addLabel}
         </Button>
       </div>
-      {hint && <p className="text-[11px] text-slate-400 mb-2">{hint}</p>}
+      {hint && <p className="text-[11px] text-[var(--dash-muted-2)] mb-2.5">{hint}</p>}
       <div className="space-y-2">
-        {list.length === 0 && (
-          <p className="text-xs text-slate-400 italic py-2">Nothing here yet.</p>
-        )}
+        {list.length === 0 && <EmptyRow />}
         {list.map((item, i) => (
-          <div key={i} className="flex gap-2 items-start">
+          <div
+            key={i}
+            className="flex gap-2 items-start bg-[var(--dash-panel-alt)] border border-slate-100 rounded-xl p-2.5"
+          >
+            <div className="pt-2 pl-0.5 text-slate-300">
+              <GripVertical size={14} />
+            </div>
             <div className="flex-1">
               {image ? (
                 <ImageInput value={item} onChange={(v) => setAt(i, v)} label={`Image ${i + 1}`} />
@@ -394,33 +484,16 @@ export const StringListEditor: React.FC<{
                 <TextInput value={item} onChange={(v) => setAt(i, v)} placeholder={placeholder} />
               )}
             </div>
-            <div className="flex flex-col gap-1 pt-0.5">
-              <button
-                type="button"
-                onClick={() => move(i, -1)}
-                disabled={i === 0}
-                className="p-1.5 text-slate-400 hover:text-slate-700 disabled:opacity-30"
-                title="Move up"
-              >
-                <ChevronUp size={14} />
-              </button>
-              <button
-                type="button"
-                onClick={() => move(i, 1)}
-                disabled={i === list.length - 1}
-                className="p-1.5 text-slate-400 hover:text-slate-700 disabled:opacity-30"
-                title="Move down"
-              >
+            <div className="flex flex-col pt-0.5">
+              <IconButton title="Move up" onClick={() => move(i, -1)} disabled={i === 0}>
+                <ChevronDown size={14} className="rotate-180" />
+              </IconButton>
+              <IconButton title="Move down" onClick={() => move(i, 1)} disabled={i === list.length - 1}>
                 <ChevronDown size={14} />
-              </button>
-              <button
-                type="button"
-                onClick={() => removeAt(i)}
-                className="p-1.5 text-red-500 hover:bg-red-50"
-                title="Remove"
-              >
+              </IconButton>
+              <IconButton title="Remove" tone="danger" onClick={() => removeAt(i)}>
                 <Trash2 size={14} />
-              </button>
+              </IconButton>
             </div>
           </div>
         ))}
@@ -428,6 +501,12 @@ export const StringListEditor: React.FC<{
     </div>
   );
 };
+
+const EmptyRow: React.FC<{ label?: string }> = ({ label = "Nothing here yet." }) => (
+  <div className="border border-dashed border-slate-250 rounded-xl py-6 text-center bg-slate-50/50">
+    <p className="text-xs text-slate-400 italic">{label}</p>
+  </div>
+);
 
 /** Editor for a list of objects, each rendered by `renderItem`. */
 export function ListEditor<T extends { id: string }>({
@@ -466,7 +545,14 @@ export function ListEditor<T extends { id: string }>({
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-semibold text-slate-700">{label}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-[12.5px] font-semibold text-slate-700">{label}</span>
+          {list.length > 0 && (
+            <span className="text-[10.5px] font-semibold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded-full">
+              {list.length}
+            </span>
+          )}
+        </div>
         <Button
           variant="primary"
           onClick={() => {
@@ -479,60 +565,71 @@ export function ListEditor<T extends { id: string }>({
         </Button>
       </div>
 
-      <div className="space-y-3">
-        {list.length === 0 && (
-          <p className="text-xs text-slate-400 italic py-2">Nothing here yet.</p>
-        )}
+      <div className="space-y-2.5">
+        {list.length === 0 && <EmptyRow />}
         {list.map((item, i) => {
           const expanded = collapsible ? (open[item.id] ?? false) : true;
           return (
-            <div key={item.id} className="border border-slate-200 rounded-lg overflow-hidden">
-              <div className="flex items-center gap-2 px-3 py-2.5 bg-slate-50 border-b border-slate-200">
-                {collapsible && (
+            <div
+              key={item.id}
+              className="border border-slate-200 rounded-xl overflow-hidden bg-white transition-shadow hover:shadow-sm"
+            >
+              <div className="flex items-center gap-1 pl-2 pr-2 py-2 bg-[var(--dash-panel-alt)] border-b border-slate-200">
+                <span className="text-slate-300 pr-0.5">
+                  <GripVertical size={14} />
+                </span>
+                <span className="w-5 h-5 shrink-0 rounded-full bg-[var(--dash-brand)]/8 text-[var(--dash-brand)] text-[10px] font-bold flex items-center justify-center">
+                  {i + 1}
+                </span>
+                {collapsible ? (
                   <button
                     type="button"
                     onClick={() => setOpen((o) => ({ ...o, [item.id]: !expanded }))}
-                    className="p-1 text-slate-400 hover:text-slate-700"
-                    aria-label={expanded ? "Collapse" : "Expand"}
+                    className="flex-1 min-w-0 flex items-center gap-1.5 px-1.5 py-0.5 text-left"
                   >
-                    {expanded ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+                    <span className="flex-1 text-[13px] font-medium text-slate-800 truncate">
+                      {titleFor(item, i)}
+                    </span>
+                    <motion.span
+                      animate={{ rotate: expanded ? 180 : 0 }}
+                      transition={{ duration: 0.15 }}
+                      className="text-slate-400 shrink-0"
+                    >
+                      <ChevronDown size={15} />
+                    </motion.span>
                   </button>
+                ) : (
+                  <span className="flex-1 min-w-0 text-[13px] font-medium text-slate-800 truncate px-1.5">
+                    {titleFor(item, i)}
+                  </span>
                 )}
-                <span className="flex-1 text-sm font-medium text-slate-800 truncate">
-                  {titleFor(item, i)}
+                <span className="flex items-center shrink-0">
+                  <IconButton title="Move up" onClick={() => move(i, -1)} disabled={i === 0}>
+                    <ChevronDown size={14} className="rotate-180" />
+                  </IconButton>
+                  <IconButton title="Move down" onClick={() => move(i, 1)} disabled={i === list.length - 1}>
+                    <ChevronDown size={14} />
+                  </IconButton>
+                  <IconButton title="Remove" tone="danger" onClick={() => removeAt(i)}>
+                    <Trash2 size={14} />
+                  </IconButton>
                 </span>
-                <button
-                  type="button"
-                  onClick={() => move(i, -1)}
-                  disabled={i === 0}
-                  className="p-1.5 text-slate-400 hover:text-slate-700 disabled:opacity-30"
-                  title="Move up"
-                >
-                  <ChevronUp size={14} />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => move(i, 1)}
-                  disabled={i === list.length - 1}
-                  className="p-1.5 text-slate-400 hover:text-slate-700 disabled:opacity-30"
-                  title="Move down"
-                >
-                  <ChevronDown size={14} />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => removeAt(i)}
-                  className="p-1.5 text-red-500 hover:bg-red-100"
-                  title="Remove"
-                >
-                  <Trash2 size={14} />
-                </button>
               </div>
-              {expanded && (
-                <div className="p-4 space-y-4">
-                  {renderItem(item, (p) => patchAt(i, p), i)}
-                </div>
-              )}
+              <AnimatePresence initial={false}>
+                {expanded && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2, ease: "easeInOut" }}
+                    style={{ overflow: "hidden" }}
+                  >
+                    <div className="p-4 space-y-4">
+                      {renderItem(item, (p) => patchAt(i, p), i)}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           );
         })}
@@ -551,42 +648,119 @@ export const SaveBar: React.FC<{
   onSave: () => void;
   onDiscard: () => void;
   onReset: () => void;
-}> = ({ dirty, saving, error, savedAt, onSave, onDiscard, onReset }) => (
-  <div className="sticky bottom-0 -mx-6 mt-6 px-6 py-3 bg-white/95 backdrop-blur border-t border-slate-200 flex items-center gap-3 flex-wrap">
-    <Button variant="primary" onClick={onSave} disabled={!dirty || saving}>
-      {saving ? <Loader2 size={15} className="animate-spin" /> : null}
-      {saving ? "Saving…" : "Save changes"}
-    </Button>
-    <Button onClick={onDiscard} disabled={!dirty || saving}>
-      Discard
-    </Button>
-    <Button variant="danger" onClick={onReset} disabled={saving}>
-      Reset to default
-    </Button>
+}> = ({ dirty, saving, error, savedAt, onSave, onDiscard, onReset }) => {
+  const lastSavedAt = useRef<number | null>(null);
+  const lastError = useRef<string | null>(null);
 
-    {error ? (
-      <span className="text-xs text-red-600">{error}</span>
-    ) : dirty ? (
-      <span className="text-xs text-amber-600">Unsaved changes</span>
-    ) : savedAt ? (
-      <span className="text-xs text-emerald-600">Saved — live on the site</span>
-    ) : (
-      <span className="text-xs text-slate-400">No changes</span>
-    )}
-  </div>
-);
+  // A toast is a clearer confirmation than static text alone, without
+  // replacing the persistent status the bar already shows.
+  useEffect(() => {
+    if (savedAt && savedAt !== lastSavedAt.current) {
+      lastSavedAt.current = savedAt;
+      toast.success("Changes saved", { description: "Your edit is now live on the site." });
+    }
+  }, [savedAt]);
+
+  useEffect(() => {
+    if (error && error !== lastError.current) {
+      lastError.current = error;
+      toast.error("Couldn't save", { description: error });
+    }
+    if (!error) lastError.current = null;
+  }, [error]);
+
+  return (
+    <div className="sticky bottom-6 z-30 mt-8">
+      <div className="mx-auto max-w-fit bg-white/80 backdrop-blur-xl border border-slate-200/50 rounded-2xl shadow-[var(--dash-shadow-lg)] px-4 py-3 flex items-center gap-3 flex-wrap ring-1 ring-black/5">
+        <Button variant="primary" onClick={onSave} disabled={!dirty || saving}>
+          {saving ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
+          {saving ? "Saving…" : "Save changes"}
+        </Button>
+        <Button onClick={onDiscard} disabled={!dirty || saving}>
+          Discard
+        </Button>
+        <Button variant="danger" onClick={onReset} disabled={saving}>
+          <RotateCcw size={14} /> Reset to default
+        </Button>
+
+        <span className="w-px self-stretch bg-slate-200/60 mx-2" />
+
+        <StatusPill dirty={dirty} saving={saving} error={error} savedAt={savedAt} />
+      </div>
+    </div>
+  );
+};
+
+const StatusPill: React.FC<{
+  dirty: boolean;
+  saving: boolean;
+  error: string | null;
+  savedAt: number | null;
+}> = ({ dirty, saving, error, savedAt }) => {
+  if (saving) {
+    return (
+      <span className="inline-flex items-center gap-1.5 text-[12px] font-medium text-slate-500 pr-1">
+        <Loader2 size={13} className="animate-spin" /> Saving…
+      </span>
+    );
+  }
+  if (error) {
+    return (
+      <span
+        className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[var(--dash-danger)] pr-1 max-w-[220px] truncate"
+        title={error}
+      >
+        <AlertCircle size={13} /> {error}
+      </span>
+    );
+  }
+  if (dirty) {
+    return (
+      <span className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[var(--dash-warn)] pr-1">
+        <span className="relative w-1.5 h-1.5 rounded-full bg-[var(--dash-warn)] dash-pulse" />
+        Unsaved changes
+      </span>
+    );
+  }
+  if (savedAt) {
+    return (
+      <span className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[var(--dash-success)] pr-1">
+        <CheckCircle2 size={13} /> Saved — live on the site
+      </span>
+    );
+  }
+  return <span className="text-[12px] text-slate-400 pr-1">No changes</span>;
+};
+
+/* ---------------------------------------------------------------- notices */
+
+const noticeStyles = {
+  info: {
+    bg: "var(--dash-info-soft)",
+    border: "var(--dash-info-border)",
+    text: "#075985",
+    Icon: Info,
+  },
+  warn: {
+    bg: "var(--dash-warn-soft)",
+    border: "var(--dash-warn-border)",
+    text: "#92400e",
+    Icon: AlertCircle,
+  },
+} as const;
 
 export const Notice: React.FC<{
   tone?: "info" | "warn";
   children: React.ReactNode;
-}> = ({ tone = "info", children }) => (
-  <div
-    className={`text-xs rounded-lg px-4 py-3 mb-5 border ${
-      tone === "warn"
-        ? "bg-amber-50 border-amber-200 text-amber-800"
-        : "bg-sky-50 border-sky-200 text-sky-800"
-    }`}
-  >
-    {children}
-  </div>
-);
+}> = ({ tone = "info", children }) => {
+  const s = noticeStyles[tone];
+  return (
+    <div
+      className="text-[12.5px] leading-relaxed rounded-xl px-4 py-3 mb-5 border flex items-start gap-2.5"
+      style={{ background: s.bg, borderColor: s.border, color: s.text }}
+    >
+      <s.Icon size={16} className="shrink-0 mt-0.5" />
+      <div>{children}</div>
+    </div>
+  );
+};

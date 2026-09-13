@@ -186,7 +186,9 @@ export const DEFAULT_CONTENT: SiteContent = {
       title: "Kabsons Industries",
       icon: "Flame",
       cardImage: "/assets/Our Businesses/kabsonnew.png",
-      heroImage: "/assets/Kabsons/cover.png",
+      tagline: "LPG Bottling",
+      status: "Expansion",
+      heroImage: "/assets/Kabsons/lpg_bottling_plant.jpg",
       description:
         "LPG Bottling. Strengthening the Group's presence in Nepal's essential energy sector.",
       overview:
@@ -213,8 +215,7 @@ export const DEFAULT_CONTENT: SiteContent = {
         },
       ],
       gallery: [
-        "https://images.unsplash.com/photo-1563720223185-11003d516935?w=800&q=80",
-        "https://images.unsplash.com/photo-1617469767053-d3b523a0b982?w=800&q=80",
+        "/assets/Kabsons/lpg_bottling_plant.jpg",
       ],
       published: true,
       order: 1,
@@ -362,7 +363,7 @@ export const DEFAULT_CONTENT: SiteContent = {
         id: "ashish-jajodia",
         name: "Ashish Jajodia",
         role: "Joint Managing Director",
-        photo: "/assets/Leadership/Ashish Jajodia.jpeg",
+        photo: "/assets/Leadership/Ashish Jajodia.jpg",
         bio: [
           "Mr. Ashish Jajodia represents the fourth generation of the family’s entrepreneurial journey and plays an active role in JB Group’s strategic direction, diversification and business development.",
           "He has served as Managing Director of Kabsons Industries since 2015 and has entrepreneurial experience across multiple sectors, including dairy through Modern Dairy Industries, agriculture, trading and travel technology through mytrip2nepal.com.",

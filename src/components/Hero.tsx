@@ -103,17 +103,29 @@ const Hero = () => {
         </AnimatePresence>
       </div>
 
-      {/* Soft dark overall tint to calm bright/saturated photos */}
-      <div className="absolute inset-0 bg-[#0a2a66]/40" />
+      {/* Soft overall tint */}
+      <div className="absolute inset-0 bg-white/40 dark:bg-[#0a2a66]/40 transition-colors duration-500" />
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 transition-colors duration-500"
         style={{
           background:
-            "linear-gradient(90deg, rgba(6,24,64,0.90) 0%, rgba(8,34,86,0.75) 32%, rgba(12,48,120,0.35) 58%, rgba(12,48,120,0.08) 80%)",
+            "linear-gradient(90deg, var(--hero-grad-1) 0%, var(--hero-grad-2) 32%, var(--hero-grad-3) 58%, transparent 80%)",
         }}
       />
+      <style>{`
+        :root {
+          --hero-grad-1: rgba(255, 255, 255, 0.70);
+          --hero-grad-2: rgba(255, 255, 255, 0.50);
+          --hero-grad-3: rgba(255, 255, 255, 0.15);
+        }
+        .dark {
+          --hero-grad-1: rgba(6, 24, 64, 0.90);
+          --hero-grad-2: rgba(8, 34, 86, 0.75);
+          --hero-grad-3: rgba(12, 48, 120, 0.35);
+        }
+      `}</style>
       {/* Top shade so header nav stays legible */}
-      <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#061840]/60 to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white/30 dark:from-[#061840]/60 to-transparent transition-colors duration-500" />
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-6 md:px-10">
@@ -129,12 +141,12 @@ const Hero = () => {
 
               <motion.h2
                 variants={item}
-                className="text-sm md:text-base font-bold tracking-[0.3em] uppercase text-white/70 mb-4"
+                className="text-sm md:text-base font-bold tracking-[0.3em] uppercase text-brand-blue/70 dark:text-white/70 mb-4 transition-colors duration-500"
               >
                 {slide.label}
               </motion.h2>
 
-              <h1 className="text-4xl md:text-6xl lg:text-7xl tracking-tight mb-6 leading-[1.08] text-white drop-shadow-[0_2px_20px_rgba(0,0,0,0.35)]">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl tracking-tight mb-6 leading-[1.08] text-brand-blue dark:text-white drop-shadow-sm dark:drop-shadow-[0_2px_20px_rgba(0,0,0,0.35)] transition-colors duration-500">
                 <motion.span variants={item} className="block font-light text-accent">
                   {slide.titleTop}
                 </motion.span>
@@ -145,7 +157,7 @@ const Hero = () => {
 
               <motion.p
                 variants={item}
-                className="text-base md:text-lg text-white/80 max-w-2xl mb-10 leading-relaxed font-light"
+                className="text-base md:text-lg text-brand-blue/80 dark:text-white/80 max-w-2xl mb-10 leading-relaxed font-light transition-colors duration-500"
               >
                 {slide.description}
               </motion.p>
@@ -154,9 +166,9 @@ const Hero = () => {
                 <motion.div variants={item}>
                   <a
                     href={slide.ctaHref}
-                    className="group inline-flex items-center gap-3 text-sm font-medium uppercase tracking-[0.15em] text-white"
+                    className="group inline-flex items-center gap-3 text-sm font-medium uppercase tracking-[0.15em] text-brand-blue dark:text-white transition-colors duration-500"
                   >
-                    <span className="w-11 h-11 rounded-full border-[1.5px] border-white/50 flex items-center justify-center transition-all duration-300 group-hover:bg-accent group-hover:border-accent group-hover:text-white">
+                    <span className="w-11 h-11 rounded-full border-[1.5px] border-brand-blue/30 dark:border-white/50 flex items-center justify-center transition-all duration-300 group-hover:bg-accent group-hover:border-accent group-hover:text-white dark:group-hover:text-white">
                       <ChevronRight
                         size={16}
                         strokeWidth={2.5}

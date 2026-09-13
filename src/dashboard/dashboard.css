@@ -1,35 +1,66 @@
 /*
- * Dashboard-scoped styling.
- *
- * The public site's theme layer sets `button { border-radius: 0 !important }`
- * globally and swaps every colour token when `.dark` is on <html>. The admin UI
- * should look the same regardless of which theme a visitor last chose, so it
- * opts out of both: fixed light surface colours and restored button radii.
+ * Dashboard-scoped design system.
  */
 
-.dash,
-.dash * {
-  border-color: #e2e8f0;
-}
-
 .dash {
-  --dash-bg: #f6f7f9;
+  --dash-bg: #f7f9fb;
+  --dash-bg-alt: #f1f5f9;
   --dash-panel: #ffffff;
-  --dash-border: #e2e8f0;
+  --dash-panel-alt: #f8fafc;
+  --dash-border: #f1f5f9;
+  --dash-border-strong: #e2e8f0;
   --dash-text: #0f172a;
   --dash-muted: #64748b;
-  --dash-brand: #111d43;
+  --dash-muted-2: #94a3b8;
+
+  --dash-brand: #0f172a;
+  --dash-brand-2: #1e293b;
+  --dash-brand-soft: rgba(15, 23, 42, 0.04);
   --dash-gold: #cb9733;
+  --dash-gold-soft: rgba(203, 151, 51, 0.1);
+  --dash-gold-ring: rgba(203, 151, 51, 0.2);
+
+  --dash-success: #059669;
+  --dash-success-soft: #ecfdf5;
+  --dash-success-border: #a7f3d0;
+  --dash-danger: #dc2626;
+  --dash-danger-soft: #fef2f2;
+  --dash-danger-border: #fecaca;
+  --dash-warn: #d97706;
+  --dash-warn-soft: #fffbeb;
+  --dash-warn-border: #fde68a;
+  --dash-info: #0284c7;
+  --dash-info-soft: #f0f9ff;
+  --dash-info-border: #bae6fd;
+
+  --dash-shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.02);
+  --dash-shadow-sm: 0 2px 8px -2px rgba(15, 23, 42, 0.05), 0 1px 4px -1px rgba(15, 23, 42, 0.03);
+  --dash-shadow-md: 0 12px 32px -8px rgba(15, 23, 42, 0.08), 0 4px 12px -3px rgba(15, 23, 42, 0.04);
+  --dash-shadow-lg: 0 24px 64px -12px rgba(15, 23, 42, 0.15), 0 12px 24px -8px rgba(15, 23, 42, 0.08);
+
+  --dash-radius-sm: 10px;
+  --dash-radius: 14px;
+  --dash-radius-lg: 20px;
 
   background: var(--dash-bg);
   color: var(--dash-text);
   color-scheme: light;
+  -webkit-font-smoothing: antialiased;
+}
+
+.dash * {
+  border-color: var(--dash-border);
 }
 
 .dash button {
-  border-radius: 0.5rem !important;
+  border-radius: var(--dash-radius-sm) !important;
   font-size: inherit;
   line-height: inherit;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dash button:active:not(:disabled) {
+  transform: scale(0.98);
 }
 
 .dash input,
@@ -38,12 +69,28 @@
   font-size: 0.875rem;
   line-height: 1.5;
   color: var(--dash-text);
+  background: var(--dash-bg-alt);
+  border: 1px solid transparent;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dash input:focus,
+.dash textarea:focus,
+.dash select:focus {
   background: #ffffff;
+  border-color: var(--dash-gold);
+  box-shadow: 0 0 0 4px var(--dash-gold-ring);
+}
+
+.dash input:hover:not(:focus),
+.dash textarea:hover:not(:focus),
+.dash select:hover:not(:focus) {
+  background: var(--dash-border-strong);
 }
 
 .dash input::placeholder,
 .dash textarea::placeholder {
-  color: #94a3b8;
+  color: var(--dash-muted-2);
 }
 
 .dash h1,
@@ -55,12 +102,66 @@
   line-height: inherit;
 }
 
-/* Keep the admin readable even though <html> may carry the site's .dark class. */
+.dash button:focus-visible,
+.dash a:focus-visible,
+.dash [tabindex]:focus-visible {
+  outline: 2px solid var(--dash-gold);
+  outline-offset: 2px;
+  border-radius: var(--dash-radius-sm);
+}
+
+/* Scrollbars */
 .dash ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
+.dash ::-webkit-scrollbar-track {
+  background: transparent;
+}
 .dash ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 9999px;
+  border: 2px solid var(--dash-bg);
+}
+.dash ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Motion */
+@keyframes dash-pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.35); }
+  100% { box-shadow: 0 0 0 6px rgba(217, 119, 6, 0); }
+}
+.dash-pulse {
+  animation: dash-pulse-ring 1.8s ease-out infinite;
+}
+
+@keyframes dash-fade-up {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.dash-fade-up {
+  animation: dash-fade-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Card surface */
+.dash-card {
+  background: var(--dash-panel);
+  border: 1px solid var(--dash-border);
+  border-radius: var(--dash-radius-lg);
+  box-shadow: var(--dash-shadow-sm);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+}
+
+.dash-sidebar-link {
+  position: relative;
+}
+.dash-sidebar-link[data-active="true"] {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 10px;
+}
+.dash-sidebar-link:hover:not([data-active="true"]) {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
 }

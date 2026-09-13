@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import ContactFooter from '../components/ContactFooter';
-import { MapPin, Phone, Mail, Clock, ArrowRight, CheckCircle, Send, ChevronDown, Linkedin, Facebook, Instagram, Youtube } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, ArrowRight, CheckCircle, Send, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-
-const INQUIRY_TYPES = [
-  { id: 'general',     label: 'General Inquiry' },
-  { id: 'partnership', label: 'Business Partnership' },
-  { id: 'careers',     label: 'Careers' },
-  { id: 'investor',    label: 'Investor Relations' },
-  { id: 'media',       label: 'Media & Press' },
-];
+import { useSection } from '../content/ContentProvider';
+import { resolveSocialIcon } from '../content/socialIcons';
 
 const ContactPage = () => {
+  const content = useSection('contact');
+
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
   const [formData, setFormData] = useState({
@@ -60,99 +56,90 @@ const ContactPage = () => {
         : 'border-border hover:border-[#cb9733]/50'
     }`;
 
+  // Card styling stays fixed; only the copy is content-driven.
+  const GOLD = {
+    gradient: 'from-[#cb9733]/10 via-[#cb9733]/5 to-transparent',
+    border: 'border-[#cb9733]/20',
+    glow: 'hover:shadow-[#cb9733]/15',
+    ring: 'bg-[#cb9733]/10 border-[#cb9733]/20 group-hover:bg-[#cb9733]/20',
+    textColor: 'text-[#cb9733]',
+    iconColor: 'text-[#cb9733]',
+  };
+  const BLUE = {
+    gradient: 'from-brand-blue/8 via-brand-blue/3 to-transparent',
+    border: 'border-brand-blue/15',
+    glow: 'hover:shadow-brand-blue/15',
+    ring: 'bg-brand-blue/8 border-brand-blue/15 group-hover:bg-brand-blue/15',
+    textColor: 'text-brand-blue dark:text-blue-400',
+    iconColor: 'text-brand-blue dark:text-blue-400',
+  };
+
   const QUICK_CARDS = [
     {
       icon: Phone,
       label: 'Call Us',
-      value: '+977-1-5361050',
-      sub: 'Sun–Fri, 10AM–6PM',
-      href: 'tel:+97715361050',
+      value: content.phone,
+      sub: content.phoneSub,
+      href: `tel:${content.phone.replace(/[^+\d]/g, '')}`,
       action: 'Tap to call',
-      gradient: 'from-[#cb9733]/10 via-[#cb9733]/5 to-transparent',
-      border: 'border-[#cb9733]/20',
-      glow: 'hover:shadow-[#cb9733]/15',
-      ring: 'bg-[#cb9733]/10 border-[#cb9733]/20 group-hover:bg-[#cb9733]/20',
-      textColor: 'text-[#cb9733]',
-      iconColor: 'text-[#cb9733]',
+      ...GOLD,
     },
     {
       icon: Mail,
       label: 'Email Us',
-      value: 'contact@jbgroup.com',
-      sub: 'Reply within 24 hours',
-      href: 'mailto:contact@jbgroup.com',
+      value: content.email,
+      sub: content.emailSub,
+      href: `mailto:${content.email}`,
       action: 'Tap to email',
-      gradient: 'from-brand-blue/8 via-brand-blue/3 to-transparent',
-      border: 'border-brand-blue/15',
-      glow: 'hover:shadow-brand-blue/15',
-      ring: 'bg-brand-blue/8 border-brand-blue/15 group-hover:bg-brand-blue/15',
-      textColor: 'text-brand-blue dark:text-blue-400',
-      iconColor: 'text-brand-blue dark:text-blue-400',
+      ...BLUE,
     },
     {
       icon: MapPin,
       label: 'Visit Us',
-      value: 'BNJ Tower',
-      sub: 'Tripureshwor, Kathmandu',
+      value: content.addressTitle,
+      sub: content.addressSub,
       href: '#map',
       action: 'View on map',
-      gradient: 'from-[#cb9733]/10 via-[#cb9733]/5 to-transparent',
-      border: 'border-[#cb9733]/20',
-      glow: 'hover:shadow-[#cb9733]/15',
-      ring: 'bg-[#cb9733]/10 border-[#cb9733]/20 group-hover:bg-[#cb9733]/20',
-      textColor: 'text-[#cb9733]',
-      iconColor: 'text-[#cb9733]',
+      ...GOLD,
     },
     {
       icon: Clock,
       label: 'Working Hours',
-      value: 'Sun – Fri',
-      sub: '10:00 AM – 6:00 PM',
+      value: content.hoursValue,
+      sub: content.hoursSub,
       href: '#',
-      action: "We're open now",
-      gradient: 'from-brand-blue/8 via-brand-blue/3 to-transparent',
-      border: 'border-brand-blue/15',
-      glow: 'hover:shadow-brand-blue/15',
-      ring: 'bg-brand-blue/8 border-brand-blue/15 group-hover:bg-brand-blue/15',
-      textColor: 'text-brand-blue dark:text-blue-400',
-      iconColor: 'text-brand-blue dark:text-blue-400',
+      action: content.hoursNote,
+      ...BLUE,
     },
-  ];
-
-  const COMPANIES = [
-    { id: '', label: 'Please select a company...' },
-    { id: 'jb_group', label: 'JB Group (General)' },
-    { id: 'reliance_trade', label: 'Reliance Trade International' },
-    { id: 'lpg', label: 'LPG Bottling & Distribution' },
-    { id: 'ev', label: 'Electric Mobility' },
-    { id: 'real_estate', label: 'Commercial Real Estate' },
-    { id: 'other', label: 'Other' }
   ];
 
   return (
     <div className="min-h-screen font-sans bg-background text-foreground overflow-x-hidden selection:bg-brand-red selection:text-white">
       <Header />
 
-      {/* Hero */}
-      <section className="h-[320px] pt-20 bg-brand-blue text-white relative flex items-center border-b-[10px] border-[#cb9733] overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=2000&q=80')] opacity-15 mix-blend-overlay bg-cover bg-center" />
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-blue via-brand-blue/90 to-brand-blue/70 z-10" />
-
-
-
-        <div className="container mx-auto px-6 relative z-20 w-full max-w-6xl">
+      {/* Minimal Hero */}
+      <section className="h-[350px] pt-20 bg-white dark:bg-[#0a1230] relative flex items-center border-b-[16px] border-brand-red overflow-hidden transition-colors duration-500">
+        <div className="container mx-auto px-6 relative z-20 flex flex-col justify-center h-full pt-16 w-full max-w-6xl">
           <div className="w-[90%] md:w-[70%] border-l-4 border-[#cb9733] pl-8">
             <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
               className="text-[#cb9733] text-xs font-bold tracking-[0.3em] uppercase mb-3">
-              We'd Love to Hear From You
+              {content.heroEyebrow}
             </motion.p>
-            <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}
-              className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight">
-              Get in <span className="text-[#cb9733]">Touch</span>
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-4xl md:text-5xl lg:text-6xl font-medium mb-3 tracking-tight leading-[1.1] text-brand-blue dark:text-white transition-colors duration-500"
+            >
+              {content.heroTitle} <span className="text-[#cb9733]">{content.heroTitleAccent}</span>
             </motion.h1>
-            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.15 }}
-              className="text-gray-300 font-light text-sm md:text-base tracking-wide">
-              Reach out and our team will get back to you within 24 hours.
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-sm md:text-base text-brand-blue/70 dark:text-gray-300 font-light uppercase tracking-[0.15em] leading-relaxed max-w-3xl transition-colors duration-500"
+            >
+              {content.heroSubtitle}
             </motion.p>
           </div>
         </div>
@@ -215,11 +202,19 @@ const ContactPage = () => {
                   <h3 className="text-lg font-bold text-foreground">Follow JB Group</h3>
                 </div>
                 <div className="flex gap-3 mt-1 relative z-10">
-                  {[Linkedin, Facebook, Instagram, Youtube].map((Icon, idx) => (
-                    <a key={idx} href="#" className="w-10 h-10 bg-brand-blue flex items-center justify-center text-white hover:bg-[#cb9733] hover:shadow-[0_0_15px_rgba(203,151,51,0.3)] transition-all duration-300">
-                      <Icon size={18} />
-                    </a>
-                  ))}
+                  {content.socials.map((social) => {
+                    const Icon = resolveSocialIcon(social.platform);
+                    return (
+                      <a
+                        key={social.id}
+                        href={social.url}
+                        aria-label={social.platform}
+                        className="w-10 h-10 bg-brand-blue flex items-center justify-center text-white hover:bg-[#cb9733] hover:shadow-[0_0_15px_rgba(203,151,51,0.3)] transition-all duration-300"
+                      >
+                        <Icon size={18} />
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -227,14 +222,14 @@ const ContactPage = () => {
               <div id="map" className="rounded-2xl overflow-hidden border border-border shadow-md" style={{ height: '220px' }}>
                 <iframe
                   title="JB Group Office Location"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.8073226220924!2d85.31025007526997!3d27.69369907619516!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb190ac44d2b45%3A0x7e55df09b1a4c55f!2sTripureshwor%2C%20Kathmandu%2044600!5e0!3m2!1sen!2snp!4v1694000000000!5m2!1sen!2snp"
+                  src={content.mapEmbedUrl}
                   width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                 />
               </div>
 
               <a
-                href="https://maps.google.com/?q=Tripureshwor,Kathmandu,Nepal"
+                href={content.mapDirectionsUrl}
                 target="_blank" rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 w-full py-3 rounded-xl border-2 border-[#cb9733]/40 text-[#cb9733] font-semibold text-sm hover:bg-[#cb9733]/10 transition-colors"
               >
@@ -253,9 +248,9 @@ const ContactPage = () => {
                     <div className="w-20 h-20 rounded-full bg-[#cb9733]/10 flex items-center justify-center mb-6 border-2 border-[#cb9733]/30">
                       <CheckCircle size={40} className="text-[#cb9733]" />
                     </div>
-                    <h3 className="text-2xl font-bold text-foreground mb-3">Message Sent!</h3>
+                    <h3 className="text-2xl font-bold text-foreground mb-3">{content.successTitle}</h3>
                     <p className="text-muted-foreground font-light leading-relaxed mb-8 max-w-sm">
-                      Thank you for reaching out. Our team will get back to you within 24 hours.
+                      {content.successMessage}
                     </p>
                     <button onClick={() => { setSubmitted(false); setFormData({ firstName:'',lastName:'',email:'',phone:'',company:'',inquiryType:'general',message:'' }); }}
                       className="text-[#cb9733] font-bold text-sm border border-[#cb9733]/40 px-6 py-2.5 rounded-xl hover:bg-[#cb9733]/10 transition-colors">
@@ -286,7 +281,7 @@ const ContactPage = () => {
                             onBlur={() => setFocused(null)}
                             className={`${inputClass('inquiryType')} appearance-none pr-10 cursor-pointer`}
                           >
-                            {INQUIRY_TYPES.map(t => (
+                            {content.inquiryTypes.map(t => (
                               <option key={t.id} value={t.id} className="bg-background text-foreground">{t.label}</option>
                             ))}
                           </select>
@@ -347,7 +342,7 @@ const ContactPage = () => {
                             onBlur={() => setFocused(null)}
                             className={`${inputClass('company')} appearance-none pr-10 cursor-pointer`}
                           >
-                            {COMPANIES.map(c => (
+                            {content.companies.map(c => (
                               <option key={c.id} value={c.id} className="bg-background text-foreground">{c.label}</option>
                             ))}
                           </select>
@@ -384,7 +379,7 @@ const ContactPage = () => {
                         )}
                       </motion.button>
                       <p className="text-xs text-center text-muted-foreground">
-                        By submitting, you agree to our privacy policy. We'll never share your information.
+                        {content.privacyNote}
                       </p>
                     </form>
                   </motion.div>

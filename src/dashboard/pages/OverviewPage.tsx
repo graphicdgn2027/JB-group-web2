@@ -1,20 +1,30 @@
 import React, { useState } from "react";
 import { Link } from "react-router";
+import { motion } from "motion/react";
+import { toast } from "sonner";
 import {
   Building2,
-  CheckCircle2,
   CloudUpload,
+  Compass,
+  Layers,
   Loader2,
   RefreshCw,
+  Sparkles,
   Users,
 } from "lucide-react";
 import { useContentStore } from "../../content/ContentProvider";
 import { Button, Notice, Panel } from "../components/ui";
 
+const STAT_TINTS = [
+  { bg: "bg-[#cb9733]/10", text: "text-[#cb9733]" },
+  { bg: "bg-[#111d43]/8", text: "text-[#111d43]" },
+  { bg: "bg-emerald-500/10", text: "text-emerald-600" },
+  { bg: "bg-violet-500/10", text: "text-violet-600" },
+];
+
 const OverviewPage: React.FC = () => {
-  const { content, status, error, refresh, publishAll } = useContentStore();
+  const { content, status, usingDefaults, refresh, publishAll } = useContentStore();
   const [busy, setBusy] = useState(false);
-  const [result, setResult] = useState<string | null>(null);
 
   const businesses = content.businesses;
   const leaders = content.leadership.leaders;
@@ -38,26 +48,35 @@ const OverviewPage: React.FC = () => {
       label: "Hero slides",
       value: String(content.hero.slides.length),
       hint: "on the homepage",
-      icon: CloudUpload,
+      icon: Sparkles,
       to: "/dashboard/hero",
     },
     {
       label: "Timeline entries",
       value: String(content.timeline.items.length),
       hint: "on the journey",
-      icon: CheckCircle2,
+      icon: Compass,
       to: "/dashboard/timeline",
     },
   ];
 
   const handlePublishAll = async () => {
     setBusy(true);
-    setResult(null);
     try {
       await publishAll();
-      setResult("All sections written to the database.");
+      toast.success("Published", { description: "Every section was written to the database." });
     } catch (e) {
-      setResult(e instanceof Error ? e.message : String(e));
+      const msg = e instanceof Error ? e.message : String(e);
+      toast.error("Publish failed", { description: msg });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleRefresh = async () => {
+    setBusy(true);
+    try {
+      await refresh();
     } finally {
       setBusy(false);
     }
@@ -73,45 +92,61 @@ const OverviewPage: React.FC = () => {
         </p>
       </div>
 
-      {status === "ready" && (
+      {usingDefaults && (
+        <Notice tone="warn">
+          Supabase is not connected — the site is running on its built-in default
+          content and nothing you edit here can be saved yet. See{" "}
+          <code className="bg-black/5 px-1 rounded">DASHBOARD.md</code> to connect it.
+        </Notice>
+      )}
+      {!usingDefaults && status === "ready" && (
         <Notice>
           Connected to Supabase. Saved edits are visible to every visitor immediately.
         </Notice>
       )}
-      {status === "error" && (
-        <Notice tone="warn">
-          Database error: {error}. The site is serving its built-in defaults.
-        </Notice>
-      )}
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
-        {stats.map((s) => (
-          <Link
-            key={s.label}
-            to={s.to}
-            className="bg-white border border-slate-200 rounded-xl p-4 hover:border-[#cb9733]/60 transition"
-          >
-            <s.icon size={16} className="text-[#cb9733] mb-2" />
-            <p className="text-2xl font-semibold text-slate-900">{s.value}</p>
-            <p className="text-xs font-medium text-slate-700 mt-0.5">{s.label}</p>
-            <p className="text-[11px] text-slate-400">{s.hint}</p>
-          </Link>
-        ))}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {stats.map((s, i) => {
+          const tint = STAT_TINTS[i % STAT_TINTS.length];
+          return (
+            <Link key={s.label} to={s.to} className="block group">
+              <motion.div
+                whileHover={{ y: -4, scale: 1.01 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                className="dash-card p-5 h-full relative overflow-hidden flex flex-col justify-between border border-slate-100 hover:border-slate-200"
+              >
+                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                  <s.icon size={64} className={tint.text} />
+                </div>
+                
+                <div>
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${tint.bg} shadow-sm`}>
+                    <s.icon size={18} className={tint.text} />
+                  </div>
+                  <p className="text-[14px] font-semibold text-slate-700">{s.label}</p>
+                  <p className="text-[12px] text-slate-400 mb-2">{s.hint}</p>
+                </div>
+                
+                <p className="text-3xl font-black text-slate-900 tracking-tight mt-2">{s.value}</p>
+              </motion.div>
+            </Link>
+          );
+        })}
       </div>
 
       <Panel
         title="Publish everything"
         description="Writes every section currently shown in the dashboard to the database. Use this once after setting up a fresh Supabase project to seed it with the site's existing content."
+        actions={<Layers size={16} className="text-slate-300" />}
       >
         <div className="flex items-center gap-3 flex-wrap">
-          <Button variant="primary" onClick={handlePublishAll} disabled={busy}>
+          <Button variant="primary" onClick={() => void handlePublishAll()} disabled={busy}>
             {busy ? <Loader2 size={15} className="animate-spin" /> : <CloudUpload size={15} />}
             Publish all sections
           </Button>
-          <Button onClick={() => void refresh()} disabled={busy}>
+          <Button onClick={() => void handleRefresh()} disabled={busy}>
             <RefreshCw size={15} /> Reload from database
           </Button>
-          {result && <span className="text-xs text-slate-600">{result}</span>}
         </div>
       </Panel>
 

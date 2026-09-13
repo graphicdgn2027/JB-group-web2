@@ -39,16 +39,8 @@ const PortfolioDetails = () => {
     <div ref={containerRef} className="min-h-screen font-sans bg-background text-foreground overflow-x-hidden selection:bg-brand-red selection:text-white">
       <Header />
 
-      {/* Magazine Cover Hero */}
-      <section className="h-[350px] pt-20 bg-brand-blue text-white relative flex items-center border-b-[16px] border-brand-red overflow-hidden">
-        <div className="absolute inset-0 bg-brand-blue/70 z-10"></div>
-        <img
-          src={data.heroImage}
-          alt={data.title}
-          className="absolute inset-0 w-full h-full object-cover filter contrast-125 saturate-50"
-        />
-
-
+      {/* Minimal Hero */}
+      <section className="h-[350px] pt-20 bg-white dark:bg-[#0a1230] relative flex items-center border-b-[16px] border-brand-red overflow-hidden transition-colors duration-500">
         <div className="container mx-auto px-6 relative z-20 flex flex-col justify-center h-full pt-16 w-full max-w-6xl">
 
           <div className="w-[90%] md:w-[75%] lg:w-[60%] border-l-4 border-brand-red pl-6 md:pl-12 lg:pl-16">
@@ -57,7 +49,7 @@ const PortfolioDetails = () => {
                 <img
                   src={data.logo}
                   alt={`${data.title} Logo`}
-                  className="h-12 md:h-16 object-contain filter brightness-0 invert drop-shadow-xl"
+                  className="h-12 md:h-16 object-contain dark:filter dark:brightness-0 dark:invert transition-all duration-300"
                   onError={(e) => e.currentTarget.style.display = 'none'}
                 />
               </div>
@@ -66,7 +58,7 @@ const PortfolioDetails = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-2xl md:text-3xl lg:text-4xl font-medium mb-3 tracking-tight leading-[1.2] text-white drop-shadow-2xl line-clamp-2"
+              className="text-2xl md:text-3xl lg:text-4xl font-medium mb-3 tracking-tight leading-[1.2] text-brand-blue dark:text-white line-clamp-2 transition-colors duration-500"
             >
               {firstWord} <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-yellow-500">
@@ -78,7 +70,7 @@ const PortfolioDetails = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-sm md:text-base text-gray-200 font-light uppercase tracking-[0.15em] leading-relaxed max-w-3xl drop-shadow-lg"
+              className="text-sm md:text-base text-brand-blue/70 dark:text-gray-300 font-light uppercase tracking-[0.15em] leading-relaxed max-w-3xl transition-colors duration-500"
             >
               {data.description}
             </motion.p>
@@ -221,11 +213,11 @@ const PortfolioDetails = () => {
 
             <div className="flex flex-wrap justify-center items-center gap-16">
               {data.brands.map((brand) => (
-                <div key={brand.id} className="group cursor-pointer">
+                <div key={brand.id} className="group cursor-pointer bg-white rounded-2xl w-32 h-32 md:w-40 md:h-40 flex items-center justify-center p-6 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
                   <img
                     src={brand.logo}
                     alt={brand.name}
-                    className="h-24 md:h-32 object-contain filter grayscale opacity-50 transition-all duration-500 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 drop-shadow-2xl"
+                    className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
                   />
                 </div>
               ))}

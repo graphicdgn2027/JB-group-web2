@@ -72,11 +72,11 @@ const Header = () => {
   return (
     <header ref={headerRef} className="w-full absolute top-0 left-0 z-50 flex justify-center">
       {/* Main Nav */}
-      <div className="flex justify-between items-center w-full py-4 px-4 md:px-8 lg:px-[6.25vw] rounded-none bg-transparent">
+      <div className="flex justify-between items-center w-full py-4 px-4 md:px-8 lg:px-[6.25vw] rounded-none bg-white dark:bg-[#0a1230] shadow-sm transition-colors duration-500">
         {/* Left: Logo */}
         <div className="shrink-0 flex items-center">
           <a href="/" className="flex items-center transition-all duration-500">
-            <Logo variant="dark" />
+            <Logo variant="auto" />
           </a>
         </div>
 
@@ -100,10 +100,10 @@ const Header = () => {
               <button
                 key={item.key}
                 onClick={() => setIsBusinessesOpen(!isBusinessesOpen)}
-                className={`flex items-center gap-1 px-2 xl:px-4 py-2  transition-all relative group whitespace-nowrap ${
+                className={`flex items-center gap-1 px-2 xl:px-4 py-2 transition-all relative group whitespace-nowrap ${
                   isActive
                     ? "text-brand-red"
-                    : "text-white/80 hover:text-white hover:bg-white/10"
+                    : "text-brand-blue/80 hover:text-brand-blue hover:bg-black/5 dark:text-white/80 dark:hover:text-white dark:hover:bg-white/10"
                 }`}
               >
                 Businesses
@@ -122,10 +122,10 @@ const Header = () => {
                 key={item.key}
                 href={item.path}
                 onClick={(e) => handleHashNav(e, item.path)}
-                className={`px-2 xl:px-4 py-2  transition-all relative group whitespace-nowrap ${
+                className={`px-2 xl:px-4 py-2 transition-all relative group whitespace-nowrap ${
                   isActive
                     ? "text-brand-red"
-                    : "text-white/80 hover:text-white hover:bg-white/10"
+                    : "text-brand-blue/80 hover:text-brand-blue hover:bg-black/5 dark:text-white/80 dark:hover:text-white dark:hover:bg-white/10"
                 }`}
               >
                 {item.name}
@@ -143,7 +143,7 @@ const Header = () => {
           {mounted && (
             <button
               onClick={() => setTheme(isDark ? "light" : "dark")}
-              className="p-2 transition-all duration-300 text-white/80 hover:text-white hover:bg-white/10 rounded-full"
+              className="p-2 transition-all duration-300 text-brand-blue/80 hover:text-brand-blue hover:bg-black/5 dark:text-white/80 dark:hover:text-white dark:hover:bg-white/10 rounded-full"
               aria-label="Toggle theme"
             >
               {isDark ? <Sun size={18} /> : <Moon size={18} />}
@@ -156,15 +156,14 @@ const Header = () => {
           {mounted && (
             <button
               onClick={() => setTheme(isDark ? "light" : "dark")}
-              className="p-2 transition text-white hover:bg-white/10 rounded-full"
-              aria-label="Toggle theme"
+              className="p-2 transition text-brand-blue hover:bg-black/5 dark:text-white dark:hover:bg-white/10 rounded-full"
             >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
             </button>
           )}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="p-2 transition text-white hover:bg-white/10 rounded-full"
+            className="p-2 transition text-brand-blue hover:bg-black/5 dark:text-white dark:hover:bg-white/10 rounded-full"
           >
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>

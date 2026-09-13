@@ -17,22 +17,16 @@ const BrandPartnersPage = () => {
     <div className="min-h-screen font-sans bg-background text-foreground selection:bg-brand-red selection:text-white">
       <Header />
 
-      {/* Hero Section */}
-      <section className="h-[350px] pt-20 bg-brand-blue text-white relative flex items-center border-b-[16px] border-brand-red overflow-hidden">
-        <div className="absolute inset-0 bg-brand-blue/70 z-10"></div>
-        <img
-          src={content.heroImage}
-          alt="Brand Partners"
-          className="absolute inset-0 w-full h-full object-cover filter contrast-125 saturate-50"
-        />
-
+      {/* Minimal Hero Section */}
+      <section className="h-[350px] pt-20 bg-white dark:bg-[#0a1230] relative flex items-center border-b-[16px] border-brand-red overflow-hidden transition-colors duration-500">
+        
         <div className="container mx-auto px-6 relative z-20 flex flex-col justify-center h-full pt-16 w-full max-w-6xl">
           <div className="w-[90%] md:w-[75%] lg:w-[60%] border-l-4 border-brand-red pl-6 md:pl-12 lg:pl-16">
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-2xl md:text-3xl lg:text-4xl font-medium mb-3 tracking-tight leading-[1.2] text-white drop-shadow-2xl line-clamp-2"
+              className="text-4xl md:text-5xl lg:text-6xl font-medium mb-3 tracking-tight leading-[1.1] text-brand-blue dark:text-white transition-colors duration-500"
             >
               {content.heroTitleTop} <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-yellow-500">
@@ -44,7 +38,7 @@ const BrandPartnersPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-sm md:text-base text-gray-200 font-light uppercase tracking-[0.15em] leading-relaxed max-w-3xl drop-shadow-lg"
+              className="text-sm md:text-base text-brand-blue/70 dark:text-gray-300 font-light uppercase tracking-[0.15em] leading-relaxed max-w-3xl transition-colors duration-500"
             >
               {content.heroSubtitle}
             </motion.p>
@@ -113,7 +107,7 @@ const BrandPartnersPage = () => {
                               <img
                                 src={brand.logo}
                                 alt={brand.name}
-                                className="max-w-full max-h-full object-contain filter grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
+                                className="max-w-full max-h-full object-contain transition-all duration-300"
                                 onError={(e) => {
                                   // Fallback if image fails
                                   e.currentTarget.style.display = 'none';

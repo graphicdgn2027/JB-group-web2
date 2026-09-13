@@ -27,24 +27,16 @@ const AboutPage = () => {
     <div className="min-h-screen font-sans bg-background text-foreground selection:bg-brand-red selection:text-white">
       <Header />
 
-      {/* Editorial Hero Section */}
-      <section className="h-[350px] pt-20 bg-brand-blue text-white relative flex items-center border-b-[16px] border-brand-red overflow-hidden">
-        <div className="absolute inset-0 bg-brand-blue/70 z-10"></div>
-        <img
-          src={content.heroImage}
-          alt="JB Group"
-          className="absolute inset-0 w-full h-full object-cover filter contrast-125 saturate-50"
-        />
-
-
-
+      {/* Minimal Editorial Hero Section */}
+      <section className="h-[350px] pt-20 bg-white dark:bg-[#0a1230] relative flex items-center border-b-[16px] border-brand-red overflow-hidden transition-colors duration-500">
+        
         <div className="container mx-auto px-6 relative z-20 flex flex-col justify-center h-full pt-16 w-full max-w-6xl">
           <div className="w-[90%] md:w-[75%] lg:w-[60%] border-l-4 border-brand-red pl-6 md:pl-12 lg:pl-16">
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-2xl md:text-3xl lg:text-4xl font-medium mb-3 tracking-tight leading-[1.2] text-white drop-shadow-2xl line-clamp-2"
+              className="text-4xl md:text-5xl lg:text-6xl font-medium mb-3 tracking-tight leading-[1.1] text-brand-blue dark:text-white transition-colors duration-500"
             >
               {content.heroTitleTop} <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-yellow-500">
@@ -56,7 +48,7 @@ const AboutPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-sm md:text-base text-gray-200 font-light uppercase tracking-[0.15em] leading-relaxed max-w-3xl drop-shadow-lg"
+              className="text-sm md:text-base text-brand-blue/70 dark:text-gray-300 font-light uppercase tracking-[0.15em] leading-relaxed max-w-3xl transition-colors duration-500"
             >
               {content.heroSubtitle}
             </motion.p>
@@ -196,8 +188,8 @@ const AboutPage = () => {
                   whileHover={{ y: -3, scale: 1.02 }}
                   className={`group ${bgClass} p-6 rounded-2xl border border-border hover:border-brand-red/30 shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden flex flex-col justify-center items-center text-center h-full`}
                 >
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-red to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-4 transition-colors ${iconContainerClass}`}>
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-red to-yellow-500 transition-all duration-300 group-hover:h-2 group-hover:shadow-[0_0_15px_rgba(203,151,51,0.5)]"></div>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-4 transition-colors ${iconContainerClass} mt-2`}>
                      <div className={`w-3 h-3 rounded-full ${iconClass}`} />
                   </div>
                   <h3 className={`text-xl font-bold mb-2 ${textClass}`}>{value.title}</h3>

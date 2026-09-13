@@ -7,11 +7,17 @@ import BusinessPortfolio from "../components/BusinessPortfolio";
 import AboutGroup from "../components/AboutGroup";
 import MissionVision from "../components/MissionVision";
 import ContactFooter from "../components/ContactFooter";
+import { useSection } from "../content/ContentProvider";
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true);
+  const settings = useSection("settings");
+  const [isLoading, setIsLoading] = useState(settings.loaderEnabled);
 
   useEffect(() => {
+    if (!settings.loaderEnabled) {
+      setIsLoading(false);
+      return;
+    }
     const timer = setTimeout(() => {
       setIsLoading(false);
       // After loading screen disappears, scroll to hash if present
@@ -24,9 +30,9 @@ function App() {
           }
         }
       }, 300); // small delay to let DOM settle after loading screen
-    }, 1500);
+    }, settings.loaderDurationMs);
     return () => clearTimeout(timer);
-  }, []);
+  }, [settings.loaderEnabled, settings.loaderDurationMs]);
 
   const sectionVariants = {
     hidden: { opacity: 0, y: 40 },
