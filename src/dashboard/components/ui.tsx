@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { toast } from "sonner";
 import {
@@ -17,6 +17,8 @@ import {
   X,
 } from "lucide-react";
 import { useMediaLibrary } from "../media";
+import { useAuth } from "../AuthProvider";
+import { useDrafts } from "../DraftProvider";
 import { isSupabaseConfigured } from "../../lib/supabase";
 
 /* ------------------------------------------------------------------ layout */
@@ -231,13 +233,16 @@ const MediaPicker: React.FC<{
   onClose: () => void;
 }> = ({ onPick, onClose }) => {
   const { items, loading, error, upload, remove } = useMediaLibrary();
+  const { access } = useAuth();
+  const canUpload = isSupabaseConfigured && Boolean(access?.can("media.upload"));
+  const canDelete = Boolean(access?.can("media.delete"));
   const [busy, setBusy] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleFiles = async (files: FileList | null) => {
-    if (!files?.length) return;
+    if (!files?.length || !canUpload) return;
     setBusy(true);
     setLocalError(null);
     try {
@@ -263,10 +268,12 @@ const MediaPicker: React.FC<{
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Button onClick={() => fileRef.current?.click()} disabled={busy} variant="primary">
-              {busy ? <Loader2 size={15} className="animate-spin" /> : <Upload size={15} />}
-              Upload
-            </Button>
+            {canUpload && (
+              <Button onClick={() => fileRef.current?.click()} disabled={busy} variant="primary">
+                {busy ? <Loader2 size={15} className="animate-spin" /> : <Upload size={15} />}
+                Upload
+              </Button>
+            )}
             <button
               onClick={onClose}
               className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg"
@@ -296,7 +303,7 @@ const MediaPicker: React.FC<{
           className="p-5 overflow-y-auto flex-1"
           onDragOver={(e) => {
             e.preventDefault();
-            if (isSupabaseConfigured) setDragOver(true);
+            if (canUpload) setDragOver(true);
           }}
           onDragLeave={() => setDragOver(false)}
           onDrop={(e) => {
@@ -311,7 +318,7 @@ const MediaPicker: React.FC<{
             </p>
           )}
 
-          {isSupabaseConfigured && (
+          {canUpload && (
             <div
               onClick={() => fileRef.current?.click()}
               className={`mb-4 rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-1.5 py-6 cursor-pointer transition-colors ${
@@ -347,14 +354,16 @@ const MediaPicker: React.FC<{
                   <img src={m.url} alt={m.name} className="w-full h-full object-contain" />
                   <span className="absolute inset-0 bg-[var(--dash-brand)]/0 group-hover:bg-[var(--dash-brand)]/5 transition-colors" />
                 </button>
-                <button
-                  type="button"
-                  title="Delete permanently"
-                  onClick={() => void remove(m.name)}
-                  className="absolute top-1.5 right-1.5 p-1.5 bg-white/95 text-[var(--dash-danger)] opacity-0 group-hover:opacity-100 transition rounded-lg shadow-sm"
-                >
-                  <Trash2 size={13} />
-                </button>
+                {canDelete && (
+                  <button
+                    type="button"
+                    title="Delete permanently"
+                    onClick={() => void remove(m.name)}
+                    className="absolute top-1.5 right-1.5 p-1.5 bg-white/95 text-[var(--dash-danger)] opacity-0 group-hover:opacity-100 transition rounded-lg shadow-sm"
+                  >
+                    <Trash2 size={13} />
+                  </button>
+                )}
                 <p className="px-2 py-1.5 text-[10px] text-slate-500 truncate border-t border-slate-100">
                   {m.name}
                 </p>
@@ -649,43 +658,31 @@ export const SaveBar: React.FC<{
   onDiscard: () => void;
   onReset: () => void;
 }> = ({ dirty, saving, error, savedAt, onSave, onDiscard, onReset }) => {
-  const lastSavedAt = useRef<number | null>(null);
-  const lastError = useRef<string | null>(null);
-
-  // A toast is a clearer confirmation than static text alone, without
-  // replacing the persistent status the bar already shows.
-  useEffect(() => {
-    if (savedAt && savedAt !== lastSavedAt.current) {
-      lastSavedAt.current = savedAt;
-      toast.success("Changes saved", { description: "Your edit is now live on the site." });
-    }
-  }, [savedAt]);
-
-  useEffect(() => {
-    if (error && error !== lastError.current) {
-      lastError.current = error;
-      toast.error("Couldn't save", { description: error });
-    }
-    if (!error) lastError.current = null;
-  }, [error]);
-
+  // Publish confirmations are toasted centrally by DraftProvider, so a
+  // multi-section publish from the top bar doesn't toast once per page.
+  const { canPublish } = useDrafts();
   return (
     <div className="sticky bottom-6 z-30 mt-8">
       <div className="mx-auto max-w-fit bg-white/80 backdrop-blur-xl border border-slate-200/50 rounded-2xl shadow-[var(--dash-shadow-lg)] px-4 py-3 flex items-center gap-3 flex-wrap ring-1 ring-black/5">
         <Button variant="primary" onClick={onSave} disabled={!dirty || saving}>
-          {saving ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
-          {saving ? "Saving…" : "Save changes"}
+          {saving ? <Loader2 size={16} className="animate-spin" /> : <UploadCloud size={16} />}
+          {saving ? (canPublish ? "Publishing…" : "Submitting…") : canPublish ? "Publish section" : "Submit for review"}
         </Button>
         <Button onClick={onDiscard} disabled={!dirty || saving}>
           Discard
         </Button>
-        <Button variant="danger" onClick={onReset} disabled={saving}>
-          <RotateCcw size={14} /> Reset to default
+        <Button
+          variant="danger"
+          onClick={onReset}
+          disabled={saving}
+          title="Load the original content as a draft — publish to apply it"
+        >
+          <RotateCcw size={14} /> Restore original
         </Button>
 
         <span className="w-px self-stretch bg-slate-200/60 mx-2" />
 
-        <StatusPill dirty={dirty} saving={saving} error={error} savedAt={savedAt} />
+        <StatusPill dirty={dirty} saving={saving} error={error} savedAt={savedAt} canPublish={canPublish} />
       </div>
     </div>
   );
@@ -696,11 +693,12 @@ const StatusPill: React.FC<{
   saving: boolean;
   error: string | null;
   savedAt: number | null;
-}> = ({ dirty, saving, error, savedAt }) => {
+  canPublish: boolean;
+}> = ({ dirty, saving, error, savedAt, canPublish }) => {
   if (saving) {
     return (
       <span className="inline-flex items-center gap-1.5 text-[12px] font-medium text-slate-500 pr-1">
-        <Loader2 size={13} className="animate-spin" /> Saving…
+        <Loader2 size={13} className="animate-spin" /> Publishing…
       </span>
     );
   }
@@ -718,18 +716,18 @@ const StatusPill: React.FC<{
     return (
       <span className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[var(--dash-warn)] pr-1">
         <span className="relative w-1.5 h-1.5 rounded-full bg-[var(--dash-warn)] dash-pulse" />
-        Unsaved changes
+        Draft — not published yet
       </span>
     );
   }
   if (savedAt) {
     return (
       <span className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[var(--dash-success)] pr-1">
-        <CheckCircle2 size={13} /> Saved — live on the site
+        <CheckCircle2 size={13} /> {canPublish ? "Published — live on the site" : "Sent for review"}
       </span>
     );
   }
-  return <span className="text-[12px] text-slate-400 pr-1">No changes</span>;
+  return <span className="text-[12px] text-slate-400 pr-1">Up to date</span>;
 };
 
 /* ---------------------------------------------------------------- notices */

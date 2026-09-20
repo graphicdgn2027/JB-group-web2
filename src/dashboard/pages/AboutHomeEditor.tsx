@@ -46,6 +46,17 @@ const AboutHomeEditor: React.FC = () => {
           label="Section photo"
           hint="Displayed tall on the left with a gentle parallax drift."
         />
+        <Grid cols={3}>
+          <Field label="Badge" hint="Chip on the photo's top corner. Leave empty to hide.">
+            <TextInput value={draft.imageBadge} onChange={(v) => update({ imageBadge: v })} />
+          </Field>
+          <Field label="Caption label" hint="e.g. Corporate Office">
+            <TextInput value={draft.imageEyebrow} onChange={(v) => update({ imageEyebrow: v })} />
+          </Field>
+          <Field label="Caption" hint="Leave empty to hide the caption.">
+            <TextInput value={draft.imageCaption} onChange={(v) => update({ imageCaption: v })} />
+          </Field>
+        </Grid>
       </Panel>
 
       <Panel

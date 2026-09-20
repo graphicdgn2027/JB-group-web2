@@ -3,6 +3,7 @@ import { Copy, Loader2, Trash2, Upload } from "lucide-react";
 import { useMediaLibrary } from "../media";
 import { isSupabaseConfigured } from "../../lib/supabase";
 import { Button, Notice, Panel } from "../components/ui";
+import { useAccess } from "../AuthProvider";
 
 function formatSize(bytes: number): string {
   if (!bytes) return "—";
@@ -13,6 +14,9 @@ function formatSize(bytes: number): string {
 
 const MediaPage: React.FC = () => {
   const { items, loading, error, upload, remove } = useMediaLibrary();
+  const access = useAccess();
+  const canUpload = access.can("media.upload");
+  const canDelete = access.can("media.delete");
   const [busy, setBusy] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
@@ -61,6 +65,7 @@ const MediaPage: React.FC = () => {
       <Panel
         title="Your images"
         actions={
+          canUpload && (
           <Button
             variant="primary"
             onClick={() => fileRef.current?.click()}
@@ -69,6 +74,7 @@ const MediaPage: React.FC = () => {
             {busy ? <Loader2 size={15} className="animate-spin" /> : <Upload size={15} />}
             Upload images
           </Button>
+          )
         }
       >
         <input
@@ -111,6 +117,7 @@ const MediaPage: React.FC = () => {
                     <Copy size={11} />
                     {copied === m.url ? "Copied" : "Copy URL"}
                   </button>
+                  {canDelete && (
                   <button
                     onClick={() => void remove(m.name)}
                     title="Delete permanently"
@@ -119,6 +126,7 @@ const MediaPage: React.FC = () => {
                   >
                     <Trash2 size={12} />
                   </button>
+                  )}
                 </div>
               </div>
             </div>

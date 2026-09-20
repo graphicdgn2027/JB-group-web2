@@ -1,14 +1,141 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
-import { motion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
-import { ArrowRight } from "lucide-react";
+import {
+  animate,
+  motion,
+  useInView,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "motion/react";
+import { ArrowRight, Award, Building2, Calendar, MapPin, Sparkles, Users } from "lucide-react";
 import { useIsMobile } from "../hooks/useIsMobile";
 import { useSection } from "../content/ContentProvider";
+
+/** Picks a fitting icon for a stat label without depending on a fixed id — labels are editable in the dashboard. */
+function iconForStat(label: string) {
+  const l = label.toLowerCase();
+  if (l.includes("year")) return Calendar;
+  if (l.includes("compan")) return Building2;
+  if (l.includes("brand")) return Award;
+  if (l.includes("employe") || l.includes("people") || l.includes("team") || l.includes("staff")) return Users;
+  return Sparkles;
+}
+
+/** Counts a stat's leading number up from 0 once it scrolls into view; trailing text (e.g. "+") stays static. */
+const CountUpValue: React.FC<{ value: string; suffixClassName?: string }> = ({ value, suffixClassName }) => {
+  const match = value.match(/^(\d+(?:\.\d+)?)(.*)$/);
+  const target = match ? parseFloat(match[1]) : null;
+  const suffix = match ? match[2] : "";
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const reduceMotion = useReducedMotion();
+  const [display, setDisplay] = useState(target === null ? value : reduceMotion ? String(target) : "0");
+
+  useEffect(() => {
+    if (!inView || target === null || reduceMotion) return;
+    const controls = animate(0, target, {
+      duration: 1.6,
+      ease: [0.16, 1, 0.3, 1],
+      onUpdate: (v) => setDisplay(String(Math.round(v))),
+    });
+    return () => controls.stop();
+  }, [inView, target, reduceMotion]);
+
+  return (
+    <span ref={ref} className="tabular-nums">
+      {display}
+      {suffix && <span className={suffixClassName}>{suffix}</span>}
+    </span>
+  );
+};
+
+const tileVariants = {
+  hidden: { opacity: 0, y: 22, scale: 0.96 },
+  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const } },
+};
+
+/** Spotlight follows the cursor inside a card (CSS variables only, so no re-renders). */
+function trackPointer(e: React.MouseEvent<HTMLElement>) {
+  const el = e.currentTarget;
+  const r = el.getBoundingClientRect();
+  el.style.setProperty("--mx", `${e.clientX - r.left}px`);
+  el.style.setProperty("--my", `${e.clientY - r.top}px`);
+}
+
+const StatCard: React.FC<{ value: string; label: string; featured: boolean; interactive: boolean }> = ({
+  value,
+  label,
+  featured,
+  interactive,
+}) => {
+  const Icon = iconForStat(label);
+
+  return (
+    <motion.div
+      variants={tileVariants}
+      whileHover={interactive ? { y: -5 } : undefined}
+      whileTap={{ scale: 0.97 }}
+      onMouseMove={interactive ? trackPointer : undefined}
+      className={`group/tile relative isolate cursor-default overflow-hidden rounded-2xl border px-4 py-4 transition-[border-color,box-shadow] duration-300 ${
+        featured
+          ? "border-brand-blue bg-brand-blue text-white shadow-[0_20px_40px_-18px_rgba(17,29,67,0.7)]"
+          : "border-slate-200/80 bg-white text-brand-blue shadow-[0_1px_2px_rgba(17,29,67,0.04)] hover:border-accent/50 hover:shadow-[0_22px_40px_-20px_rgba(17,29,67,0.35)]"
+      }`}
+    >
+      {/* Cursor spotlight */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 opacity-0 transition-opacity duration-300 group-hover/tile:opacity-100"
+        style={{
+          background: `radial-gradient(180px circle at var(--mx, 50%) var(--my, 50%), ${
+            featured ? "rgba(203,151,51,0.28)" : "rgba(203,151,51,0.12)"
+          }, transparent 70%)`,
+        }}
+      />
+
+      {/* Gold underline that sweeps in on hover */}
+      <span className="absolute bottom-0 left-0 h-[3px] w-0 bg-accent transition-all duration-500 ease-out group-hover/tile:w-full" />
+
+      <div className="flex items-center gap-3">
+        <span
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all duration-300 group-hover/tile:-rotate-12 group-hover/tile:scale-110 ${
+            featured
+              ? "bg-accent text-brand-blue shadow-[0_0_22px_rgba(203,151,51,0.45)]"
+              : "bg-accent/10 text-accent group-hover/tile:bg-accent group-hover/tile:text-white group-hover/tile:shadow-[0_8px_18px_-6px_rgba(203,151,51,0.7)]"
+          }`}
+        >
+          <Icon size={19} strokeWidth={2.1} />
+        </span>
+
+        <div className="min-w-0">
+          <div
+            className={`text-[32px] font-black leading-none tracking-tight ${featured ? "text-accent" : "text-brand-blue"}`}
+          >
+            <CountUpValue
+              value={value}
+              suffixClassName={`ml-0.5 align-top text-[19px] ${featured ? "text-white" : "text-accent"}`}
+            />
+          </div>
+
+          <div
+            className={`mt-1.5 text-[10px] font-bold uppercase tracking-[0.14em] break-words transition-colors duration-300 ${
+              featured ? "text-white/70 group-hover/tile:text-white" : "text-slate-500 group-hover/tile:text-brand-blue"
+            }`}
+          >
+            {label}
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
 
 const AboutGroup = () => {
   const containerRef = useRef<HTMLElement>(null);
   const isMobile = useIsMobile();
+  const reduceMotion = useReducedMotion();
+  const interactive = !isMobile && !reduceMotion;
   const content = useSection("aboutHome");
 
   const { scrollYProgress } = useScroll({
@@ -16,7 +143,8 @@ const AboutGroup = () => {
     offset: ["start end", "end start"],
   });
 
-  const yParallax = useTransform(scrollYProgress, [0, 1], isMobile ? ["0%", "0%"] : ["0%", "10%"]);
+  // The image is contained on a tinted backdrop, so a gentle drift never exposes a hard edge.
+  const yParallax = useTransform(scrollYProgress, [0, 1], interactive ? ["3%", "-2%"] : ["0%", "0%"]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -30,7 +158,7 @@ const AboutGroup = () => {
 
   const itemVariants = {
     hidden: { opacity: 0, y: isMobile ? 20 : 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } },
   };
 
   const [firstParagraph, ...restParagraphs] = content.paragraphs;
@@ -45,31 +173,75 @@ const AboutGroup = () => {
           viewport={{ once: true, margin: "-100px" }}
           className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-stretch"
         >
-          {/* Image and Stats Column (Left) */}
-          <motion.div variants={itemVariants} className="lg:w-4/12 w-full flex flex-col">
-            <div className="border border-border/30 bg-white p-2 shadow-sm flex-grow flex flex-col min-h-[500px]">
-              <div className="relative overflow-hidden w-full flex-grow">
-                <motion.div
-                  className="absolute inset-0 w-full h-[120%] -top-[10%] bg-cover bg-center"
-                  style={{ backgroundImage: `url('${content.image}')`, y: yParallax }}
-                />
-              </div>
+          {/* Photo + stats column (left) */}
+          <motion.div variants={itemVariants} className="lg:w-4/12 w-full flex flex-col gap-3">
+            {/* Photo */}
+            <div className="group/photo relative isolate flex-grow min-h-[480px] sm:min-h-[560px] overflow-hidden rounded-2xl bg-gradient-to-b from-[#dfe6f2] via-[#eef1f6] to-[#f6f1e6] shadow-[0_24px_50px_-28px_rgba(17,29,67,0.55)]">
+              {/* Soft sun glow behind the building */}
+              <span
+                aria-hidden
+                className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-accent/20 blur-3xl transition-transform duration-[1400ms] ease-out group-hover/photo:scale-125"
+              />
+              {/* Image covers the container */}
+              <motion.div
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-[scale] duration-[1400ms] ease-out group-hover/photo:scale-[1.04]"
+                style={{ backgroundImage: `url('${content.image}')`, y: yParallax }}
+              />
+
+              {/* Readability gradient for the caption */}
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-blue from-5% via-brand-blue/70 via-20% to-transparent to-40%" />
+
+              {/* Light sweep on hover */}
+              <span className="pointer-events-none absolute inset-y-0 -left-2/3 w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-[1100ms] ease-out group-hover/photo:translate-x-[420%]" />
+
+              {content.imageBadge && (
+                <div className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-white/95 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-blue shadow-[0_6px_18px_-6px_rgba(17,29,67,0.4)] transition-transform duration-300 group-hover/photo:-translate-y-0.5">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75 motion-reduce:hidden" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
+                  </span>
+                  {content.imageBadge}
+                </div>
+              )}
+
+              {content.imageCaption && (
+                <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-5">
+                  <div className="transition-transform duration-500 ease-out group-hover/photo:-translate-y-1">
+                    {content.imageEyebrow && (
+                      <p className="flex items-center gap-2 text-[10.5px] font-bold uppercase tracking-[0.22em] text-accent">
+                        <span className="h-px w-6 bg-accent transition-all duration-500 group-hover/photo:w-10" />
+                        {content.imageEyebrow}
+                      </p>
+                    )}
+                    <p className="mt-1.5 text-[15px] font-semibold leading-snug text-white">
+                      {content.imageCaption}
+                    </p>
+                  </div>
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-inset ring-white/25 backdrop-blur-md transition-all duration-300 group-hover/photo:bg-accent group-hover/photo:ring-accent group-hover/photo:text-brand-blue">
+                    <MapPin size={17} />
+                  </span>
+                </div>
+              )}
             </div>
 
-            {/* Stats below image */}
-            <div className="grid grid-cols-2 mt-3 gap-3">
-              {content.stats.map((stat) => (
-                <div
+            {/* Stats: bento cards */}
+            <motion.div
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: "-60px" }}
+              variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } } }}
+              className="grid grid-cols-2 gap-3"
+            >
+              {content.stats.map((stat, i) => (
+                <StatCard
                   key={stat.id}
-                  className="border border-border/30 p-3 text-center bg-white shadow-sm hover:shadow-md transition-shadow"
-                >
-                  <div className="text-2xl font-black text-brand-blue">{stat.value}</div>
-                  <div className="text-[10px] font-bold tracking-widest text-accent uppercase mt-0.5">
-                    {stat.label}
-                  </div>
-                </div>
+                  value={stat.value}
+                  label={stat.label}
+                  featured={i === 0 || i === content.stats.length - 1}
+                  interactive={interactive}
+                />
               ))}
-            </div>
+            </motion.div>
           </motion.div>
 
           {/* Text Content Column (Right) */}

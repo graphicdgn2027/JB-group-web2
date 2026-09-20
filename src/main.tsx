@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import { ThemeProvider } from "next-themes";
-import { BrowserRouter, Routes, Route } from "react-router";
+import { BrowserRouter, Navigate, Routes, Route } from "react-router";
+import NotFoundPage from "./pages/NotFoundPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import PortfolioDetails from "./pages/PortfolioDetails.tsx";
 import ContactPage from "./pages/ContactPage.tsx";
@@ -23,6 +24,11 @@ import ContactEditor from "./dashboard/pages/ContactEditor.tsx";
 import FooterNavEditor from "./dashboard/pages/FooterNavEditor.tsx";
 import MediaPage from "./dashboard/pages/MediaPage.tsx";
 import SettingsEditor from "./dashboard/pages/SettingsEditor.tsx";
+import ReviewPage from "./dashboard/pages/ReviewPage.tsx";
+import UsersPage from "./dashboard/pages/UsersPage.tsx";
+import RolesPage from "./dashboard/pages/RolesPage.tsx";
+import ActivityPage from "./dashboard/pages/ActivityPage.tsx";
+import AccountPage from "./dashboard/pages/AccountPage.tsx";
 import "./styles/index.css";
 
 createRoot(document.getElementById("root")!).render(
@@ -38,6 +44,8 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/leadership" element={<LeadershipPage />} />
             <Route path="/brand-partners" element={<BrandPartnersPage />} />
+            {/* "Our Businesses" links point here; the section lives on the homepage. */}
+            <Route path="/businesses" element={<Navigate to="/#businesses" replace />} />
 
             {/* Admin dashboard — DashboardLayout renders the login screen
                 itself when there is no authenticated session. */}
@@ -55,7 +63,15 @@ createRoot(document.getElementById("root")!).render(
               <Route path="footer" element={<FooterNavEditor />} />
               <Route path="media" element={<MediaPage />} />
               <Route path="settings" element={<SettingsEditor />} />
+              <Route path="review" element={<ReviewPage />} />
+              <Route path="users" element={<UsersPage />} />
+              <Route path="roles" element={<RolesPage />} />
+              <Route path="activity" element={<ActivityPage />} />
+              <Route path="account" element={<AccountPage />} />
             </Route>
+
+            {/* Anything else */}
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

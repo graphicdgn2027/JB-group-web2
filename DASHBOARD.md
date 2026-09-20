@@ -25,14 +25,23 @@ of [`supabase/schema.sql`](supabase/schema.sql), and run it.
 This creates:
 
 - a `site_content` table — one row per section of the site, stored as JSON,
-- row-level security so **anyone can read** content but **only signed-in users can
-  change it**,
-- a public `media` storage bucket for images uploaded through the dashboard.
+- roles, user profiles and permission checks (see **Roles and permissions** below),
+- the review queue and the activity log,
+- a public `media` storage bucket for images uploaded through the dashboard,
+- row-level security so **anyone can read** content, but only people whose role
+  allows it can change anything.
 
-### 3. Create your admin login
+The script is safe to run again whenever it changes; permissions you customised in the
+dashboard are kept.
 
-Go to **Authentication → Users → Add user**. Enter an email and password, and tick
-**Auto Confirm User** so no confirmation email is required.
+### 3. Create your Super Admin login
+
+Go to **Authentication → Users → Add user**. Enter **graphicdgn2027@gmail.com** and a
+password, and tick **Auto Confirm User** so no confirmation email is required.
+
+That email is made **Super Admin** automatically (it's set at the top of
+`schema.sql` — change it there if needed). Every other new login starts as a Viewer
+until a Super Admin changes their role.
 
 Then go to **Authentication → Sign In / Providers → Email** and turn **off**
 "Allow new users to sign up". This is important — without it, anyone could register
@@ -58,10 +67,25 @@ Restart the dev server afterwards — Vite only reads `.env` at startup.
 ### 5. Seed the database
 
 Run `npm run dev`, open <http://localhost:5173/dashboard>, sign in, and press
-**Publish all sections** on the Overview page. This writes the site's current content
+**Seed database** on the Overview page. This writes the site's current content
 into Supabase so you have something to edit.
 
-### 6. Deploy
+### 6. Deploy user management
+
+Creating and deleting logins, and changing someone's email or password, needs
+Supabase's secret service key, so it runs in a small Edge Function
+(`supabase/functions/admin-users`) rather than in the browser.
+
+```
+npx supabase login
+npx supabase functions deploy admin-users --project-ref cbfkuatjuvlwhgptytcx
+```
+
+No extra configuration is needed: Supabase gives Edge Functions their keys
+automatically. Until it's deployed, the Users page still lets you change roles, page
+access and enable/disable accounts — it just can't add or remove logins.
+
+### 7. Deploy the website
 
 On Vercel, add the same two variables under
 **Project → Settings → Environment Variables**, then redeploy. Vite inlines `VITE_*`
@@ -99,10 +123,17 @@ All three come from whichever businesses are marked published.
 
 ## Day-to-day use
 
-- Edits are buffered locally until you press **Save changes**, so you can experiment
-  freely. **Discard** throws away unsaved edits.
-- **Reset to default** restores that one section to the content the site originally
-  shipped with. It affects only the section you are looking at.
+- Every edit is a **draft** until you publish it. Drafts are kept in your browser, so
+  they survive closing the tab, and a dot in the sidebar marks pages with drafts.
+- **Preview** (top bar) shows the real website with your drafts beside the editor,
+  updating as you type. Switch between desktop, tablet and mobile widths, pick any
+  page, or open the preview in its own tab.
+- **Publish** (top bar, or `Ctrl+S`) puts every draft live at once. The amber
+  "unpublished" menu lists them so you can publish or discard them one at a time; each
+  page's own bar also has **Publish section**.
+- **View live** opens the published page for whatever you're editing.
+- **Restore original** loads the content the site originally shipped with into that
+  section's draft. Nothing changes on the website until you publish it.
 - **Unpublish** hides a business or a leadership profile everywhere on the site while
   keeping its content intact — safer than deleting.
 - Images can be a path to a file in `Public/assets` (for example
@@ -111,10 +142,38 @@ All three come from whichever businesses are marked published.
 - Deleting an image from the media library is permanent and is *not* undone by
   "Reset to default".
 
-## Adding another editor
+## Roles and permissions
 
-Create the user in **Supabase → Authentication → Users**. Keep public sign-ups
-disabled so only people you add can log in.
+| Role | What they can do |
+| --- | --- |
+| **Super Admin** | Everything, including users and roles. There is always at least one, and nobody can remove the last one. |
+| **Admin** | Edit and publish all content, upload and delete media, change site settings, see the activity log. |
+| **Editor** | Edit and publish content, approve or reject submissions, upload media, see the activity log. |
+| **Content Creator** | Edit the pages they're given and upload media. They can't publish — they **submit for review** instead. |
+| **Viewer** | Look around the dashboard and the live preview, without changing anything. |
+
+- **Roles & permissions** (Super Admins only) is a grid where you can change what
+  Admin, Editor, Content Creator and Viewer are allowed to do.
+- **Users** is where you add people, pick their role, and — for roles that edit —
+  choose **All pages** or only specific pages (for example, just Leadership).
+- **Review** is where content creators' submissions wait. Editors can preview a
+  submission with the live preview, then **Approve** (it goes live) or **Request
+  changes** with a note. Creators see the note and can revise and resubmit.
+- **Activity** lists who published, reviewed or changed users, and when.
+- **My account** lets anyone change their own name and password, see what their role
+  allows, and sign out on every device.
+
+These rules are enforced by the database, not just hidden in the dashboard, so they
+hold even if someone calls Supabase directly.
+
+## Adding another person
+
+Open **Users → Add user**, enter their name, email and a password (or press
+**Generate**), pick a role, and share the password with them securely. Keep public
+sign-ups disabled in Supabase so only people you add can log in.
+
+If someone forgets their password, use **Send password reset** from the user's menu.
+The link brings them back to the dashboard to choose a new one.
 
 ## Troubleshooting
 

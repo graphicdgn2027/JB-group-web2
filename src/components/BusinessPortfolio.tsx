@@ -95,9 +95,7 @@ const BusinessPortfolio: React.FC<BusinessPortfolioProps> = ({
                     <span className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-0 transition-transform duration-1000 ease-out group-hover:translate-x-[400%]" />
                     {/* Soft tint fades in on hover */}
                     <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-brand-blue/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                    <span className="absolute top-3 right-3 text-[11px] font-bold tracking-widest text-white bg-black/30 backdrop-blur-md px-2.5 py-1 transition-all duration-300 group-hover:bg-accent group-hover:scale-110" style={{ borderRadius: 9999 }}>
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
+
                   </div>
 
                   {/* Content */}

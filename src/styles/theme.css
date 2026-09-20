@@ -174,6 +174,10 @@
     font-size: var(--text-base);
     font-weight: var(--font-weight-medium);
     line-height: 1.5;
+  }
+
+  /* The public site uses square buttons; the dashboard has its own radius scale. */
+  button:not(.dash *) {
     border-radius: 0 !important;
   }
 

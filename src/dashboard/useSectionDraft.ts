@@ -1,68 +1,52 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useContentStore } from "../content/ContentProvider";
+import { useCallback } from "react";
+import { DEFAULT_CONTENT } from "../content/defaults";
 import type { SectionKey, SiteContent } from "../content/types";
+import { useDrafts } from "./DraftProvider";
 
 /**
- * Local edit buffer for one content section.
+ * Edit buffer for one content section, backed by the shared DraftProvider.
  *
- * Editors mutate a draft copy so nothing reaches the database (or the live site)
- * until "Save" is pressed, and an unsaved draft survives navigating between
- * dashboard tabs only for as long as the editor stays mounted.
+ * Edits stay as drafts — visible in the live preview but not on the public
+ * site — until the section is published, either from this page's save bar or
+ * from the Publish button in the top bar.
  */
 export function useSectionDraft<K extends SectionKey>(key: K) {
-  const { content, saveSection, resetSection } = useContentStore();
-  const published = content[key];
+  const {
+    getDraft,
+    setDraft: setSectionDraft,
+    dirtyKeys,
+    discard: discardKeys,
+    publish,
+    submit,
+    canPublish,
+    sectionState,
+  } = useDrafts();
 
-  const [draft, setDraft] = useState<SiteContent[K]>(published);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [savedAt, setSavedAt] = useState<number | null>(null);
+  const draft = getDraft(key);
+  const dirty = dirtyKeys.includes(key);
+  const { saving, error, savedAt } = sectionState(key);
 
-  // Re-sync when the section is reloaded from the server (or reset elsewhere).
-  useEffect(() => {
-    setDraft(published);
-  }, [published]);
-
-  const dirty = useMemo(
-    () => JSON.stringify(draft) !== JSON.stringify(published),
-    [draft, published]
-  );
+  const setDraft = useCallback((value: SiteContent[K]) => setSectionDraft(key, value), [key, setSectionDraft]);
 
   /** Shallow-patch the draft; for object-shaped sections. */
-  const update = useCallback((patch: Partial<SiteContent[K]>) => {
-    setDraft((prev) => ({ ...prev, ...patch }) as SiteContent[K]);
-  }, []);
+  const update = useCallback(
+    (patch: Partial<SiteContent[K]>) =>
+      setSectionDraft(key, (prev) => ({ ...prev, ...patch }) as SiteContent[K]),
+    [key, setSectionDraft]
+  );
 
+  /** Publishes, or sends for review when the user's role can't publish. */
   const save = useCallback(async () => {
-    setSaving(true);
-    setError(null);
-    try {
-      await saveSection(key, draft);
-      setSavedAt(Date.now());
-    } catch (e) {
-      setError(e instanceof Error ? e.message : String(e));
-    } finally {
-      setSaving(false);
-    }
-  }, [draft, key, saveSection]);
+    if (canPublish) await publish([key]);
+    else await submit([key]);
+  }, [key, canPublish, publish, submit]);
 
-  const discard = useCallback(() => {
-    setDraft(published);
-    setError(null);
-  }, [published]);
+  const discard = useCallback(() => discardKeys([key]), [key, discardKeys]);
 
-  const resetToDefault = useCallback(async () => {
-    setSaving(true);
-    setError(null);
-    try {
-      await resetSection(key);
-      setSavedAt(Date.now());
-    } catch (e) {
-      setError(e instanceof Error ? e.message : String(e));
-    } finally {
-      setSaving(false);
-    }
-  }, [key, resetSection]);
+  /** Loads the original content into the draft; it still needs publishing. */
+  const resetToDefault = useCallback(() => {
+    setSectionDraft(key, DEFAULT_CONTENT[key]);
+  }, [key, setSectionDraft]);
 
   return {
     draft,

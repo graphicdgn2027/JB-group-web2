@@ -52,15 +52,31 @@
   border-color: var(--dash-border);
 }
 
-.dash button {
-  border-radius: var(--dash-radius-sm) !important;
-  font-size: inherit;
-  line-height: inherit;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
+/*
+ * Element defaults live in Tailwind's `base` layer so utility classes
+ * (text-[13px], rounded-full, …) can still override them. Unlayered rules
+ * would beat every utility.
+ */
+@layer base {
+  .dash button {
+    border-radius: var(--dash-radius-sm);
+    font-size: inherit;
+    line-height: inherit;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
-.dash button:active:not(:disabled) {
-  transform: scale(0.98);
+  .dash button:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  .dash h1,
+  .dash h2,
+  .dash h3,
+  .dash h4 {
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+  }
 }
 
 .dash input,
@@ -93,13 +109,13 @@
   color: var(--dash-muted-2);
 }
 
-.dash h1,
-.dash h2,
-.dash h3,
-.dash h4 {
-  font-size: inherit;
-  font-weight: inherit;
-  line-height: inherit;
+/* Keep browser autofill from painting fields pale blue. */
+.dash input:-webkit-autofill,
+.dash input:-webkit-autofill:hover,
+.dash input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--dash-text);
+  caret-color: var(--dash-text);
+  transition: background-color 100000s ease-in-out 0s;
 }
 
 .dash button:focus-visible,
@@ -153,15 +169,37 @@
   transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
 }
 
-.dash-sidebar-link {
-  position: relative;
+/* Sidebar */
+.dash-sidebar {
+  background:
+    radial-gradient(120% 60% at 0% 0%, rgba(203, 151, 51, 0.09), transparent 60%),
+    linear-gradient(180deg, #0f172a 0%, #0b1224 100%);
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.04);
 }
-.dash-sidebar-link[data-active="true"] {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  border-radius: 10px;
+
+.dash .dash-collapse-btn {
+  border-radius: 9999px;
+  transition: opacity 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
-.dash-sidebar-link:hover:not([data-active="true"]) {
-  background: rgba(255, 255, 255, 0.04);
-  border-radius: 10px;
+
+.dash-nav-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+}
+.dash .dash-nav-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.dash .dash-nav-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border: 0;
+}
+.dash .dash-nav-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dash-sidebar,
+  .dash-sidebar * {
+    transition-duration: 0.01ms !important;
+  }
 }

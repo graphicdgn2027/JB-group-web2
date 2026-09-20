@@ -43,6 +43,11 @@ export interface AboutHomeContent {
   titleLine1: string;
   titleLine2: string;
   image: string;
+  /** Small chip on the photo's top-left corner. */
+  imageBadge: string;
+  /** Caption on the photo: short gold label, then the main line. */
+  imageEyebrow: string;
+  imageCaption: string;
   dropCap: string;
   paragraphs: string[];
   stats: StatItem[];
@@ -93,6 +98,10 @@ export interface Business extends Identified {
   /** Wide hero image used on the detail page. */
   heroImage: string;
   logo?: string;
+  /** Short sector label, e.g. "LPG Bottling". Not rendered yet. */
+  tagline?: string;
+  /** Business stage label, e.g. "Expansion". Not rendered yet. */
+  status?: string;
   description: string;
   overview: string;
   details: string[];
@@ -189,6 +198,8 @@ export interface BrandPartnersContent {
   heroImage: string;
   sectionEyebrow: string;
   sectionHeading: string;
+  /** Intro paragraph shown above the list of businesses and their brands. */
+  intro: string;
   emptyStateText: string;
 }
 

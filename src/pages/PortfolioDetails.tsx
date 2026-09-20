@@ -40,7 +40,15 @@ const PortfolioDetails = () => {
       <Header />
 
       {/* Minimal Hero */}
-      <section className="h-[350px] pt-20 bg-white dark:bg-[#0a1230] relative flex items-center border-b-[16px] border-brand-red overflow-hidden transition-colors duration-500">
+      <section className="h-[350px] pt-20 bg-brand-blue relative flex items-center border-b-[4px] border-brand-red overflow-hidden transition-colors duration-500">
+        {/* Nepal panoramic cover — blurred & softened */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-cover bg-center scale-105"
+          style={{ backgroundImage: "url('/assets/nepal-panoramic-cover.jpg')", filter: "blur(3px) brightness(0.45) saturate(0.85)" }}
+        />
+        {/* Soft dark veil */}
+        <div className="absolute inset-0 bg-brand-blue/40" />
         <div className="container mx-auto px-6 relative z-20 flex flex-col justify-center h-full pt-16 w-full max-w-6xl">
 
           <div className="w-[90%] md:w-[75%] lg:w-[60%] border-l-4 border-brand-red pl-6 md:pl-12 lg:pl-16">
@@ -58,7 +66,7 @@ const PortfolioDetails = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-2xl md:text-3xl lg:text-4xl font-medium mb-3 tracking-tight leading-[1.2] text-brand-blue dark:text-white line-clamp-2 transition-colors duration-500"
+              className="text-2xl md:text-3xl lg:text-4xl font-medium mb-3 tracking-tight leading-[1.2] text-white line-clamp-2"
             >
               {firstWord} <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-yellow-500">
@@ -70,7 +78,7 @@ const PortfolioDetails = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-sm md:text-base text-brand-blue/70 dark:text-gray-300 font-light uppercase tracking-[0.15em] leading-relaxed max-w-3xl transition-colors duration-500"
+              className="text-sm md:text-base text-white/75 font-light uppercase tracking-[0.15em] leading-relaxed max-w-3xl"
             >
               {data.description}
             </motion.p>
@@ -186,17 +194,23 @@ const PortfolioDetails = () => {
               <h3 className="text-5xl font-black text-foreground uppercase tracking-tighter">Visual Archive</h3>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 auto-rows-[300px] lg:auto-rows-[350px]">
               {data.gallery.map((img, idx) => (
                 <div
                   key={idx}
-                  className={`relative overflow-hidden group border-[8px] border-white shadow-xl ${idx === 0 || idx === 3 ? 'md:col-span-2 lg:col-span-2 aspect-[16/9]' : 'aspect-square'}`}
+                  className={`relative overflow-hidden group rounded-3xl shadow-lg border-4 border-white ${
+                    idx === 0
+                      ? 'md:col-span-2 md:row-span-2'
+                      : 'md:col-span-1 md:row-span-1'
+                  }`}
                 >
                   <img
                     src={img}
                     alt={`${data.title} archive ${idx + 1}`}
-                    className="w-full h-full object-cover filter contrast-125 saturate-50 transition-all duration-700 group-hover:scale-105 group-hover:saturate-100"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
+                  {/* Subtle colorful overlay on hover */}
+                  <div className="absolute inset-0 bg-brand-red/0 group-hover:bg-brand-red/10 transition-colors duration-500 pointer-events-none" />
                 </div>
               ))}
             </div>
@@ -207,7 +221,14 @@ const PortfolioDetails = () => {
       {/* Brand Partners */}
       {data.brands.length > 0 && (
         <section className="py-32 bg-brand-blue text-white relative">
-          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none mix-blend-overlay"></div>
+          {/* Inline grain texture — self-hosted so the page never depends on a third-party host */}
+          <div
+            className="absolute inset-0 opacity-20 pointer-events-none mix-blend-overlay"
+            style={{
+              backgroundImage:
+                "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E\")",
+            }}
+          ></div>
           <div className="container mx-auto px-6 max-w-6xl relative z-10">
             <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-brand-red mb-16 text-center border-b border-white/10 pb-8">Featured Partners</h2>
 

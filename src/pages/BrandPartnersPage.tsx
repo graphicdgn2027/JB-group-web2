@@ -18,7 +18,15 @@ const BrandPartnersPage = () => {
       <Header />
 
       {/* Minimal Hero Section */}
-      <section className="h-[350px] pt-20 bg-white dark:bg-[#0a1230] relative flex items-center border-b-[16px] border-brand-red overflow-hidden transition-colors duration-500">
+      <section className="h-[350px] pt-20 bg-brand-blue relative flex items-center border-b-[4px] border-brand-red overflow-hidden transition-colors duration-500">
+        {/* Nepal panoramic cover — blurred & softened */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-cover bg-center scale-105"
+          style={{ backgroundImage: "url('/assets/nepal-panoramic-cover.jpg')", filter: "blur(3px) brightness(0.45) saturate(0.85)" }}
+        />
+        {/* Soft dark veil */}
+        <div className="absolute inset-0 bg-brand-blue/40" />
         
         <div className="container mx-auto px-6 relative z-20 flex flex-col justify-center h-full pt-16 w-full max-w-6xl">
           <div className="w-[90%] md:w-[75%] lg:w-[60%] border-l-4 border-brand-red pl-6 md:pl-12 lg:pl-16">
@@ -26,7 +34,7 @@ const BrandPartnersPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-medium mb-3 tracking-tight leading-[1.1] text-brand-blue dark:text-white transition-colors duration-500"
+              className="text-4xl md:text-5xl lg:text-6xl font-medium mb-3 tracking-tight leading-[1.1] text-white"
             >
               {content.heroTitleTop} <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-yellow-500">
@@ -38,7 +46,7 @@ const BrandPartnersPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-sm md:text-base text-brand-blue/70 dark:text-gray-300 font-light uppercase tracking-[0.15em] leading-relaxed max-w-3xl transition-colors duration-500"
+              className="text-sm md:text-base text-white/75 font-light uppercase tracking-[0.15em] leading-relaxed max-w-3xl"
             >
               {content.heroSubtitle}
             </motion.p>
@@ -57,6 +65,11 @@ const BrandPartnersPage = () => {
               {content.sectionHeading}
             </h3>
             <div className="w-16 h-1 bg-brand-red mx-auto mt-8"></div>
+            {content.intro && (
+              <p className="max-w-3xl mx-auto mt-8 text-muted-foreground font-light leading-relaxed">
+                {content.intro}
+              </p>
+            )}
           </div>
 
           <div className="space-y-16">

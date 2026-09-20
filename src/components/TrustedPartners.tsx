@@ -2,10 +2,10 @@ import React from "react";
 import { motion } from "motion/react";
 
 const partners = [
-  { name: "Mobil", logo: "/assets/Brands & Partnerships/Mobil-logo.png" },
-  { name: "IPOL Lubricants", logo: "/assets/Brands & Partnerships/ipol-Logo.png" },
-  { name: "Volta Batteries", logo: "/assets/Brands & Partnerships/logo-01.png" },
-  { name: "Eastman", logo: "/assets/Brands & Partnerships/Eastman Logo.png" },
+  { name: "Mobil", logo: "/assets/reliance-gallery/logo/Mobil-logo.png" },
+  { name: "IPOL Lubricants", logo: "/assets/reliance-gallery/logo/ipol-Logo.png" },
+  { name: "Volta Batteries", logo: "/assets/reliance-gallery/logo/logo-01.png" },
+  { name: "Eastman", logo: "/assets/reliance-gallery/logo/Eastman Logo.png" },
 ];
 
 const TrustedPartners = () => {

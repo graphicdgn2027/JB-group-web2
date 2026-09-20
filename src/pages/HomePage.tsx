@@ -14,24 +14,30 @@ function App() {
   const [isLoading, setIsLoading] = useState(settings.loaderEnabled);
 
   useEffect(() => {
-    if (!settings.loaderEnabled) {
-      setIsLoading(false);
-      return;
-    }
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-      // After loading screen disappears, scroll to hash if present
+    // Small delay so the DOM has settled (after the loading screen, if any).
+    const scrollToHash = () =>
       setTimeout(() => {
         const hash = window.location.hash;
-        if (hash) {
-          const el = document.querySelector(hash);
-          if (el) {
-            el.scrollIntoView({ behavior: "smooth", block: "start" });
-          }
-        }
-      }, 300); // small delay to let DOM settle after loading screen
+        if (!hash) return;
+        const el = document.querySelector(hash);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 300);
+
+    if (!settings.loaderEnabled) {
+      setIsLoading(false);
+      const immediate = scrollToHash();
+      return () => clearTimeout(immediate);
+    }
+
+    let pending: ReturnType<typeof setTimeout>;
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      pending = scrollToHash();
     }, settings.loaderDurationMs);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(pending);
+    };
   }, [settings.loaderEnabled, settings.loaderDurationMs]);
 
   const sectionVariants = {
@@ -39,7 +45,7 @@ function App() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: "easeOut" }
+      transition: { duration: 0.8, ease: "easeOut" as const }
     }
   };
 
@@ -90,7 +96,7 @@ function App() {
           <MissionVision />
         </motion.div>
 
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionVariants}>
+        <motion.div id="businesses" initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionVariants}>
           <BusinessPortfolio />
         </motion.div>
 

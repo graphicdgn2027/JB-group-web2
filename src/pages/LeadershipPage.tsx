@@ -24,7 +24,15 @@ const LeadershipPage = () => {
       <Header />
 
       {/* Minimal Hero */}
-      <section className="h-[350px] pt-20 bg-white dark:bg-[#0a1230] relative flex items-center border-b-[16px] border-brand-red overflow-hidden transition-colors duration-500">
+      <section className="h-[350px] pt-20 bg-brand-blue relative flex items-center border-b-[4px] border-brand-red overflow-hidden transition-colors duration-500">
+        {/* Nepal panoramic cover — blurred & softened */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-cover bg-center scale-105"
+          style={{ backgroundImage: "url('/assets/nepal-panoramic-cover.jpg')", filter: "blur(3px) brightness(0.45) saturate(0.85)" }}
+        />
+        {/* Soft dark veil */}
+        <div className="absolute inset-0 bg-brand-blue/40" />
         
         <div className="container mx-auto px-6 relative z-20 flex flex-col justify-center h-full pt-16 w-full max-w-6xl">
           <div className="w-[90%] md:w-[75%] lg:w-[60%] border-l-4 border-brand-red pl-6 md:pl-12 lg:pl-16">
@@ -32,7 +40,7 @@ const LeadershipPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-medium mb-3 tracking-tight leading-[1.1] text-brand-blue dark:text-white transition-colors duration-500"
+              className="text-4xl md:text-5xl lg:text-6xl font-medium mb-3 tracking-tight leading-[1.1] text-white"
             >
               {content.heroTitleTop} <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-yellow-500">
@@ -43,7 +51,7 @@ const LeadershipPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-sm md:text-base text-brand-blue/70 dark:text-gray-300 font-light uppercase tracking-[0.15em] leading-relaxed max-w-2xl transition-colors duration-500"
+              className="text-sm md:text-base text-white/75 font-light uppercase tracking-[0.15em] leading-relaxed max-w-2xl"
             >
               {content.heroSubtitle}
             </motion.p>
@@ -109,16 +117,31 @@ const LeadershipPage = () => {
                     className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start"
                   >
                     <div className="lg:col-span-3 relative group">
-                      {/* The dark backdrop keeps portraits with transparent or
-                          off-centre framing looking deliberate. */}
-                      <div className="aspect-[3/4] overflow-hidden shadow-2xl relative z-10 border-[8px] border-white dark:border-[#1a2555] flex items-center justify-center bg-zinc-900">
-                        <img
-                          src={leader.photo}
-                          alt={leader.name}
-                          className="w-full h-full object-cover object-top transition-all duration-700 group-hover:scale-105"
-                        />
+                      <div className="aspect-[3/4] overflow-hidden relative z-10 flex items-center justify-center">
+                        {leader.photo ? (
+                          <img
+                            src={leader.photo}
+                            alt={leader.name}
+                            className="w-full h-full object-contain transition-all duration-700 group-hover:scale-105"
+                          />
+                        ) : (
+                          /* No portrait supplied yet — initials rather than a stand-in face. */
+                          <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-brand-blue text-white">
+                            <span className="text-5xl font-black tracking-tight text-accent">
+                              {leader.name
+                                .split(/\s+/)
+                                .filter(Boolean)
+                                .slice(0, 2)
+                                .map((part) => part[0])
+                                .join("")
+                                .toUpperCase()}
+                            </span>
+                            <span className="px-4 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-white/60">
+                              Portrait coming soon
+                            </span>
+                          </div>
+                        )}
                       </div>
-                      <div className="absolute top-10 -left-10 w-full h-full bg-brand-blue/10 -z-10" />
                     </div>
 
                     <div className="lg:col-span-9 lg:pl-10 pt-8">

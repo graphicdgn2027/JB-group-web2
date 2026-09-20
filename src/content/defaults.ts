@@ -7,6 +7,12 @@ import type { SiteContent } from "./types";
  * configured, or missing a section row — so the public site always renders even
  * with no database. It is also what "Reset to default" in the dashboard writes
  * back, and what seeds a brand-new Supabase project on first publish.
+ *
+ * Updated 2026-09-17 from "JB Group Website Content Update" (content-only
+ * revision): JB Group is now framed as a multi-generational family
+ * entrepreneurial journey, with 1982 shown as the formalisation of one
+ * business vertical (Reliance Trade International) rather than as the start
+ * of the family's business history. See DASHBOARD.md for the source notes.
  */
 export const DEFAULT_CONTENT: SiteContent = {
   hero: {
@@ -14,19 +20,19 @@ export const DEFAULT_CONTENT: SiteContent = {
     slides: [
       {
         id: "group",
-        image: "/assets/hero-image/kabsonnew.png",
-        eyebrow: "Since 1982",
+        image: "/assets/hero-image/kabsonnew.jpg",
+        eyebrow: "Believing · Growing · Leading",
         label: "JB Group",
-        titleTop: "Four Decades of Enterprise.",
+        titleTop: "Generations of Enterprise.",
         titleBottom: "One Vision for the Future.",
         description:
-          "JB Group is a diversified business group built on more than four decades of entrepreneurship, market knowledge and trusted relationships in Nepal.",
+          "JB Group is a diversified business group built on a multi-generational tradition of entrepreneurship, market knowledge and trusted relationships in Nepal.",
         ctaLabel: "Learn More",
         ctaHref: "/about",
       },
       {
         id: "kabsons",
-        image: "/assets/hero-image/kabsonnew.png",
+        image: "/assets/hero-image/kabsonnew.jpg",
         eyebrow: "Manufacturing",
         label: "Kabsons Industries",
         titleTop: "Engineered for Scale.",
@@ -67,11 +73,14 @@ export const DEFAULT_CONTENT: SiteContent = {
     eyebrow: "About JB Group",
     titleLine1: "Why",
     titleLine2: "We Are.",
-    image: "/assets/company profile/company profile pic.png",
+    image: "/assets/company profile/company profile pic.jpg",
+    imageBadge: "Generations of Enterprise",
+    imageEyebrow: "Corporate Office",
+    imageCaption: "BNJ Tower, Tripureshwor, Kathmandu",
     dropCap: "W",
     paragraphs: [
-      "e exist to build businesses that last, rooted in a journey that began in Nepal in 1982 with Reliance Trade International Pvt. Ltd. What began as a focused trading business importing quality lubricants into Nepal has evolved over more than four decades into a purpose-driven group.",
-      "Our reason for being is simple: to create lasting value through market knowledge, disciplined execution, trusted partnerships, and a genuine commitment to understanding changing customer needs. Today, that purpose drives businesses spanning lubricants and energy storage solutions, LPG bottling, electric mobility, commercial real estate, and strategic investments in future-oriented sectors.",
+      "e are the continuation of a family entrepreneurial journey that spans four generations in Nepal. Earlier generations built businesses across fuel retailing, medicines, electronics, textiles, construction materials and general trading — including one of Nepal's early fuel retail operations. In 1982, one of these business lines was formally structured through Reliance Trade International Pvt. Ltd.",
+      "Today, as fourth-generation leadership takes a more active role, that same entrepreneurial spirit drives businesses spanning lubricants and energy storage solutions, LPG bottling, electric mobility, commercial real estate and strategic investments in future-oriented sectors.",
       "JB Group is built on a simple belief: strong businesses are created by understanding markets, serving customers reliably, empowering people, building enduring partnerships and growing responsibly.",
     ],
     stats: [
@@ -119,9 +128,9 @@ export const DEFAULT_CONTENT: SiteContent = {
       cardImage: "/assets/Our Businesses/reliance.png",
       heroImage: "/assets/reliance-gallery/cover-image.png",
       description:
-        "Lubricants & Energy Storage. Serving automotive, industrial and aviation lubricant markets.",
+        "Lubricants & Energy Storage. A long-standing Group company serving automotive, industrial and aviation lubricant markets, alongside lithium battery and inverter solutions.",
       overview:
-        "Reliance Trade International Pvt. Ltd. is the foundation of JB Group's business journey. Established in 1982, the company built reputation through the import, marketing and distribution of quality products in Nepal. Over the decades, Reliance Trade International developed deep experience in the lubricant market, serving automotive, commercial, industrial and specialized applications. Its lubricant portfolio includes internationally recognized brands such as Mobil and IPOL, as well as trusted battery brands. Building on its distribution capabilities and understanding of evolving energy requirements, the company has expanded into modern energy-storage and power-backup solutions. Our focus remains consistent: authentic products, dependable availability, strong market relationships and responsive customer service.",
+        "Reliance Trade International Pvt. Ltd. is one of JB Group's long-standing formal business entities. Established in 1982, it marked the formalisation of an important family business vertical and developed a strong presence in the import, marketing and distribution of quality products in Nepal. Over the decades, Reliance Trade International developed deep experience in the lubricant market, serving automotive, commercial, industrial and specialized applications. Its lubricant portfolio includes internationally recognized brands such as Mobil and IPOL, as well as trusted battery brands. Building on its distribution capabilities and understanding of evolving energy requirements, the company has expanded into modern energy-storage and power-backup solutions. Our focus remains consistent: authentic products, dependable availability, strong market relationships and responsive customer service.",
       details: [
         "Automotive & Commercial vehicle lubricants",
         "Industrial & Aviation lubricants",
@@ -188,9 +197,9 @@ export const DEFAULT_CONTENT: SiteContent = {
       cardImage: "/assets/Our Businesses/kabsonnew.png",
       tagline: "LPG Bottling",
       status: "Expansion",
-      heroImage: "/assets/Kabsons/lpg_bottling_plant.jpg",
+      heroImage: "/assets/Kabsons/cover.jpg",
       description:
-        "LPG Bottling. Strengthening the Group's presence in Nepal's essential energy sector.",
+        "LPG Bottling. Strengthening the Group's presence in Nepal's essential energy sector through LPG bottling operations.",
       overview:
         "Kabsons Industries Pvt. Ltd. represents JB Group's presence in Nepal's LPG sector and marks an important step in the Group's diversification into essential energy businesses. The company operates an LPG bottling facility in Dhading and supports the supply of LPG to the Nepalese market through disciplined operations, safety-focused processes and dependable service. Kabsons reflects JB Group's approach to diversification: identify a meaningful opportunity, invest strategically, strengthen operations and build long-term value.",
       details: [
@@ -214,9 +223,7 @@ export const DEFAULT_CONTENT: SiteContent = {
           fallbackText: "Shreemaya Gas",
         },
       ],
-      gallery: [
-        "/assets/Kabsons/lpg_bottling_plant.jpg",
-      ],
+      gallery: ["/assets/Kabsons/cover.jpg", "/assets/Kabsons/shreemaya-gas.jpg"],
       published: true,
       order: 1,
     },
@@ -226,11 +233,12 @@ export const DEFAULT_CONTENT: SiteContent = {
       title: "HIPCO Trading",
       icon: "Car",
       cardImage: "/assets/Our Businesses/hipco.png",
-      heroImage: "https://images.unsplash.com/photo-1588011930968-eadac80e6a5a?w=1600&q=80",
-      logo: "/assets/hipco-logo.png",
-      description: "Electric Mobility. Representing Montra electric three-wheelers in Nepal.",
+      heroImage: "/assets/hipco/superauto.jpg",
+      logo: "/assets/hipco/hipco-DGO.png",
+      description:
+        "Electric Mobility. Representing Montra electric three-wheelers in Nepal and expanding the Group's presence across the evolving e-mobility ecosystem.",
       overview:
-        "HIPCO Trading Pvt. Ltd. represents JB Group's growing commitment to the future of mobility in Nepal. The company represents Montra Electric Vehicles in Nepal in the electric three-wheeler segment and is developing capabilities across sales, distribution, dealer development, customer support and after-sales service. As electric mobility continues to evolve, HIPCO is expanding its presence beyond a single product category with the objective of building a broader and sustainable e-mobility platform for Nepal.",
+        "HIPCO Trading Pvt. Ltd. represents JB Group's growing commitment to the future of mobility in Nepal. The company represents Montra Electric Vehicles in Nepal in the electric three-wheeler segment and is developing capabilities across sales, distribution, dealer development, customer support and after-sales service. As electric mobility continues to evolve, HIPCO is expanding its presence beyond a single product category with the objective of building a broader and sustainable e-mobility platform for Nepal. HIPCO will continue to explore additional electric mobility segments and related solutions that are relevant to Nepal's evolving transport ecosystem.",
       details: [
         "Montra electric three-wheelers",
         "Electric vehicle sales and distribution",
@@ -249,14 +257,18 @@ export const DEFAULT_CONTENT: SiteContent = {
         {
           id: "b1",
           name: "Montra",
-          logo: "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=400&q=80",
+          logo: "/assets/hipco/montra-logo.png",
           fallbackText: "Montra Electric",
         },
       ],
       gallery: [
-        "https://images.unsplash.com/photo-1555664424-778a1e5e1b48?w=800&q=80",
-        "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=800&q=80",
-        "https://images.unsplash.com/photo-1526406915894-7bcd65f60845?w=800&q=80",
+        "/assets/hipco/super-auto (1).jpg",
+        "/assets/hipco/super-auto (2).jpg",
+        "/assets/hipco/super-auto (3).jpg",
+        "/assets/hipco/super-auto (4).jpg",
+        "/assets/hipco/super-auto (5).jpg",
+        "/assets/hipco/super-auto (6).jpg",
+        "/assets/hipco/super-auto (7).jpg",
       ],
       published: true,
       order: 2,
@@ -266,10 +278,10 @@ export const DEFAULT_CONTENT: SiteContent = {
       slug: "jb-group-investments",
       title: "JB Group Investments",
       icon: "Briefcase",
-      cardImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
-      heroImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&q=80",
+      cardImage: "/assets/portfolio/jb-investments-hero.jpg",
+      heroImage: "/assets/portfolio/jb-investments-hero.jpg",
       description:
-        "Strategic Investments. Investing in future technology companies and the financial sector.",
+        "Strategic Investments. Investing selectively in future technology companies, the financial sector and emerging opportunities aligned with long-term value creation.",
       overview:
         "JB Group actively evaluates strategic investment opportunities that can create long-term value and complement the Group's existing businesses. Our investment approach is focused on sectors shaped by technology, changing consumer behavior and Nepal's evolving economic landscape. We seek opportunities where capital can be combined with market understanding, partnerships and disciplined execution to create sustainable long-term value.",
       details: [
@@ -288,9 +300,9 @@ export const DEFAULT_CONTENT: SiteContent = {
       features: [],
       brands: [],
       gallery: [
-        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
-        "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=800&q=80",
-        "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&q=80",
+        "/assets/portfolio/jb-investments-g1.jpg",
+        "/assets/portfolio/jb-investments-g2.jpg",
+        "/assets/portfolio/jb-investments-g3.jpg",
       ],
       published: true,
       order: 3,
@@ -300,10 +312,10 @@ export const DEFAULT_CONTENT: SiteContent = {
       slug: "bnj-properties",
       title: "BNJ Properties",
       icon: "Building2",
-      cardImage: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80",
-      heroImage: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600&q=80",
+      cardImage: "/assets/portfolio/bnj-properties-hero.jpg",
+      heroImage: "/assets/portfolio/bnj-properties-hero.jpg",
       description:
-        "Commercial Real Estate & Warehousing. Developing practical and strategically located facilities.",
+        "Commercial Real Estate & Warehousing. Developing and managing commercial business spaces and warehouse leasing assets for Nepal's growing business and logistics requirements.",
       overview:
         "BNJ Properties represents JB Group's interests in commercial real estate and property-based business infrastructure. The business develops and manages commercial spaces and warehouse assets designed to serve companies seeking practical, well-managed and strategically located facilities. Our objective is to create and manage business spaces that support the operational needs of modern enterprises while generating sustainable long-term asset value.",
       details: [
@@ -321,8 +333,8 @@ export const DEFAULT_CONTENT: SiteContent = {
       features: [],
       brands: [],
       gallery: [
-        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80",
-        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
+        "/assets/portfolio/bnj-properties-hero.jpg",
+        "/assets/portfolio/bnj-properties-hero.jpg",
       ],
       published: true,
       order: 4,
@@ -343,14 +355,14 @@ export const DEFAULT_CONTENT: SiteContent = {
     pullQuote: "Experience. Entrepreneurship. Continuity. Progress.",
     boardHeading: "The Board",
     closingQuote:
-      "Together, JB Group’s leadership remains committed to preserving the values built across generations while creating stronger businesses, developing trusted partnerships and pursuing sustainable long-term growth.",
-    closingImage: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=2000&q=80",
+      "Across generations, our family business journey has been defined by a simple principle: trust must be earned every day. As fourth-generation leadership takes a more active role, we remain committed to building a diversified and future-ready business group that creates lasting value for customers, employees, partners and communities.",
+    closingImage: "/assets/nepal-panoramic-cover.jpg",
     leaders: [
       {
         id: "subhas-jajodia",
         name: "Subhas Jajodia",
         role: "Founder & Chairman",
-        photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&q=80",
+        photo: "",
         bio: [
           "Mr. Subhas Jajodia represents the third generation of the family’s entrepreneurial legacy and has played a central role in carrying that business tradition into the modern era.",
           "He has guided the journey that developed through Reliance Trade International from 1982 and the subsequent expansion into new business areas.",
@@ -363,7 +375,7 @@ export const DEFAULT_CONTENT: SiteContent = {
         id: "ashish-jajodia",
         name: "Ashish Jajodia",
         role: "Joint Managing Director",
-        photo: "/assets/Leadership/Ashish Jajodia.jpg",
+        photo: "/assets/Leadership/Ashish Jajodia.jpeg",
         bio: [
           "Mr. Ashish Jajodia represents the fourth generation of the family’s entrepreneurial journey and plays an active role in JB Group’s strategic direction, diversification and business development.",
           "He has served as Managing Director of Kabsons Industries since 2015 and has entrepreneurial experience across multiple sectors, including dairy through Modern Dairy Industries, agriculture, trading and travel technology through mytrip2nepal.com.",
@@ -376,7 +388,7 @@ export const DEFAULT_CONTENT: SiteContent = {
         id: "siddarth-jajodia",
         name: "Siddarth Jajodia",
         role: "Joint Managing Director",
-        photo: "https://images.unsplash.com/photo-1556157382-97eda2d62296?w=800&q=80",
+        photo: "/assets/Leadership/Siddarth-Jajodia.png",
         bio: [
           "Mr. Siddarth Jajodia represents the fourth generation of the family’s entrepreneurial journey and is actively involved in the Group’s trading, distribution, strategic partnerships and new-generation mobility businesses.",
           "He leads Reliance Trade International Pvt. Ltd. and is closely involved in developing JB Group’s electric mobility initiatives through HIPCO Trading Pvt. Ltd., including the representation and growth of Montra Electric Vehicles in Nepal.",
@@ -389,28 +401,28 @@ export const DEFAULT_CONTENT: SiteContent = {
   },
 
   timeline: {
-    eyebrow: "Since 1982",
+    eyebrow: "Generations of Enterprise",
     titleLine1: "The",
     titleLine2: "Journey.",
-    subtitle: "Four Decades of Experience. One Continuing Journey.",
+    subtitle: "From Family Business Roots to Fourth-Generation Leadership.",
     items: [
       {
         id: "t1",
-        year: "1982",
-        title: "Foundation",
-        desc: "Reliance Trade International begins its journey in Nepal with lubricants and trading.",
+        year: "Before 1982",
+        title: "Early Generations",
+        desc: "The family's entrepreneurial roots predate 1982, with interests across fuel retailing, medicines, electronics, textiles, construction materials and general trading. The family's petroleum journey included one of Nepal's early fuel retail operations.",
       },
       {
         id: "t2",
-        year: "Growth",
-        title: "Market Expansion",
-        desc: "Expansion across automotive, industrial and lubricant markets, supported by strong distribution.",
+        year: "1982",
+        title: "Formalisation",
+        desc: "Formalisation of one family business vertical through Reliance Trade International Pvt. Ltd., with a focus on lubricants and trading.",
       },
       {
         id: "t3",
-        year: "Evolve",
-        title: "Diversification",
-        desc: "Entry into complementary energy and industrial opportunities, broadening the Group's experience.",
+        year: "Growth",
+        title: "Growth & Diversification",
+        desc: "Expansion across lubricants, automotive and industrial products, distribution, energy and other business opportunities, supported by strong market relationships.",
       },
       {
         id: "t4",
@@ -422,19 +434,25 @@ export const DEFAULT_CONTENT: SiteContent = {
         id: "t5",
         year: "Mobility",
         title: "New Mobility",
-        desc: "HIPCO Trading develops the Group's presence in electric mobility.",
+        desc: "HIPCO Trading develops the Group's presence in electric mobility, representing Montra electric three-wheelers in Nepal.",
       },
       {
         id: "t6",
         year: "Assets",
         title: "Property & Investments",
-        desc: "Expansion into commercial real estate, warehousing and strategic investments.",
+        desc: "Expansion into commercial real estate, warehousing and strategic investments in future-oriented sectors.",
       },
       {
         id: "t7",
+        year: "Leadership",
+        title: "Fourth-Generation Leadership",
+        desc: "A new generation takes a more active role across the Group's businesses, combining established values with new sectors, technologies and partnerships.",
+      },
+      {
+        id: "t8",
         year: "Today",
         title: "JB Group",
-        desc: "A unified corporate identity bringing businesses and future opportunities together.",
+        desc: "A unified corporate identity bringing the family's multi-generational entrepreneurial heritage, current businesses and future opportunities together under one vision.",
       },
     ],
   },
@@ -443,27 +461,32 @@ export const DEFAULT_CONTENT: SiteContent = {
     heroTitleTop: "The Story of",
     heroTitleBottom: "JB Group",
     heroSubtitle: "Believing · Growing · Leading",
-    heroImage: "/assets/company profile/company profile pic.png",
+    // Boudhanath Stupa, Kathmandu (Unsplash)
+    heroImage: "/assets/about/nepal-kathmandu-cover.jpg",
     heritageHeading: "Our Heritage",
     heritageParagraphs: [
-      "JB Group represents the next chapter of a business journey that began in Nepal in 1982 with Reliance Trade International Pvt. Ltd. What began as a focused trading business importing quality lubricants into Nepal has evolved over more than four decades through market knowledge, disciplined execution, trusted partnerships and a commitment to understanding changing customer needs.",
-      "Today, the Group's businesses span lubricants and energy storage solutions, LPG bottling, electric mobility, commercial real estate and strategic investments in future-oriented sectors. JB Group is built on a simple belief: strong businesses are created by understanding markets, serving customers reliably, empowering people, building enduring partnerships and growing responsibly.",
-      "Our journey has always been about more than products. It is about trust, relationships, reliability and the confidence to grow. As we expand into new sectors, we carry forward the entrepreneurial spirit that has defined our family for generations, blending traditional values with modern business practices.",
+      "JB Group carries forward a family tradition of entrepreneurship that spans four generations, with business interests in Nepal extending well before the formal establishment of Reliance Trade International Pvt. Ltd. in 1982.",
+      "Earlier generations of the family were active across fuel retailing and diverse trading businesses, including medicines, electronics, textiles, construction materials and other commercial activities. The establishment of Reliance Trade International in 1982 marked the formalisation of one important business vertical within this broader entrepreneurial journey.",
+      "Today, with fourth-generation leadership taking a more active role, the Group's businesses span lubricants and energy storage solutions, LPG bottling, electric mobility, commercial real estate and strategic investments in future-oriented sectors.",
+      "JB Group is built on a simple belief: strong businesses are created by understanding markets, serving customers reliably, empowering people, building enduring partnerships and growing responsibly.",
+      "Across generations, our journey has been about more than products. It is about entrepreneurship, trust, relationships, reliability and the confidence to evolve with Nepal.",
+      "Our Roots — Generations of Enterprise. The family's business heritage extends across multiple generations. Earlier generations built and operated businesses in fuel retailing and in the trading of medicines, electronics, textiles, construction materials and other goods. The family's early involvement in petroleum included one of Nepal's early fuel retail operations.",
+      "This heritage should be understood as a continuing entrepreneurial tradition rather than one continuous legal entity. In 1982, that tradition took a more formal corporate shape through Reliance Trade International, followed over time by additional businesses and investments. Today, the fourth generation is taking a more active role in shaping JB Group's next phase.",
     ],
     philosophyHeading: "Our Philosophy",
     philosophyItems: [
       { id: "p1", title: "BELIEVING", text: "In people, partnerships and possibilities." },
-      { id: "p2", title: "GROWING", text: "Through continuous improvement and expansion." },
-      { id: "p3", title: "LEADING", text: "With integrity, quality, and purpose." },
+      { id: "p2", title: "GROWING", text: "Through continuous improvement, innovation and responsible expansion." },
+      { id: "p3", title: "LEADING", text: "With integrity, quality, accountability and purpose." },
     ],
     quote:
-      "Our journey has always been about more than products. It is about trust, relationships, reliability and the confidence to grow.",
+      "Across generations, our journey has been about more than products. It is about entrepreneurship, trust, relationships, reliability and the confidence to evolve with Nepal.",
     visionTitle: "Vision",
     visionText:
       "To build a trusted, diversified and future-ready business group that creates sustainable value through excellence, innovation, responsible growth and enduring relationships.",
     missionTitle: "Mission",
     missionText:
-      "To create lasting value by delivering dependable products, operating with integrity, embracing innovation and continuously improving the way we do business.",
+      "To create lasting value for customers, partners, employees and communities by delivering dependable products and services, operating with integrity, embracing innovation and continuously improving the way we do business.",
     coreValuesHeading: "The Pillars of Our Success",
     coreValuesWatermark: "CORE VALUES",
     coreValues: [
@@ -471,8 +494,9 @@ export const DEFAULT_CONTENT: SiteContent = {
       { id: "v2", title: "Quality", text: "We believe quality is a responsibility, not an option." },
       { id: "v3", title: "Reliability", text: "We keep our commitments and strive to be a dependable partner." },
       { id: "v4", title: "Customer Focus", text: "We listen, understand and respond to evolving customer needs." },
-      { id: "v5", title: "Innovation", text: "We embrace new ideas, technologies and opportunities." },
-      { id: "v6", title: "Responsibility", text: "We pursue growth that creates value for business and society." },
+      { id: "v5", title: "Innovation", text: "We embrace new ideas, technologies and opportunities that create meaningful progress." },
+      { id: "v6", title: "Responsibility", text: "We pursue growth that creates value for business, society and communities." },
+      { id: "v7", title: "Teamwork", text: "We believe lasting success comes through collaboration, trust and shared purpose." },
     ],
   },
 
@@ -480,9 +504,11 @@ export const DEFAULT_CONTENT: SiteContent = {
     heroTitleTop: "Brand &",
     heroTitleBottom: "Businesses Partners",
     heroSubtitle: "Growing together through trusted partnerships",
-    heroImage: "/assets/company profile/company profile pic.png",
+    heroImage: "/assets/company profile/company profile pic.jpg",
     sectionEyebrow: "Our Network",
     sectionHeading: "Businesses & Brands",
+    intro:
+      "JB Group's businesses have grown through long-term relationships with respected international and domestic brands, suppliers, customers and business partners. Across our businesses, our portfolio includes relationships and market experience involving brands such as Mobil, IPOL, Volta, Eastman and Montra Electric Vehicles. For JB Group, partnerships are more than commercial arrangements — they represent trust, quality, knowledge and shared long-term growth.",
     emptyStateText: "Operating as independent entity",
   },
 
@@ -490,19 +516,19 @@ export const DEFAULT_CONTENT: SiteContent = {
     heroEyebrow: "We'd Love to Hear From You",
     heroTitle: "Get in",
     heroTitleAccent: "Touch",
-    heroSubtitle: "Reach out and our team will get back to you within 24 hours.",
+    heroSubtitle: "Reach out and our team will get back to you.",
     phone: "+977-1-5361050",
     phoneSub: "Sun–Fri, 10AM–6PM",
     email: "contact@jbgroup.com",
-    emailSub: "Reply within 24 hours",
+    emailSub: "We reply within one business day",
     addressTitle: "BNJ Tower",
     addressSub: "Tripureshwor, Kathmandu",
     hoursValue: "Sun – Fri",
     hoursSub: "10:00 AM – 6:00 PM",
     hoursNote: "We're open now",
     mapEmbedUrl:
-      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.8073226220924!2d85.31025007526997!3d27.69369907619516!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb190ac44d2b45%3A0x7e55df09b1a4c55f!2sTripureshwor%2C%20Kathmandu%2044600!5e0!3m2!1sen!2snp!4v1694000000000!5m2!1sen!2snp",
-    mapDirectionsUrl: "https://maps.google.com/?q=Tripureshwor,Kathmandu,Nepal",
+      "https://maps.google.com/maps?q=BNJ+Tower,+Tripureshwor,+Kathmandu,+Nepal&t=&z=15&ie=UTF8&iwloc=&output=embed",
+    mapDirectionsUrl: "https://maps.google.com/?q=BNJ+Tower,+Tripureshwor,+Kathmandu,+Nepal",
     socials: [
       { id: "li", platform: "Linkedin", url: "#" },
       { id: "fb", platform: "Facebook", url: "#" },
@@ -540,7 +566,7 @@ export const DEFAULT_CONTENT: SiteContent = {
     ctaButtonHref: "/contact",
     tagline: "Believing · Growing · Leading",
     blurb:
-      "A diversified business group built on more than four decades of enterprise in Nepal.",
+      "A diversified business group built on a multi-generational tradition of entrepreneurship in Nepal.",
     socials: [
       { id: "li", platform: "Linkedin", url: "#" },
       { id: "tw", platform: "Twitter", url: "#" },
@@ -578,7 +604,7 @@ export const DEFAULT_CONTENT: SiteContent = {
   settings: {
     siteTitle: "JB Group",
     metaDescription:
-      "A diversified business group built on more than four decades of enterprise in Nepal.",
+      "A diversified business group built on a multi-generational tradition of entrepreneurship in Nepal.",
     brandBlue: "#111D43",
     brandGold: "#CB9733",
     loaderEnabled: true,

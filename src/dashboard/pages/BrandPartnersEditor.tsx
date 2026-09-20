@@ -8,6 +8,7 @@ import {
   Notice,
   Panel,
   SaveBar,
+  TextArea,
   TextInput,
 } from "../components/ui";
 
@@ -75,6 +76,9 @@ const BrandPartnersEditor: React.FC = () => {
             />
           </Field>
         </Grid>
+        <Field label="Intro paragraph" hint="Shown above the list of businesses and their brands.">
+          <TextArea value={draft.intro} onChange={(v) => update({ intro: v })} rows={3} />
+        </Field>
         <Field
           label="Empty state text"
           hint="Shown for a company that has no associated brands."
