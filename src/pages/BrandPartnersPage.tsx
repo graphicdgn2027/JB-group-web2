@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import { Link } from "react-router";
+import { ArrowUpRight } from "lucide-react";
 import Header from "../components/Header";
 import ContactFooter from "../components/ContactFooter";
 import { motion } from "motion/react";
@@ -98,12 +100,12 @@ const BrandPartnersPage = () => {
                       </p>
                     </div>
 
-                    <a
-                      href={`/portfolio/${business.slug}`}
+                    <Link
+                      to={`/portfolio/${business.slug}`}
                       className="inline-flex items-center text-sm font-bold uppercase tracking-widest text-[#cb9733] hover:text-white transition-colors mt-auto relative z-10"
                     >
                       View Details &rarr;
-                    </a>
+                    </Link>
                   </div>
 
                   {/* Brands Container */}
@@ -115,21 +117,31 @@ const BrandPartnersPage = () => {
                     {business.brands.length > 0 ? (
                       <div className="flex flex-wrap gap-8 md:gap-12 items-center">
                         {business.brands.map((brand) => (
-                          <div key={brand.id} className="flex flex-col items-center gap-4 group">
-                            <div className="w-32 h-32 md:w-48 md:h-48 rounded-xl bg-muted p-6 flex items-center justify-center border border-border shadow-sm group-hover:border-[#cb9733]/50 group-hover:shadow-md transition-all duration-300">
+                          <Link
+                            key={brand.id}
+                            to={`/portfolio/${business.slug}`}
+                            aria-label={`View ${business.title} — ${brand.name}`}
+                            className="flex flex-col items-center gap-4 group"
+                          >
+                            <div className="relative w-32 h-32 md:w-48 md:h-48 rounded-xl bg-muted p-6 flex items-center justify-center border border-border shadow-sm transition-all duration-300 group-hover:border-[#cb9733]/60 group-hover:shadow-lg group-hover:-translate-y-1">
                               <img
                                 src={brand.logo}
                                 alt={brand.name}
-                                className="max-w-full max-h-full object-contain transition-all duration-300"
+                                className="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105"
                                 onError={(e) => {
                                   // Fallback if image fails
                                   e.currentTarget.style.display = 'none';
                                   e.currentTarget.parentElement!.innerHTML = `<span class="font-bold text-xl text-foreground text-center">${brand.fallbackText || brand.name}</span>`;
                                 }}
                               />
+                              <span className="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-[#cb9733] text-white opacity-0 scale-75 shadow-md transition-all duration-300 group-hover:opacity-100 group-hover:scale-100">
+                                <ArrowUpRight size={15} />
+                              </span>
                             </div>
-                            <span className="text-base md:text-lg font-bold text-foreground">{brand.name}</span>
-                          </div>
+                            <span className="text-base md:text-lg font-bold text-foreground transition-colors duration-300 group-hover:text-[#cb9733]">
+                              {brand.name}
+                            </span>
+                          </Link>
                         ))}
                       </div>
                     ) : (

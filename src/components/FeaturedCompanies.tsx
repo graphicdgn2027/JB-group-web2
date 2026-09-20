@@ -35,7 +35,7 @@ const COMPANIES = [
   {
     name: "BNJ Properties",
     industry: "Real Estate & Warehousing",
-    img: "/assets/portfolio/bnj-properties-hero.jpg",
+    img: "/assets/bnj-properties/warehouse.jpg",
     link: "/portfolio/bnj-properties",
     desc: "Developing and managing commercial business spaces and warehouse leasing assets.",
   },

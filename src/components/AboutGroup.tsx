@@ -176,15 +176,15 @@ const AboutGroup = () => {
           {/* Photo + stats column (left) */}
           <motion.div variants={itemVariants} className="lg:w-4/12 w-full flex flex-col gap-3">
             {/* Photo */}
-            <div className="group/photo relative isolate flex-grow min-h-[480px] sm:min-h-[560px] overflow-hidden rounded-2xl bg-gradient-to-b from-[#dfe6f2] via-[#eef1f6] to-[#f6f1e6] shadow-[0_24px_50px_-28px_rgba(17,29,67,0.55)]">
+            <div className="group/photo relative isolate aspect-[1086/1448] overflow-hidden rounded-2xl bg-gradient-to-b from-[#dfe6f2] via-[#eef1f6] to-[#f6f1e6] shadow-[0_24px_50px_-28px_rgba(17,29,67,0.55)]">
               {/* Soft sun glow behind the building */}
               <span
                 aria-hidden
                 className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-accent/20 blur-3xl transition-transform duration-[1400ms] ease-out group-hover/photo:scale-125"
               />
-              {/* Image covers the container */}
+              {/* Frame is locked to the photo's own proportions, so it fills edge-to-edge with no crop and no gutter */}
               <motion.div
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-[scale] duration-[1400ms] ease-out group-hover/photo:scale-[1.04]"
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-[scale] duration-[1400ms] ease-out group-hover/photo:scale-[1.03]"
                 style={{ backgroundImage: `url('${content.image}')`, y: yParallax }}
               />
 

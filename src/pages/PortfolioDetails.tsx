@@ -52,16 +52,7 @@ const PortfolioDetails = () => {
         <div className="container mx-auto px-6 relative z-20 flex flex-col justify-center h-full pt-16 w-full max-w-6xl">
 
           <div className="w-[90%] md:w-[75%] lg:w-[60%] border-l-4 border-brand-red pl-6 md:pl-12 lg:pl-16">
-            {data.logo && (
-              <div className="mb-4">
-                <img
-                  src={data.logo}
-                  alt={`${data.title} Logo`}
-                  className="h-12 md:h-16 object-contain dark:filter dark:brightness-0 dark:invert transition-all duration-300"
-                  onError={(e) => e.currentTarget.style.display = 'none'}
-                />
-              </div>
-            )}
+
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -101,18 +92,48 @@ const PortfolioDetails = () => {
                 </p>
               </div>
 
-              {/* Focus Areas Pull-out */}
-              {data.details.length > 0 && (
+              {/* Focus Areas Pull-out — also carries the company & brand logos, shown large and clear */}
+              {(data.details.length > 0 || data.logo || data.brands.length > 0) && (
                 <div className="my-20 p-12 border-t-4 border-b border-brand-red bg-muted/30">
-                  <h3 className="text-2xl font-black text-foreground mb-8 uppercase tracking-widest text-center">Key Focus Areas</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
-                    {data.details.map((detail, idx) => (
-                      <div key={idx} className="flex items-start gap-4">
-                        <div className="w-1.5 h-1.5 rounded-full bg-brand-red mt-2.5 shrink-0"></div>
-                        <span className="font-light text-lg text-foreground">{detail}</span>
+                  {(data.logo || data.brands.length > 0) && (
+                    <div
+                      className={`flex flex-wrap items-center justify-center gap-x-14 gap-y-8 ${
+                        data.details.length > 0 ? "mb-12 pb-12 border-b border-border" : ""
+                      }`}
+                    >
+                      {data.brands.map((brand) => (
+                        <img
+                          key={brand.id}
+                          src={brand.logo}
+                          alt={brand.name}
+                          className="h-20 md:h-24 object-contain"
+                          onError={(e) => e.currentTarget.style.display = 'none'}
+                        />
+                      ))}
+                      {data.logo && (
+                        <img
+                          src={data.logo}
+                          alt={`${data.title} logo`}
+                          className="h-16 md:h-20 object-contain"
+                          onError={(e) => e.currentTarget.style.display = 'none'}
+                        />
+                      )}
+                    </div>
+                  )}
+
+                  {data.details.length > 0 && (
+                    <>
+                      <h3 className="text-2xl font-black text-foreground mb-10 uppercase tracking-widest text-center">Key Focus Areas</h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-8">
+                        {data.details.map((detail, idx) => (
+                          <div key={idx} className="flex items-start gap-4">
+                            <div className="w-2 h-2 rounded-full bg-brand-red mt-3 shrink-0"></div>
+                            <span className="font-semibold text-xl text-foreground">{detail}</span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
+                    </>
+                  )}
                 </div>
               )}
             </div>
@@ -230,7 +251,7 @@ const PortfolioDetails = () => {
             }}
           ></div>
           <div className="container mx-auto px-6 max-w-6xl relative z-10">
-            <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-brand-red mb-16 text-center border-b border-white/10 pb-8">Featured Partners</h2>
+            <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-brand-red mb-16 text-center border-b border-white/10 pb-8">Our Brands</h2>
 
             <div className="flex flex-wrap justify-center items-center gap-16">
               {data.brands.map((brand) => (
