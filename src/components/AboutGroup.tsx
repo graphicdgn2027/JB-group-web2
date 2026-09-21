@@ -77,7 +77,7 @@ const StatCard: React.FC<{ value: string; label: string; featured: boolean; inte
       whileHover={interactive ? { y: -5 } : undefined}
       whileTap={{ scale: 0.97 }}
       onMouseMove={interactive ? trackPointer : undefined}
-      className="group/tile relative isolate cursor-default overflow-hidden rounded-2xl border-2 border-brand-blue bg-transparent px-4 py-4 text-brand-blue shadow-[0_1px_2px_rgba(17,29,67,0.04)] transition-[border-color,box-shadow] duration-300 hover:border-accent hover:shadow-[0_22px_40px_-20px_rgba(17,29,67,0.35)]"
+      className="group/tile relative isolate cursor-default overflow-hidden rounded-2xl border border-brand-blue bg-transparent px-4 py-4 text-brand-blue shadow-[0_1px_2px_rgba(17,29,67,0.04)] transition-[border-color,box-shadow] duration-300 hover:border-accent hover:shadow-[0_22px_40px_-20px_rgba(17,29,67,0.35)]"
     >
       {/* Cursor spotlight */}
       <span
