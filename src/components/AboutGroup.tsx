@@ -77,20 +77,15 @@ const StatCard: React.FC<{ value: string; label: string; featured: boolean; inte
       whileHover={interactive ? { y: -5 } : undefined}
       whileTap={{ scale: 0.97 }}
       onMouseMove={interactive ? trackPointer : undefined}
-      className={`group/tile relative isolate cursor-default overflow-hidden rounded-2xl border px-4 py-4 transition-[border-color,box-shadow] duration-300 ${
-        featured
-          ? "border-white/10 bg-brand-blue text-white shadow-[0_20px_40px_-18px_rgba(17,29,67,0.7)]"
-          : "border-brand-blue/15 bg-white text-brand-blue shadow-[0_1px_2px_rgba(17,29,67,0.04)] hover:border-accent/50 hover:shadow-[0_22px_40px_-20px_rgba(17,29,67,0.35)]"
-      }`}
+      className="group/tile relative isolate cursor-default overflow-hidden rounded-2xl border-2 border-brand-blue bg-transparent px-4 py-4 text-brand-blue shadow-[0_1px_2px_rgba(17,29,67,0.04)] transition-[border-color,box-shadow] duration-300 hover:border-accent hover:shadow-[0_22px_40px_-20px_rgba(17,29,67,0.35)]"
     >
       {/* Cursor spotlight */}
       <span
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10 opacity-0 transition-opacity duration-300 group-hover/tile:opacity-100"
         style={{
-          background: `radial-gradient(180px circle at var(--mx, 50%) var(--my, 50%), ${
-            featured ? "rgba(203,151,51,0.28)" : "rgba(203,151,51,0.12)"
-          }, transparent 70%)`,
+          background:
+            "radial-gradient(180px circle at var(--mx, 50%) var(--my, 50%), rgba(203,151,51,0.12), transparent 70%)",
         }}
       />
 
@@ -99,30 +94,19 @@ const StatCard: React.FC<{ value: string; label: string; featured: boolean; inte
 
       <div className="flex items-center gap-3">
         <span
-          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all duration-300 group-hover/tile:-rotate-12 group-hover/tile:scale-110 ${
-            featured
-              ? "bg-accent text-brand-blue shadow-[0_0_22px_rgba(203,151,51,0.45)]"
-              : "bg-accent/10 text-accent group-hover/tile:bg-accent group-hover/tile:text-white group-hover/tile:shadow-[0_8px_18px_-6px_rgba(203,151,51,0.7)]"
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all duration-300 group-hover/tile:-rotate-12 group-hover/tile:scale-110 group-hover/tile:bg-accent group-hover/tile:text-white group-hover/tile:shadow-[0_8px_18px_-6px_rgba(203,151,51,0.7)] ${
+            featured ? "bg-accent text-brand-blue shadow-[0_0_16px_rgba(203,151,51,0.3)]" : "bg-accent/10 text-accent"
           }`}
         >
           <Icon size={19} strokeWidth={2.1} />
         </span>
 
         <div className="min-w-0">
-          <div
-            className={`text-[32px] font-black leading-none tracking-tight ${featured ? "text-accent" : "text-brand-blue"}`}
-          >
-            <CountUpValue
-              value={value}
-              suffixClassName={`ml-0.5 align-top text-[19px] ${featured ? "text-white" : "text-accent"}`}
-            />
+          <div className="text-[32px] font-black leading-none tracking-tight text-brand-blue">
+            <CountUpValue value={value} suffixClassName="ml-0.5 align-top text-[19px] text-accent" />
           </div>
 
-          <div
-            className={`mt-1.5 text-[10px] font-bold uppercase tracking-[0.14em] break-words transition-colors duration-300 ${
-              featured ? "text-white/70 group-hover/tile:text-white" : "text-slate-500 group-hover/tile:text-brand-blue"
-            }`}
-          >
+          <div className="mt-1.5 text-[10px] font-bold uppercase tracking-[0.14em] break-words text-slate-500 transition-colors duration-300 group-hover/tile:text-brand-blue">
             {label}
           </div>
         </div>
