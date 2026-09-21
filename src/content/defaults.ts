@@ -520,7 +520,7 @@ export const DEFAULT_CONTENT: SiteContent = {
     heroSubtitle: "Reach out and our team will get back to you.",
     phone: "+977-1-5361050",
     phoneSub: "Sun–Fri, 10AM–6PM",
-    email: "contact@jbgroup.com",
+    email: "info@rtinepal.com",
     emailSub: "We reply within one business day",
     addressTitle: "BNJ Tower",
     addressSub: "Tripureshwor, Kathmandu",
