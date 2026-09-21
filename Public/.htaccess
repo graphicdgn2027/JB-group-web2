@@ -1,0 +1,50 @@
+# JB Group website — Apache config for shared/cPanel hosting.
+# Vercel gets this same routing behaviour from vercel.json's rewrite rule;
+# this file does the equivalent job for a plain Apache host.
+
+# Serve compressed text assets when the client supports it.
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# Cache hashed, versioned assets aggressively; never cache the HTML shell,
+# so a new deploy is picked up immediately instead of showing a stale build.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType image/svg+xml "access plus 1 month"
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# Uncomment once an SSL certificate is active on this domain (cPanel's
+# AutoSSL / Let's Encrypt issues one for free — check SSL/TLS Status first).
+# RewriteEngine On
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Single-page app routing: this is a client-side-routed React app, so any
+# URL that isn't a real file or folder (e.g. /about, /portfolio/hipco-trading)
+# must still be served index.html and let React Router take over. Without
+# this, refreshing or directly opening any page but "/" would 404.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Custom 404s are handled inside the app (see NotFoundPage.tsx); anything
+# that reaches Apache's own 404 falls back to the same SPA shell.
+ErrorDocument 404 /index.html

@@ -84,6 +84,9 @@ function seoAssets() {
  */
 function stripNonWebAssets() {
   const allowed = /\.(png|jpe?g|gif|svg|webp|avif|ico|mp4|webm|woff2?|ttf|otf|json|txt|xml|pdf|css|js|map|html)$/i
+  // Server config files ship with no extension (or a non-web one) but are
+  // required by the host — keep these regardless of the extension check above.
+  const allowedByName = new Set(['.htaccess', '_redirects', 'web.config'])
 
   return {
     name: 'strip-non-web-assets',
@@ -92,15 +95,24 @@ function stripNonWebAssets() {
       const dist = path.resolve(__dirname, 'dist')
       if (!fs.existsSync(dist)) return
       const removed: string[] = []
-      const walk = (dir: string) => {
-        for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      // Returns true if the directory ends up empty (e.g. an accidental
+      // "New folder" left in Public/, or one only containing stripped files),
+      // so the caller can remove it too instead of shipping empty clutter.
+      const walk = (dir: string): boolean => {
+        const entries = fs.readdirSync(dir, { withFileTypes: true })
+        for (const entry of entries) {
           const full = path.join(dir, entry.name)
-          if (entry.isDirectory()) walk(full)
-          else if (!allowed.test(entry.name)) {
+          if (entry.isDirectory()) {
+            if (walk(full)) {
+              fs.rmdirSync(full)
+              removed.push(path.relative(dist, full) + '/')
+            }
+          } else if (!allowed.test(entry.name) && !allowedByName.has(entry.name)) {
             fs.unlinkSync(full)
             removed.push(path.relative(dist, full))
           }
         }
+        return fs.readdirSync(dir).length === 0
       }
       walk(dist)
       if (removed.length) {
