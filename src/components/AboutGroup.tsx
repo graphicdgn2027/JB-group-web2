@@ -79,8 +79,8 @@ const StatCard: React.FC<{ value: string; label: string; featured: boolean; inte
       onMouseMove={interactive ? trackPointer : undefined}
       className={`group/tile relative isolate cursor-default overflow-hidden rounded-2xl border px-4 py-4 transition-[border-color,box-shadow] duration-300 ${
         featured
-          ? "border-brand-blue bg-brand-blue text-white shadow-[0_20px_40px_-18px_rgba(17,29,67,0.7)]"
-          : "border-slate-200/80 bg-white text-brand-blue shadow-[0_1px_2px_rgba(17,29,67,0.04)] hover:border-accent/50 hover:shadow-[0_22px_40px_-20px_rgba(17,29,67,0.35)]"
+          ? "border-white/10 bg-brand-blue text-white shadow-[0_20px_40px_-18px_rgba(17,29,67,0.7)]"
+          : "border-brand-blue/15 bg-white text-brand-blue shadow-[0_1px_2px_rgba(17,29,67,0.04)] hover:border-accent/50 hover:shadow-[0_22px_40px_-20px_rgba(17,29,67,0.35)]"
       }`}
     >
       {/* Cursor spotlight */}
