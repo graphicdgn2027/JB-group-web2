@@ -70,7 +70,11 @@ const Header = () => {
   ];
 
   return (
-    <header ref={headerRef} className="w-full absolute top-0 left-0 z-50 flex justify-center">
+    <header ref={headerRef} className="w-full absolute top-0 left-0 z-50 flex flex-wrap justify-center">
+      {/* flex-wrap matters here: the nav bar and the (conditionally rendered)
+          mobile menu panel are both w-full flex children — without wrap they'd
+          share one row and get squeezed to ~50% width each instead of the
+          menu dropping to its own full-width row below the bar. */}
       {/* Main Nav */}
       <div className="flex justify-between items-center w-full py-4 px-4 md:px-8 lg:px-[6.25vw] rounded-none bg-white dark:bg-[#0a1230] shadow-sm transition-colors duration-500">
         {/* Left: Logo */}
@@ -170,10 +174,12 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu — needs an explicit width: it's a flex child of the
+          justify-center <header>, so without one it shrinks to its content
+          width and floats centered instead of spanning the screen. */}
       {mobileOpen && (
         <div
-          className={`lg:hidden backdrop-blur-xl border-t px-8 py-6 space-y-2 ${
+          className={`lg:hidden w-full backdrop-blur-xl border-t px-8 py-6 space-y-2 max-h-[calc(100vh-4.5rem)] overflow-y-auto ${
             isDark
               ? "bg-brand-blue/95 border-white/10"
               : "bg-white/95 border-gray-200"

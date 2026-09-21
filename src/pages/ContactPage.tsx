@@ -173,7 +173,7 @@ const ContactPage = () => {
       <Header />
 
       {/* Minimal Hero */}
-      <section className="h-[350px] pt-20 bg-brand-blue relative flex items-center border-b-[4px] border-brand-red overflow-hidden transition-colors duration-500">
+      <section className="min-h-[350px] pt-20 pb-8 bg-brand-blue relative flex items-center border-b-[4px] border-brand-red overflow-hidden transition-colors duration-500">
         {/* Nepal panoramic cover — blurred & softened */}
         <div
           aria-hidden
@@ -248,7 +248,7 @@ const ContactPage = () => {
                       </div>
 
                       <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">{card.label}</p>
-                      <p className={`text-lg md:text-xl font-bold leading-snug transition-colors duration-300 ${card.textColor}`}>{card.value}</p>
+                      <p className={`text-lg md:text-xl font-bold leading-snug break-words transition-colors duration-300 ${card.textColor}`}>{card.value}</p>
                       <p className="text-sm text-muted-foreground">{card.sub}</p>
 
                     {/* bottom glow sweep */}

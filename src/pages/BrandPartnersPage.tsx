@@ -20,7 +20,7 @@ const BrandPartnersPage = () => {
       <Header />
 
       {/* Minimal Hero Section */}
-      <section className="h-[350px] pt-20 bg-brand-blue relative flex items-center border-b-[4px] border-brand-red overflow-hidden transition-colors duration-500">
+      <section className="min-h-[350px] pt-20 pb-8 bg-brand-blue relative flex items-center border-b-[4px] border-brand-red overflow-hidden transition-colors duration-500">
         {/* Nepal panoramic cover — blurred & softened */}
         <div
           aria-hidden
