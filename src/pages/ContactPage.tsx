@@ -19,6 +19,9 @@ const ContactPage = () => {
   const [focused, setFocused]     = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  // Distinct from field errors: a submission-level problem (send failed, or
+  // no delivery method is configured yet), shown near the submit button.
+  const [submitNotice, setSubmitNotice] = useState<{ type: 'error' | 'info'; text: string } | null>(null);
 
   const validate = () => {
     const e: Record<string, string> = {};
@@ -41,10 +44,62 @@ const ContactPage = () => {
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length) { setErrors(errs); return; }
+    setSubmitNotice(null);
+
+    const fullName = `${formData.firstName} ${formData.lastName}`.trim();
+    const inquiryLabel = content.inquiryTypes.find(t => t.id === formData.inquiryType)?.label ?? formData.inquiryType;
+    const companyLabel = content.companies.find(c => c.id === formData.company)?.label;
+
+    // No delivery key configured yet (dashboard: Contact page → Form delivery) —
+    // fall back to opening the visitor's own email app with everything filled in,
+    // so an enquiry can still reach someone.
+    if (!content.formAccessKey) {
+      const body = [
+        `Inquiry type: ${inquiryLabel}`,
+        `Name: ${fullName}`,
+        `Email: ${formData.email}`,
+        `Phone: ${formData.phone || '—'}`,
+        `Company: ${companyLabel || '—'}`,
+        '',
+        formData.message,
+      ].join('\n');
+      window.location.href = `mailto:${content.email}?subject=${encodeURIComponent(`${inquiryLabel} enquiry — ${fullName}`)}&body=${encodeURIComponent(body)}`;
+      setSubmitNotice({ type: 'info', text: `Your email app should have opened. If it didn't, email us directly at ${content.email}.` });
+      return;
+    }
+
     setSubmitting(true);
-    await new Promise(r => setTimeout(r, 1500));
-    setSubmitting(false);
-    setSubmitted(true);
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: content.formAccessKey,
+          subject: `${inquiryLabel} enquiry — ${fullName}`,
+          from_name: fullName,
+          name: fullName,
+          email: formData.email,
+          replyto: formData.email,
+          phone: formData.phone || undefined,
+          company: companyLabel || undefined,
+          inquiry_type: inquiryLabel,
+          message: formData.message,
+          botcheck: '',
+        }),
+      });
+      const result = await res.json().catch(() => null);
+      if (!res.ok || !result?.success) {
+        throw new Error(result?.message || 'The message service did not accept the submission.');
+      }
+      setSubmitted(true);
+    } catch {
+      setSubmitNotice({
+        type: 'error',
+        text: `Something went wrong sending your message. Please try again, or email us directly at ${content.email}.`,
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const inputClass = (field: string) =>
@@ -260,7 +315,7 @@ const ContactPage = () => {
                     <p className="text-muted-foreground font-light leading-relaxed mb-8 max-w-sm">
                       {content.successMessage}
                     </p>
-                    <button onClick={() => { setSubmitted(false); setFormData({ firstName:'',lastName:'',email:'',phone:'',company:'',inquiryType:'general',message:'' }); }}
+                    <button onClick={() => { setSubmitted(false); setSubmitNotice(null); setFormData({ firstName:'',lastName:'',email:'',phone:'',company:'',inquiryType:'general',message:'' }); }}
                       className="text-[#cb9733] font-bold text-sm border border-[#cb9733]/40 px-6 py-2.5 rounded-xl hover:bg-[#cb9733]/10 transition-colors">
                       Send Another Message
                     </button>
@@ -374,6 +429,19 @@ const ContactPage = () => {
                           </span>
                         </div>
                       </div>
+
+                      {/* Submission-level feedback (send failed, or no delivery key configured yet) */}
+                      {submitNotice && (
+                        <p
+                          className={`text-sm rounded-xl px-4 py-3 ${
+                            submitNotice.type === 'error'
+                              ? 'bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400'
+                              : 'bg-[#cb9733]/10 text-[#8a6a1f] dark:text-[#e0b862]'
+                          }`}
+                        >
+                          {submitNotice.text}
+                        </p>
+                      )}
 
                       {/* Submit */}
                       <motion.button type="submit" disabled={submitting}

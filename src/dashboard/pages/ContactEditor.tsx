@@ -169,6 +169,37 @@ const ContactEditor: React.FC = () => {
         </div>
       </Panel>
 
+      <Panel
+        title="Form delivery"
+        description="Routes enquiry-form submissions to an email inbox — no server of our own required."
+      >
+        <Field
+          label="Web3Forms access key"
+          hint={
+            <>
+              Free at{" "}
+              <a
+                href="https://web3forms.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-indigo-600 underline"
+              >
+                web3forms.com
+              </a>
+              : sign up with the inbox you want enquiries sent to (e.g. info@rtinepal.com),
+              then paste the access key it gives you here. Leave empty and the form falls
+              back to opening the visitor's own email app instead.
+            </>
+          }
+        >
+          <TextInput
+            value={draft.formAccessKey}
+            onChange={(v) => update({ formAccessKey: v })}
+            placeholder="e.g. 5b3b2e21-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+          />
+        </Field>
+      </Panel>
+
       <Panel title="Form messages">
         <Field label="Success heading">
           <TextInput

@@ -58,7 +58,7 @@ export const Grid: React.FC<{ cols?: 2 | 3; children: React.ReactNode }> = ({
 
 export const Field: React.FC<{
   label: string;
-  hint?: string;
+  hint?: React.ReactNode;
   children: React.ReactNode;
 }> = ({ label, hint, children }) => (
   <label className="block">

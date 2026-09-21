@@ -557,6 +557,9 @@ export const DEFAULT_CONTENT: SiteContent = {
       "Thank you for reaching out. Our team will get back to you within 24 hours.",
     privacyNote:
       "By submitting, you agree to our privacy policy. We'll never share your information.",
+    // Set from the dashboard (Contact page → Form delivery) once a Web3Forms
+    // access key exists — sign up free at web3forms.com with info@rtinepal.com.
+    formAccessKey: "",
   },
 
   footer: {

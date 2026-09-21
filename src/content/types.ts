@@ -237,6 +237,13 @@ export interface ContactContent {
   successTitle: string;
   successMessage: string;
   privacyNote: string;
+  /**
+   * Web3Forms access key (web3forms.com) — routes enquiry-form submissions
+   * to an inbox with no backend of our own. Safe to store as plain text:
+   * it's a public, rate-limited form key, not a secret credential.
+   * Leave empty to fall back to a plain mailto: link.
+   */
+  formAccessKey: string;
 }
 
 /* ------------------------------------------------------------ footer / nav */

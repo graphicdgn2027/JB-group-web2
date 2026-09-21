@@ -106,7 +106,7 @@ variables at build time, so a redeploy is required for them to take effect.
 | **About page** | Banner, heritage, philosophy, quote, vision/mission, core values |
 | **Journey timeline** | Company milestones |
 | **Brand partners** | Page framing (logos live under Businesses) |
-| **Contact page** | Phone, email, address, hours, map, socials, form dropdowns, messages |
+| **Contact page** | Phone, email, address, hours, map, socials, form dropdowns, messages, form delivery key (see below) |
 | **Footer & nav** | Header menu, mega-menu headings, footer columns, address, social icons, copyright |
 | **Media library** | Upload, browse, copy URLs, delete images |
 | **Settings** | Site title, meta description, brand colours, loading screen |
@@ -118,6 +118,16 @@ Some things are generated rather than typed, so they can never drift out of sync
 - the company blocks on the **Brand Partners** page.
 
 All three come from whichever businesses are marked published.
+
+### Contact form delivery
+
+The enquiry form on the Contact page sends through
+[Web3Forms](https://web3forms.com) rather than a server of our own — there's
+nothing to host or maintain. Sign up free with the inbox you want enquiries
+sent to (e.g. `info@rtinepal.com`), then paste the access key it gives you
+into **Contact page → Form delivery**. Submissions also show up in your
+Web3Forms dashboard as a backup record. Leave the key empty and the form
+instead opens the visitor's own email app with everything filled in.
 
 ---
 
