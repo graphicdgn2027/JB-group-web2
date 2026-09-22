@@ -76,7 +76,7 @@ const Header = () => {
           share one row and get squeezed to ~50% width each instead of the
           menu dropping to its own full-width row below the bar. */}
       {/* Main Nav */}
-      <div className="flex justify-between items-center w-full py-4 px-4 md:px-8 lg:px-[6.25vw] rounded-none bg-white dark:bg-[#0a1230] shadow-sm transition-colors duration-500">
+      <div className="flex justify-between items-center w-full py-4 px-4 md:px-8 lg:px-[6.25vw] rounded-none bg-white dark:bg-[#0a1230] transition-colors duration-500">
         {/* Left: Logo */}
         <div className="shrink-0 flex items-center">
           <a href="/" className="flex items-center transition-all duration-500">
