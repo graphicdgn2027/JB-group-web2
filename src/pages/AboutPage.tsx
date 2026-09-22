@@ -29,11 +29,11 @@ const AboutPage = () => {
 
       {/* Cover Hero: Kathmandu, Nepal */}
       <section className="h-[420px] md:h-[460px] pt-20 bg-brand-blue relative flex items-center border-b-[4px] border-brand-red overflow-hidden">
-        {/* Nepal panoramic cover — blurred & softened */}
+        {/* Cover photo — shown clean and sharp, no blur */}
         <div
           aria-hidden
-          className="absolute inset-0 bg-cover bg-center scale-105"
-          style={{ backgroundImage: "url('/assets/cover-image/cover-about.jpg')", filter: "blur(3px) brightness(0.45) saturate(0.85)" }}
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: "url('/assets/cover-image/cover-about.jpg')" }}
         />
         {/* Soft dark veil for text legibility — no gradient, just even translucent wash */}
         <div className="absolute inset-0 bg-brand-blue/40" />
