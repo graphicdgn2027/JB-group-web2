@@ -27,41 +27,43 @@ const AboutPage = () => {
     <div className="min-h-screen font-sans bg-background text-foreground selection:bg-brand-red selection:text-white">
       <Header />
 
-      {/* Cover Hero: Kathmandu, Nepal */}
-      <section className="h-[420px] md:h-[460px] 2xl:h-auto 2xl:aspect-[1920/350] pt-20 bg-white relative flex items-center border-b-[4px] border-brand-red overflow-hidden">
-        {/* Cover photo — shown clean and complete, no crop, no blur, no overlay */}
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-contain md:bg-cover bg-no-repeat"
-          style={{ backgroundImage: "url('/assets/cover-image/cover-about.jpg')", backgroundPosition: "right bottom" }}
-        />
+      {/* Cover Hero: Kathmandu, Nepal — pt-20 clears the fixed navbar with plain
+          white space, so the photo below always starts right at the navbar's
+          bottom edge instead of rendering (invisibly) behind it. */}
+      <section className="pt-20 bg-white relative">
+        <div className="relative w-full h-[340px] md:h-[380px] 2xl:h-auto 2xl:aspect-[1920/350] flex items-center border-b-[4px] border-brand-red overflow-hidden">
+          {/* Cover photo — shown clean and complete, no crop, no blur, no overlay */}
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-contain md:bg-cover bg-no-repeat"
+            style={{ backgroundImage: "url('/assets/cover-image/cover-about.jpg')", backgroundPosition: "right bottom" }}
+          />
 
-        <div className="container mx-auto px-6 relative z-20 flex flex-col justify-center h-full pt-10 w-full max-w-6xl">
-          <div className="w-[90%] md:w-[75%] lg:w-[60%] border-l-4 border-brand-red pl-6 md:pl-12 lg:pl-16">
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-medium mb-3 tracking-tight leading-[1.1] text-brand-blue drop-shadow-[0_2px_10px_rgba(255,255,255,0.9)]"
-            >
-              {content.heroTitleTop} <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-yellow-500">
-                {content.heroTitleBottom}
-              </span>
-            </motion.h1>
+          <div className="container mx-auto px-6 relative z-20 w-full max-w-6xl">
+            <div className="w-[90%] md:w-[75%] lg:w-[60%] border-l-4 border-brand-red pl-6 md:pl-12 lg:pl-16">
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                className="text-4xl md:text-5xl lg:text-6xl font-medium mb-3 tracking-tight leading-[1.1] text-brand-blue drop-shadow-[0_2px_10px_rgba(255,255,255,0.9)]"
+              >
+                {content.heroTitleTop} <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-yellow-500">
+                  {content.heroTitleBottom}
+                </span>
+              </motion.h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-sm md:text-base text-brand-blue/70 font-light uppercase tracking-[0.15em] leading-relaxed max-w-3xl drop-shadow-[0_2px_8px_rgba(255,255,255,0.9)]"
-            >
-              {content.heroSubtitle}
-            </motion.p>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="text-sm md:text-base text-brand-blue/70 font-light uppercase tracking-[0.15em] leading-relaxed max-w-3xl drop-shadow-[0_2px_8px_rgba(255,255,255,0.9)]"
+              >
+                {content.heroSubtitle}
+              </motion.p>
+            </div>
           </div>
         </div>
-
-
       </section>
 
       {/* Magazine Content Layout */}
