@@ -4,7 +4,8 @@ import { useTheme } from "next-themes";
 import Logo from "./Logo";
 import BusinessMegaMenu from "./BusinessMegaMenu";
 import { useLocation } from "react-router";
-import { useSection } from "../content/ContentProvider";
+import { useSection, usePublishedBusinesses } from "../content/ContentProvider";
+import { resolveIcon } from "../content/icons";
 
 /** The Businesses dropdown is generated, so it sits at a fixed slot in the menu. */
 const DROPDOWN_INDEX = 2;
@@ -21,6 +22,7 @@ const Header = () => {
   const [mounted, setMounted] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const nav = useSection("nav");
+  const businesses = usePublishedBusinesses();
 
   useEffect(() => {
     setMounted(true);
@@ -54,6 +56,7 @@ const Header = () => {
       // If on another page, let the normal href navigate (target page handles scroll after load)
     }
     setMobileOpen(false);
+    setIsBusinessesOpen(false);
   };
 
   const links: NavEntry[] = nav.items.map((item) => ({
@@ -187,28 +190,62 @@ const Header = () => {
         >
           {navItems.map((item) => (
             item.type === "dropdown" ? (
-              <button
-                key={item.key}
-                onClick={() => setIsBusinessesOpen(!isBusinessesOpen)}
-                className={`w-full text-left py-3 px-4  transition flex items-center justify-between ${
-                  isDark
-                    ? "text-white/80 hover:text-white hover:bg-white/5"
-                    : "text-brand-blue/80 hover:text-brand-blue hover:bg-black/5"
-                }`}
-              >
-                Businesses
-                <ChevronDown
-                  size={14}
-                  className={`transition-transform ${isBusinessesOpen ? "rotate-180" : ""}`}
-                />
-              </button>
+              <div key={item.key}>
+                <button
+                  onClick={() => setIsBusinessesOpen(!isBusinessesOpen)}
+                  aria-expanded={isBusinessesOpen}
+                  className={`w-full text-left py-3 px-4  transition flex items-center justify-between ${
+                    isBusinessesOpen
+                      ? "text-brand-red font-semibold"
+                      : isDark
+                        ? "text-white/80 hover:text-white hover:bg-white/5"
+                        : "text-brand-blue/80 hover:text-brand-blue hover:bg-black/5"
+                  }`}
+                >
+                  Businesses
+                  <ChevronDown
+                    size={16}
+                    className={`transition-transform ${isBusinessesOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                {/* Businesses open inline on mobile — the desktop mega menu panel
+                    is a fixed-width overlay that has nowhere to go on a phone. */}
+                {isBusinessesOpen && (
+                  <div className="mt-1 mb-2 space-y-1">
+                    {businesses.map((business) => {
+                      const Icon = resolveIcon(business.icon);
+                      return (
+                        <a
+                          key={business.id}
+                          href={`/portfolio/${business.slug}`}
+                          onClick={() => {
+                            setMobileOpen(false);
+                            setIsBusinessesOpen(false);
+                          }}
+                          className={`flex items-center gap-3 py-3 pl-6 pr-4 rounded-lg transition ${
+                            isDark
+                              ? "text-white/75 hover:text-white hover:bg-white/5"
+                              : "text-brand-blue/75 hover:text-brand-blue hover:bg-black/5"
+                          }`}
+                        >
+                          <Icon size={18} className="shrink-0 text-brand-red" />
+                          <span className="text-[15px] font-medium leading-snug">{business.title}</span>
+                        </a>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             ) : (
               <a
                 key={item.key}
                 href={item.path}
                 className={`block py-3 px-4  transition ${
                   location.pathname === item.path || (item.path !== "/" && location.pathname.startsWith(item.path))
-                    ? "text-brand-red font-semibold bg-black/5"
+                    ? isDark
+                      ? "text-brand-red font-semibold bg-white/5"
+                      : "text-brand-red font-semibold bg-black/5"
                     : isDark
                       ? "text-white/80 hover:text-white hover:bg-white/5"
                       : "text-brand-blue/80 hover:text-brand-blue hover:bg-black/5"

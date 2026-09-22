@@ -44,7 +44,10 @@ export const Logo: React.FC<LogoProps> = ({
         </div>
       )}
       {!forceLight && !forceDark && (
-        <div className="flex items-center cursor-pointer select-none group relative">
+        <div className="flex items-center cursor-pointer select-none group">
+          {/* Only one of these is ever displayed, so they stay in normal flow —
+              absolutely positioning the dark one collapsed it to zero width
+              once its light sibling was display:none. */}
           {/* Light Mode Logo (Blue Text) - Shown when scrolled OR when in light theme */}
           <img
             src={fullRelianceLogo}
@@ -59,7 +62,7 @@ export const Logo: React.FC<LogoProps> = ({
             alt="Reliance Trade International"
             className={`${heightClass} w-auto object-contain transition-transform duration-200 group-hover:scale-[1.02] filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)] ${
               scrolled ? "hidden" : "hidden dark:block"
-            } absolute top-0 left-0`}
+            }`}
           />
         </div>
       )}
