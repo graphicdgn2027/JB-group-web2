@@ -28,11 +28,11 @@ const AboutPage = () => {
       <Header />
 
       {/* Cover Hero: Kathmandu, Nepal */}
-      <section className="h-[420px] md:h-[460px] pt-20 bg-brand-blue relative flex items-center border-b-[4px] border-brand-red overflow-hidden">
-        {/* Cover photo — shown clean, full, no blur or overlay */}
+      <section className="h-[420px] md:h-[460px] pt-20 bg-white relative flex items-center border-b-[4px] border-brand-red overflow-hidden">
+        {/* Cover photo — shown clean and complete, no crop, no blur, no overlay */}
         <div
           aria-hidden
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-contain bg-no-repeat bg-right"
           style={{ backgroundImage: "url('/assets/cover-image/cover-about.jpg')" }}
         />
 
