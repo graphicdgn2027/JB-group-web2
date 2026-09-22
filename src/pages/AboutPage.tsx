@@ -29,14 +29,12 @@ const AboutPage = () => {
 
       {/* Cover Hero: Kathmandu, Nepal */}
       <section className="h-[420px] md:h-[460px] pt-20 bg-brand-blue relative flex items-center border-b-[4px] border-brand-red overflow-hidden">
-        {/* Cover photo — shown clean and sharp, no blur */}
+        {/* Cover photo — shown clean, full, no blur or overlay */}
         <div
           aria-hidden
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: "url('/assets/cover-image/cover-about.jpg')" }}
         />
-        {/* Soft dark veil for text legibility — no gradient, just even translucent wash */}
-        <div className="absolute inset-0 bg-brand-blue/40" />
 
         <div className="container mx-auto px-6 relative z-20 flex flex-col justify-center h-full pt-10 w-full max-w-6xl">
           <div className="w-[90%] md:w-[75%] lg:w-[60%] border-l-4 border-brand-red pl-6 md:pl-12 lg:pl-16">
@@ -44,7 +42,7 @@ const AboutPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-medium mb-3 tracking-tight leading-[1.1] text-white"
+              className="text-4xl md:text-5xl lg:text-6xl font-medium mb-3 tracking-tight leading-[1.1] text-brand-blue drop-shadow-[0_2px_10px_rgba(255,255,255,0.9)]"
             >
               {content.heroTitleTop} <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-yellow-500">
@@ -56,7 +54,7 @@ const AboutPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-sm md:text-base text-white/80 font-light uppercase tracking-[0.15em] leading-relaxed max-w-3xl"
+              className="text-sm md:text-base text-brand-blue/70 font-light uppercase tracking-[0.15em] leading-relaxed max-w-3xl drop-shadow-[0_2px_8px_rgba(255,255,255,0.9)]"
             >
               {content.heroSubtitle}
             </motion.p>
