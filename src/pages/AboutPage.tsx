@@ -28,7 +28,7 @@ const AboutPage = () => {
       <Header />
 
       {/* Cover Hero: Kathmandu, Nepal */}
-      <section className="h-[420px] md:h-[460px] pt-20 bg-white relative flex items-center border-b-[4px] border-brand-red overflow-hidden">
+      <section className="h-[420px] md:h-[460px] 2xl:h-auto 2xl:aspect-[1920/350] pt-20 bg-white relative flex items-center border-b-[4px] border-brand-red overflow-hidden">
         {/* Cover photo — shown clean and complete, no crop, no blur, no overlay */}
         <div
           aria-hidden
