@@ -32,7 +32,7 @@ const AboutPage = () => {
         {/* Cover photo — shown clean and complete, no crop, no blur, no overlay */}
         <div
           aria-hidden
-          className="absolute inset-0 bg-contain bg-no-repeat"
+          className="absolute inset-0 bg-contain md:bg-cover bg-no-repeat"
           style={{ backgroundImage: "url('/assets/cover-image/cover-about.jpg')", backgroundPosition: "right bottom" }}
         />
 
