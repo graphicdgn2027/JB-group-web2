@@ -33,7 +33,7 @@ const AboutPage = () => {
         <div
           aria-hidden
           className="absolute inset-0 bg-cover bg-center scale-105"
-          style={{ backgroundImage: "url('/assets/nepal-panoramic-cover.jpg')", filter: "blur(3px) brightness(0.45) saturate(0.85)" }}
+          style={{ backgroundImage: "url('/assets/cover-image/cover-about.jpg')", filter: "blur(3px) brightness(0.45) saturate(0.85)" }}
         />
         {/* Soft dark veil for text legibility — no gradient, just even translucent wash */}
         <div className="absolute inset-0 bg-brand-blue/40" />
