@@ -84,8 +84,9 @@ const BusinessPortfolio: React.FC<BusinessPortfolioProps> = ({
                   style={{ borderRadius: 16 }}
                   className="group relative flex flex-col h-full overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-accent bg-card border border-border/60 shadow-[0_4px_20px_rgba(10,42,102,0.06)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(10,42,102,0.15)] hover:border-accent/40"
                 >
-                  {/* Image — shown clean, no overlay */}
-                  <div className="relative h-64 lg:h-72 overflow-hidden bg-secondary">
+                  {/* Image — square, matching the 1:1 brand-lockup artwork so
+                      the company logo at the top is never cropped away. */}
+                  <div className="relative aspect-square overflow-hidden bg-secondary">
                     <img
                       src={item.cardImage}
                       alt={item.title}
@@ -111,9 +112,15 @@ const BusinessPortfolio: React.FC<BusinessPortfolioProps> = ({
                         {item.title}
                       </span>
                     </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 flex-1 transition-colors duration-300 group-hover:text-foreground/80">
-                      {item.description}
-                    </p>
+                    {/* The wrapper takes the flex growth so the clamped <p> is
+                        not itself a flex item: flex items blockify
+                        display:-webkit-box to flow-root, which silently kills
+                        line-clamp and lets the text cut off mid-word. */}
+                    <div className="flex-1">
+                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 transition-colors duration-300 group-hover:text-foreground/80">
+                        {item.description}
+                      </p>
+                    </div>
                   </div>
 
                   {/* Gold progress bar sweeps across the bottom on hover */}

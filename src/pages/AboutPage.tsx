@@ -31,15 +31,24 @@ const AboutPage = () => {
           white space, so the photo below always starts right at the navbar's
           bottom edge instead of rendering (invisibly) behind it. */}
       <section className="pt-20 bg-white relative">
-        <div className="relative w-full h-[340px] md:h-[380px] 2xl:h-auto 2xl:aspect-[1920/350] flex items-center border-b-[4px] border-brand-red overflow-hidden">
-          {/* Cover photo — shown clean and complete, no crop, no blur, no overlay */}
+        {/* The cover is a 1920x350 panorama whose left half is deliberately
+            empty — that is where the heading sits. From xl up the box is
+            locked to the photo's own ratio, so the whole photo shows edge to
+            edge, uncropped, with the heading over its empty half. Below xl
+            there is not enough height for that, so the heading moves above
+            the photo and the photo becomes a banner showing its mountain
+            half: the empty half is cropped away (right-anchored, so the
+            mountains themselves are never cut) instead of being rendered as
+            a stranded sliver of blank space. */}
+        <div className="relative w-full flex flex-col xl:flex-row xl:items-center xl:aspect-[1920/350] border-b-[4px] border-brand-red overflow-hidden">
+          {/* Cover photo — shown clean, no blur, no overlay */}
           <div
             aria-hidden
-            className="absolute inset-0 bg-contain md:bg-cover bg-no-repeat"
+            className="order-2 w-full aspect-[21/9] md:aspect-[3/1] lg:aspect-[4/1] bg-cover bg-no-repeat xl:absolute xl:inset-0 xl:aspect-auto"
             style={{ backgroundImage: "url('/assets/cover-image/cover-about.jpg')", backgroundPosition: "right bottom" }}
           />
 
-          <div className="container mx-auto px-6 relative z-20 w-full max-w-6xl">
+          <div className="order-1 container mx-auto px-6 py-10 xl:py-0 relative z-20 w-full max-w-6xl">
             <div className="w-[90%] md:w-[75%] lg:w-[60%] border-l-4 border-brand-red pl-6 md:pl-12 lg:pl-16">
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}

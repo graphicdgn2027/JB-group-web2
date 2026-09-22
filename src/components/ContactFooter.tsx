@@ -15,7 +15,7 @@ const ContactFooter = () => {
         <div className="container mx-auto px-6 relative z-10">
 
           {/* Top CTA Section */}
-          <div className="flex flex-col md:flex-row justify-between items-end mb-12 relative">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 relative">
             <div className="mb-6 md:mb-0 relative z-10">
               <span className="text-brand-red text-xs font-bold tracking-[0.3em] uppercase mb-2 block">
                 {content.ctaEyebrow}
