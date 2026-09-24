@@ -75,63 +75,25 @@ const Hero = () => {
 
   return (
     <section
-      className="relative w-full h-screen min-h-[640px] flex items-center overflow-hidden bg-background"
+      /* pt-20 clears the fixed navbar with plain background, so the image
+         panel starts below it rather than running behind it. */
+      className="relative w-full bg-background pt-20"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* Background slider with Ken Burns drift */}
-      <div className="absolute inset-0">
-        <AnimatePresence initial={false}>
-          <motion.div
-            key={index}
-            className="absolute inset-0"
-            initial={{ opacity: 0, scale: 1.14, x: direction * 50 }}
-            animate={{
-              opacity: 1,
-              scale: 1.04,
-              x: 0,
-              transition: {
-                opacity: { duration: 1.1 },
-                x: { duration: 1.2, ease: [0.16, 1, 0.3, 1] as const },
-                scale: { duration: 7.5, ease: "linear" },
-              },
-            }}
-            exit={{ opacity: 0, transition: { duration: 0.9 } }}
-          >
-            <img src={slide.image} alt="" className="w-full h-full object-cover" />
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* Soft overall tint */}
-      <div className="absolute inset-0 bg-white/40 dark:bg-[#0a2a66]/40 transition-colors duration-500" />
-      <div
-        className="absolute inset-0 transition-colors duration-500"
-        style={{
-          background:
-            "linear-gradient(90deg, var(--hero-grad-1) 0%, var(--hero-grad-2) 32%, var(--hero-grad-3) 58%, transparent 80%)",
-        }}
-      />
-      <style>{`
-        :root {
-          --hero-grad-1: rgba(255, 255, 255, 0.70);
-          --hero-grad-2: rgba(255, 255, 255, 0.50);
-          --hero-grad-3: rgba(255, 255, 255, 0.15);
-        }
-        .dark {
-          --hero-grad-1: rgba(6, 24, 64, 0.90);
-          --hero-grad-2: rgba(8, 34, 86, 0.75);
-          --hero-grad-3: rgba(12, 48, 120, 0.35);
-        }
-      `}</style>
-      {/* Top shade so header nav stays legible */}
-      <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white/30 dark:from-[#061840]/60 to-transparent transition-colors duration-500" />
-
-      {/* Content */}
-      <div className="relative z-10 container mx-auto px-6 md:px-10">
-        <div className="max-w-3xl">
+      {/* 2 of 5 columns for the copy, 3 of 5 for the image — a 40/60 split.
+         Height tracks viewport width (the image column is 60vw, so 34vw keeps
+         it near the photos' own 16:9 and avoids gouging the sides), with a
+         floor so the copy always fits. Below xl the two stack, copy first:
+         a 60%-wide column is taller than it is wide there, which would crop
+         a landscape photo down to a sliver. */}
+      <div className="xl:grid xl:grid-cols-5 xl:h-[34vw] xl:max-h-[760px] xl:min-h-[580px]">
+        {/* Copy — 40% */}
+        <div className="xl:col-span-2 flex items-center px-6 md:px-10 xl:pl-16 xl:pr-10 2xl:pl-24 py-14 xl:py-0">
           <AnimatePresence mode="wait">
-            <motion.div key={index} variants={container} initial="hidden" animate="visible" exit="exit">
+            {/* Capped while stacked so the copy does not run the full page
+                width; in the split the 40% column already bounds it. */}
+            <motion.div key={index} variants={container} initial="hidden" animate="visible" exit="exit" className="w-full max-w-2xl xl:max-w-none">
               <motion.div variants={item} className="inline-flex items-center gap-3 mb-6">
                 <span className="h-px w-10 bg-accent" />
                 <span className="text-xs font-semibold tracking-[0.25em] uppercase text-accent">
@@ -141,12 +103,12 @@ const Hero = () => {
 
               <motion.h2
                 variants={item}
-                className="text-sm md:text-base font-bold tracking-[0.3em] uppercase text-brand-blue/70 dark:text-white/70 mb-4 transition-colors duration-500"
+                className="text-sm font-bold tracking-[0.3em] uppercase text-brand-blue/70 dark:text-white/70 mb-4 transition-colors duration-500"
               >
                 {slide.label}
               </motion.h2>
 
-              <h1 className="text-4xl md:text-6xl lg:text-7xl tracking-tight mb-6 leading-[1.08] text-brand-blue dark:text-white drop-shadow-sm dark:drop-shadow-[0_2px_20px_rgba(0,0,0,0.35)] transition-colors duration-500">
+              <h1 className="text-4xl md:text-5xl xl:text-6xl tracking-tight mb-6 leading-[1.08] text-brand-blue dark:text-white transition-colors duration-500">
                 <motion.span variants={item} className="block font-light text-accent">
                   {slide.titleTop}
                 </motion.span>
@@ -157,7 +119,7 @@ const Hero = () => {
 
               <motion.p
                 variants={item}
-                className="text-base md:text-lg text-brand-blue/80 dark:text-white/80 max-w-2xl mb-10 leading-relaxed font-light transition-colors duration-500"
+                className="text-base text-brand-blue/80 dark:text-white/80 mb-10 leading-relaxed font-light transition-colors duration-500"
               >
                 {slide.description}
               </motion.p>
@@ -182,58 +144,79 @@ const Hero = () => {
                   </a>
                 </motion.div>
               )}
+
+              {/* Slide indicator sits with the copy so it never covers the photo */}
+              {count > 1 && (
+                <motion.div variants={item} className="mt-10 flex items-center gap-2">
+                  {slides.map((s, i) => (
+                    <button
+                      key={s.id}
+                      onClick={() => goTo(i)}
+                      aria-label={`Go to slide ${i + 1}: ${s.label}`}
+                      className={`relative h-1.5 overflow-hidden transition-all duration-500 ${
+                        i === index
+                          ? "w-12 bg-brand-blue/15 dark:bg-white/25"
+                          : "w-4 bg-brand-blue/25 dark:bg-white/35 hover:bg-brand-blue/40 dark:hover:bg-white/60"
+                      }`}
+                    >
+                      {i === index && (
+                        <motion.span
+                          key={`bar-${index}-${paused}`}
+                          className="absolute inset-y-0 left-0 bg-accent"
+                          initial={{ width: "0%" }}
+                          animate={{ width: paused ? "40%" : "100%" }}
+                          transition={{ duration: paused ? 0.4 : slideDurationMs / 1000, ease: "linear" }}
+                        />
+                      )}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
             </motion.div>
           </AnimatePresence>
         </div>
-      </div>
 
-      {/* Side arrows */}
-      {count > 1 &&
-        [
-          { onClick: prev, label: "Previous slide", Icon: ChevronLeft, side: "left-4 md:left-6" },
-          { onClick: next, label: "Next slide", Icon: ChevronRight, side: "right-4 md:right-6" },
-        ].map(({ onClick, label, Icon, side }) => (
-          <button
-            key={label}
-            onClick={onClick}
-            aria-label={label}
-            style={{ borderRadius: 9999 }}
-            className={`hidden sm:flex absolute ${side} top-1/2 -translate-y-1/2 z-20 w-12 h-12 items-center justify-center bg-white/10 border border-white/20 text-white backdrop-blur-md shadow-lg transition-all duration-300 hover:bg-accent hover:border-accent hover:scale-110`}
-          >
-            <Icon size={22} strokeWidth={2} />
-          </button>
-        ))}
-
-      {/* Pill indicator */}
-      {count > 1 && (
-        <div
-          style={{ borderRadius: 9999 }}
-          className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-3 py-2 bg-black/25 backdrop-blur-md border border-white/10"
-        >
-          {slides.map((s, i) => (
-            <button
-              key={s.id}
-              onClick={() => goTo(i)}
-              aria-label={`Go to slide ${i + 1}: ${s.label}`}
-              style={{ borderRadius: 9999 }}
-              className={`relative h-2 overflow-hidden transition-all duration-500 ${
-                i === index ? "w-10 bg-white/30" : "w-2 bg-white/50 hover:bg-white/80"
-              }`}
+        {/* Image — 60%. 16:9 below xl matches the source files exactly, so
+           nothing is cropped there; on xl it fills the split's height. */}
+        <div className="xl:col-span-3 relative aspect-[16/9] xl:aspect-auto xl:h-full overflow-hidden bg-secondary">
+          <AnimatePresence initial={false}>
+            <motion.div
+              key={index}
+              className="absolute inset-0"
+              initial={{ opacity: 0, scale: 1.14, x: direction * 50 }}
+              animate={{
+                opacity: 1,
+                scale: 1.04,
+                x: 0,
+                transition: {
+                  opacity: { duration: 1.1 },
+                  x: { duration: 1.2, ease: [0.16, 1, 0.3, 1] as const },
+                  scale: { duration: 7.5, ease: "linear" },
+                },
+              }}
+              exit={{ opacity: 0, transition: { duration: 0.9 } }}
             >
-              {i === index && (
-                <motion.span
-                  key={`bar-${index}-${paused}`}
-                  style={{ borderRadius: 9999 }}
-                  className="absolute inset-y-0 left-0 bg-accent"
-                  initial={{ width: "0%" }}
-                  animate={{ width: paused ? "40%" : "100%" }}
-                  transition={{ duration: paused ? 0.4 : slideDurationMs / 1000, ease: "linear" }}
-                />
-              )}
-            </button>
-          ))}
+              <img src={slide.image} alt="" className="w-full h-full object-cover" />
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Side arrows, kept inside the image panel */}
+          {count > 1 &&
+            [
+              { onClick: prev, label: "Previous slide", Icon: ChevronLeft, side: "left-4" },
+              { onClick: next, label: "Next slide", Icon: ChevronRight, side: "right-4" },
+            ].map(({ onClick, label, Icon, side }) => (
+              <button
+                key={label}
+                onClick={onClick}
+                aria-label={label}
+                className={`hidden sm:flex absolute ${side} top-1/2 -translate-y-1/2 z-20 w-12 h-12 items-center justify-center bg-black/20 border border-white/25 text-white backdrop-blur-md shadow-lg transition-all duration-300 hover:bg-accent hover:border-accent hover:scale-110`}
+              >
+                <Icon size={22} strokeWidth={2} />
+              </button>
+            ))}
         </div>
-      )}
+      </div>
     </section>
   );
 };
