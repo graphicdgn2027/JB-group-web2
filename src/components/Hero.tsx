@@ -88,75 +88,83 @@ const Hero = () => {
          a 60%-wide column is taller than it is wide there, which would crop
          a landscape photo down to a sliver. */}
       <div className="xl:grid xl:grid-cols-5 xl:h-[34vw] xl:max-h-[760px] xl:min-h-[580px]">
-        {/* Copy — 40% */}
-        <div className="xl:col-span-2 flex items-center px-6 md:px-10 xl:pl-16 xl:pr-10 2xl:pl-24 py-14 xl:py-0">
-          <AnimatePresence mode="wait">
-            {/* Capped while stacked so the copy does not run the full page
-                width; in the split the 40% column already bounds it. */}
-            <motion.div key={index} variants={container} initial="hidden" animate="visible" exit="exit" className="w-full max-w-2xl xl:max-w-none">
-              <motion.div variants={item} className="inline-flex items-center gap-3 mb-6">
-                <span className="h-px w-10 bg-accent" />
-                <span className="text-xs font-semibold tracking-[0.25em] uppercase text-accent">
-                  {slide.eyebrow}
-                </span>
-              </motion.div>
-
-              <motion.h2
-                variants={item}
-                className="text-sm font-bold tracking-[0.3em] uppercase text-brand-blue/70 dark:text-white/70 mb-4 transition-colors duration-500"
-              >
-                {slide.label}
-              </motion.h2>
-
-              <h1 className="text-4xl md:text-5xl xl:text-6xl tracking-tight mb-6 leading-[1.08] text-brand-blue dark:text-white transition-colors duration-500">
-                <motion.span variants={item} className="block font-light text-accent">
-                  {slide.titleTop}
-                </motion.span>
-                <motion.span variants={item} className="block mt-1 font-bold">
-                  {slide.titleBottom}
-                </motion.span>
-              </h1>
-
-              <motion.p
-                variants={item}
-                className="text-base text-brand-blue/80 dark:text-white/80 mb-10 leading-relaxed font-light transition-colors duration-500"
-              >
-                {slide.description}
-              </motion.p>
-
-              {slide.ctaLabel && (
-                <motion.div variants={item}>
-                  <a
-                    href={slide.ctaHref}
-                    className="group inline-flex items-center gap-3 text-sm font-medium uppercase tracking-[0.15em] text-brand-blue dark:text-white transition-colors duration-500"
-                  >
-                    <span className="w-11 h-11 rounded-full border-[1.5px] border-brand-blue/30 dark:border-white/50 flex items-center justify-center transition-all duration-300 group-hover:bg-accent group-hover:border-accent group-hover:text-white dark:group-hover:text-white">
-                      <ChevronRight
-                        size={16}
-                        strokeWidth={2.5}
-                        className="transition-transform duration-300 group-hover:translate-x-0.5"
-                      />
-                    </span>
-                    <span className="relative pb-1">
-                      {slide.ctaLabel}
-                      <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-accent transition-all duration-300 group-hover:w-full" />
-                    </span>
-                  </a>
+        {/* Copy — 40%. The left gutter matches the site container's 6.25vw so
+            the headline lines up with the logo and every section below it. */}
+        <div className="xl:col-span-2 flex flex-col justify-center px-4 md:px-8 xl:pl-[6.25vw] xl:pr-12 py-14 xl:py-0">
+          {/* Capped while stacked so the copy does not run the full page
+              width; in the split the 40% column already bounds it. */}
+          <div className="w-full max-w-2xl xl:max-w-none">
+            <AnimatePresence mode="wait">
+              <motion.div key={index} variants={container} initial="hidden" animate="visible" exit="exit">
+                <motion.div variants={item} className="inline-flex items-center gap-3 mb-7">
+                  <span className="h-px w-8 bg-accent" />
+                  <span className="text-[11px] font-semibold tracking-[0.28em] uppercase text-accent">
+                    {slide.eyebrow}
+                  </span>
                 </motion.div>
-              )}
 
-              {/* Slide indicator sits with the copy so it never covers the photo */}
-              {count > 1 && (
-                <motion.div variants={item} className="mt-10 flex items-center gap-2">
+                <h1 className="text-[2.15rem] md:text-5xl xl:text-[3.25rem] 2xl:text-6xl tracking-[-0.02em] mb-6 leading-[1.06] text-brand-blue dark:text-white transition-colors duration-500">
+                  <motion.span variants={item} className="block font-light text-accent">
+                    {slide.titleTop}
+                  </motion.span>
+                  <motion.span variants={item} className="block mt-1 font-bold">
+                    {slide.titleBottom}
+                  </motion.span>
+                </h1>
+
+                <motion.p
+                  variants={item}
+                  className="text-[15px] xl:text-base text-brand-blue/70 dark:text-white/70 mb-9 leading-[1.75] font-light max-w-[46ch] transition-colors duration-500"
+                >
+                  {slide.description}
+                </motion.p>
+
+                {slide.ctaLabel && (
+                  <motion.div variants={item}>
+                    <a
+                      href={slide.ctaHref}
+                      className="group inline-flex items-center gap-3 text-sm font-medium uppercase tracking-[0.15em] text-brand-blue dark:text-white transition-colors duration-500"
+                    >
+                      <span className="w-11 h-11 rounded-full border-[1.5px] border-brand-blue/30 dark:border-white/50 flex items-center justify-center transition-all duration-300 group-hover:bg-accent group-hover:border-accent group-hover:text-white dark:group-hover:text-white">
+                        <ChevronRight
+                          size={16}
+                          strokeWidth={2.5}
+                          className="transition-transform duration-300 group-hover:translate-x-0.5"
+                        />
+                      </span>
+                      <span className="relative pb-1">
+                        {slide.ctaLabel}
+                        <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-accent transition-all duration-300 group-hover:w-full" />
+                      </span>
+                    </a>
+                  </motion.div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Slider controls: counter, progress, arrows. Outside the
+                AnimatePresence so they stay put instead of re-animating on
+                every slide, and off the photo so nothing covers it. */}
+            {count > 1 && (
+              <div className="mt-10 xl:mt-12 flex items-center gap-5 border-t border-brand-blue/10 dark:border-white/15 pt-6">
+                <span className="text-sm tabular-nums text-brand-blue/50 dark:text-white/50 transition-colors duration-500">
+                  <span className="font-semibold text-brand-blue dark:text-white">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  {" / "}
+                  {String(count).padStart(2, "0")}
+                </span>
+
+                <div className="flex flex-1 items-center gap-1.5">
                   {slides.map((s, i) => (
                     <button
                       key={s.id}
                       onClick={() => goTo(i)}
                       aria-label={`Go to slide ${i + 1}: ${s.label}`}
-                      className={`relative h-1.5 overflow-hidden transition-all duration-500 ${
+                      className={`relative h-[3px] overflow-hidden transition-all duration-500 ${
                         i === index
-                          ? "w-12 bg-brand-blue/15 dark:bg-white/25"
-                          : "w-4 bg-brand-blue/25 dark:bg-white/35 hover:bg-brand-blue/40 dark:hover:bg-white/60"
+                          ? "flex-1 max-w-[72px] bg-brand-blue/15 dark:bg-white/25"
+                          : "w-5 bg-brand-blue/20 dark:bg-white/30 hover:bg-brand-blue/40 dark:hover:bg-white/60"
                       }`}
                     >
                       {i === index && (
@@ -170,10 +178,26 @@ const Hero = () => {
                       )}
                     </button>
                   ))}
-                </motion.div>
-              )}
-            </motion.div>
-          </AnimatePresence>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {[
+                    { onClick: prev, label: "Previous slide", Icon: ChevronLeft },
+                    { onClick: next, label: "Next slide", Icon: ChevronRight },
+                  ].map(({ onClick, label, Icon }) => (
+                    <button
+                      key={label}
+                      onClick={onClick}
+                      aria-label={label}
+                      className="w-10 h-10 flex items-center justify-center border border-brand-blue/20 dark:border-white/25 text-brand-blue dark:text-white transition-all duration-300 hover:bg-accent hover:border-accent hover:text-white"
+                    >
+                      <Icon size={17} strokeWidth={2} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Image — 60%. 16:9 below xl matches the source files exactly, so
@@ -200,21 +224,23 @@ const Hero = () => {
             </motion.div>
           </AnimatePresence>
 
-          {/* Side arrows, kept inside the image panel */}
-          {count > 1 &&
-            [
-              { onClick: prev, label: "Previous slide", Icon: ChevronLeft, side: "left-4" },
-              { onClick: next, label: "Next slide", Icon: ChevronRight, side: "right-4" },
-            ].map(({ onClick, label, Icon, side }) => (
-              <button
-                key={label}
-                onClick={onClick}
-                aria-label={label}
-                className={`hidden sm:flex absolute ${side} top-1/2 -translate-y-1/2 z-20 w-12 h-12 items-center justify-center bg-black/20 border border-white/25 text-white backdrop-blur-md shadow-lg transition-all duration-300 hover:bg-accent hover:border-accent hover:scale-110`}
-              >
-                <Icon size={22} strokeWidth={2} />
-              </button>
-            ))}
+          {/* Names the company in the photo, so the copy column does not have
+              to repeat it above the headline */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/55 to-transparent" />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.35, ease: [0.16, 1, 0.3, 1] as const } }}
+              exit={{ opacity: 0, transition: { duration: 0.3 } }}
+              className="absolute bottom-6 left-6 xl:bottom-8 xl:left-8 flex items-center gap-3"
+            >
+              <span className="h-8 w-[3px] bg-accent" />
+              <span className="text-xs font-semibold tracking-[0.22em] uppercase text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">
+                {slide.label}
+              </span>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </section>
