@@ -91,9 +91,9 @@ const Hero = () => {
         {/* Copy — 40%. The left gutter matches the site container's 6.25vw so
             the headline lines up with the logo and every section below it. */}
         <div className="xl:col-span-2 flex flex-col justify-center px-4 md:px-8 xl:pl-[6.25vw] xl:pr-12 py-14 xl:py-0">
-          {/* Capped while stacked so the copy does not run the full page
-              width; in the split the 40% column already bounds it. */}
-          <div className="w-full max-w-2xl xl:max-w-none">
+          {/* One measure for the whole column, so the rule above the controls
+              ends with the text instead of running past it. */}
+          <div className="w-full max-w-2xl xl:max-w-[30rem]">
             <AnimatePresence mode="wait">
               <motion.div key={index} variants={container} initial="hidden" animate="visible" exit="exit">
                 <motion.div variants={item} className="inline-flex items-center gap-3 mb-7">
@@ -142,54 +142,55 @@ const Hero = () => {
               </motion.div>
             </AnimatePresence>
 
-            {/* Slider controls: counter, progress, arrows. Outside the
-                AnimatePresence so they stay put instead of re-animating on
-                every slide, and off the photo so nothing covers it. */}
+            {/* Slider controls. Outside the AnimatePresence so they stay put
+                instead of re-animating on every slide, and off the photo so
+                nothing covers it. The current slide's company name lives here
+                rather than over the image, which keeps the photo clean and
+                saves a third stacked line above the headline. */}
             {count > 1 && (
-              <div className="mt-10 xl:mt-12 flex items-center gap-5 border-t border-brand-blue/10 dark:border-white/15 pt-6">
-                <span className="text-sm tabular-nums text-brand-blue/50 dark:text-white/50 transition-colors duration-500">
-                  <span className="font-semibold text-brand-blue dark:text-white">
-                    {String(index + 1).padStart(2, "0")}
+              <div className="mt-10 xl:mt-12 flex items-center justify-between gap-6 border-t border-brand-blue/10 dark:border-white/15 pt-6">
+                <div className="flex min-w-0 items-center gap-4">
+                  <span className="truncate text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-blue/60 dark:text-white/60 transition-colors duration-500">
+                    {slide.label}
                   </span>
-                  {" / "}
-                  {String(count).padStart(2, "0")}
-                </span>
-
-                <div className="flex flex-1 items-center gap-1.5">
-                  {slides.map((s, i) => (
-                    <button
-                      key={s.id}
-                      onClick={() => goTo(i)}
-                      aria-label={`Go to slide ${i + 1}: ${s.label}`}
-                      className={`relative h-[3px] overflow-hidden transition-all duration-500 ${
-                        i === index
-                          ? "flex-1 max-w-[72px] bg-brand-blue/15 dark:bg-white/25"
-                          : "w-5 bg-brand-blue/20 dark:bg-white/30 hover:bg-brand-blue/40 dark:hover:bg-white/60"
-                      }`}
-                    >
-                      {i === index && (
-                        <motion.span
-                          key={`bar-${index}-${paused}`}
-                          className="absolute inset-y-0 left-0 bg-accent"
-                          initial={{ width: "0%" }}
-                          animate={{ width: paused ? "40%" : "100%" }}
-                          transition={{ duration: paused ? 0.4 : slideDurationMs / 1000, ease: "linear" }}
-                        />
-                      )}
-                    </button>
-                  ))}
+                  <div className="flex shrink-0 items-center gap-1.5">
+                    {slides.map((s, i) => (
+                      <button
+                        key={s.id}
+                        onClick={() => goTo(i)}
+                        aria-label={`Go to slide ${i + 1}: ${s.label}`}
+                        className={`relative h-[3px] overflow-hidden transition-all duration-500 ${
+                          i === index
+                            ? "w-12 bg-brand-blue/15 dark:bg-white/25"
+                            : "w-4 bg-brand-blue/20 dark:bg-white/30 hover:bg-brand-blue/40 dark:hover:bg-white/60"
+                        }`}
+                      >
+                        {i === index && (
+                          <motion.span
+                            key={`bar-${index}-${paused}`}
+                            className="absolute inset-y-0 left-0 bg-accent"
+                            initial={{ width: "0%" }}
+                            animate={{ width: paused ? "40%" : "100%" }}
+                            transition={{ duration: paused ? 0.4 : slideDurationMs / 1000, ease: "linear" }}
+                          />
+                        )}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex shrink-0 items-center">
                   {[
                     { onClick: prev, label: "Previous slide", Icon: ChevronLeft },
                     { onClick: next, label: "Next slide", Icon: ChevronRight },
-                  ].map(({ onClick, label, Icon }) => (
+                  ].map(({ onClick, label, Icon }, i) => (
                     <button
                       key={label}
                       onClick={onClick}
                       aria-label={label}
-                      className="w-10 h-10 flex items-center justify-center border border-brand-blue/20 dark:border-white/25 text-brand-blue dark:text-white transition-all duration-300 hover:bg-accent hover:border-accent hover:text-white"
+                      className={`w-10 h-10 flex items-center justify-center border border-brand-blue/20 dark:border-white/25 text-brand-blue dark:text-white transition-all duration-300 hover:bg-accent hover:border-accent hover:text-white ${
+                        i === 1 ? "-ml-px" : ""
+                      }`}
                     >
                       <Icon size={17} strokeWidth={2} />
                     </button>
@@ -224,23 +225,6 @@ const Hero = () => {
             </motion.div>
           </AnimatePresence>
 
-          {/* Names the company in the photo, so the copy column does not have
-              to repeat it above the headline */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/55 to-transparent" />
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.35, ease: [0.16, 1, 0.3, 1] as const } }}
-              exit={{ opacity: 0, transition: { duration: 0.3 } }}
-              className="absolute bottom-6 left-6 xl:bottom-8 xl:left-8 flex items-center gap-3"
-            >
-              <span className="h-8 w-[3px] bg-accent" />
-              <span className="text-xs font-semibold tracking-[0.22em] uppercase text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">
-                {slide.label}
-              </span>
-            </motion.div>
-          </AnimatePresence>
         </div>
       </div>
     </section>
