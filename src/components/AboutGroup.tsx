@@ -77,7 +77,7 @@ const StatCard: React.FC<{ value: string; label: string; featured: boolean; inte
       whileHover={interactive ? { y: -5 } : undefined}
       whileTap={{ scale: 0.97 }}
       onMouseMove={interactive ? trackPointer : undefined}
-      className="group/tile relative isolate cursor-default overflow-hidden rounded-2xl border border-brand-blue bg-transparent px-4 py-4 text-brand-blue shadow-[0_1px_2px_rgba(17,29,67,0.04)] transition-[border-color,box-shadow] duration-300 hover:border-accent hover:shadow-[0_22px_40px_-20px_rgba(17,29,67,0.35)]"
+      className="group/tile relative isolate cursor-default overflow-hidden rounded-2xl border border-brand-blue bg-transparent px-4 py-4 text-brand-blue shadow-[0_1px_2px_rgba(17,29,67,0.04)] transition-[border-color,box-shadow] duration-300 hover:border-accent hover:shadow-[0_22px_40px_-20px_rgba(17,29,67,0.35)] dark:border-white/25 dark:text-white"
     >
       {/* Cursor spotlight */}
       <span
@@ -102,11 +102,11 @@ const StatCard: React.FC<{ value: string; label: string; featured: boolean; inte
         </span>
 
         <div className="min-w-0">
-          <div className="text-[32px] font-black leading-none tracking-tight text-brand-blue">
+          <div className="text-[32px] font-black leading-none tracking-tight text-brand-blue dark:text-white">
             <CountUpValue value={value} suffixClassName="ml-0.5 align-top text-[19px] text-accent" />
           </div>
 
-          <div className="mt-1.5 text-[10px] font-bold uppercase tracking-[0.14em] break-words text-slate-500 transition-colors duration-300 group-hover/tile:text-brand-blue">
+          <div className="mt-1.5 text-[10px] font-bold uppercase tracking-[0.14em] break-words text-slate-500 transition-colors duration-300 group-hover/tile:text-brand-blue dark:text-white/60 dark:group-hover/tile:text-white">
             {label}
           </div>
         </div>
@@ -148,7 +148,7 @@ const AboutGroup = () => {
   const [firstParagraph, ...restParagraphs] = content.paragraphs;
 
   return (
-    <section ref={containerRef} className="py-16 bg-white relative overflow-hidden text-foreground">
+    <section ref={containerRef} className="py-16 bg-background relative overflow-hidden text-foreground">
       <div className="container mx-auto px-6 max-w-7xl">
         <motion.div
           variants={containerVariants}
@@ -235,7 +235,7 @@ const AboutGroup = () => {
                 {content.eyebrow}
               </h3>
 
-              <h2 className="text-5xl lg:text-6xl font-black text-brand-blue mb-10 leading-[0.9] tracking-tight uppercase">
+              <h2 className="text-5xl lg:text-6xl font-black text-brand-blue dark:text-white mb-10 leading-[0.9] tracking-tight uppercase">
                 {content.titleLine1}<br />{content.titleLine2}
               </h2>
 
@@ -243,7 +243,7 @@ const AboutGroup = () => {
                 <div className="text-muted-foreground leading-relaxed space-y-6 text-lg font-light">
                   {firstParagraph && (
                     <p>
-                      <span className="float-left text-7xl leading-[0.8] font-black text-brand-blue mr-3 mt-1">
+                      <span className="float-left text-7xl leading-[0.8] font-black text-brand-blue dark:text-white mr-3 mt-1">
                         {content.dropCap}
                       </span>
                       {firstParagraph}
@@ -259,7 +259,7 @@ const AboutGroup = () => {
             <div className="mt-auto">
               <Link
                 to={content.ctaHref}
-                className="group relative inline-flex items-center gap-2 mt-10 pb-1 text-sm font-bold uppercase tracking-widest text-brand-blue hover:text-brand-red transition-colors"
+                className="group relative inline-flex items-center gap-2 mt-10 pb-1 text-sm font-bold uppercase tracking-widest text-brand-blue dark:text-white hover:text-brand-red dark:hover:text-brand-red transition-colors"
               >
                 <span>{content.ctaLabel}</span>
                 <ArrowRight size={18} className="transition-transform duration-300 group-hover:translate-x-1.5" />
