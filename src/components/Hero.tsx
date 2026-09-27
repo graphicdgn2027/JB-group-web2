@@ -8,7 +8,6 @@ import { useSection } from "../content/ContentProvider";
 const Hero = () => {
   const { slides, slideDurationMs } = useSection("hero");
   const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState(1);
   const [paused, setPaused] = useState(false);
 
   const count = slides.length;
@@ -16,11 +15,7 @@ const Hero = () => {
   const goTo = useCallback(
     (next: number) => {
       if (count === 0) return;
-      setIndex((prev) => {
-        const target = (next + count) % count;
-        setDirection(target === prev ? 1 : target > prev ? 1 : -1);
-        return target;
-      });
+      setIndex((next + count) % count);
     },
     [count]
   );
@@ -153,7 +148,9 @@ const Hero = () => {
                   <span className="truncate text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-blue/60 dark:text-white/60 transition-colors duration-500">
                     {slide.label}
                   </span>
-                  <div className="flex shrink-0 items-center gap-1.5">
+                  {/* Hidden at xl: the accordion itself shows which slide is
+                      up and carries the autoplay progress there */}
+                  <div className="flex shrink-0 items-center gap-1.5 xl:hidden">
                     {slides.map((s, i) => (
                       <button
                         key={s.id}
@@ -201,30 +198,72 @@ const Hero = () => {
           </div>
         </div>
 
-        {/* Image — 60%. 16:9 below xl matches the source files exactly, so
-           nothing is cropped there; on xl it fills the split's height. */}
-        <div className="xl:col-span-3 relative aspect-[16/9] xl:aspect-auto xl:h-full overflow-hidden bg-secondary">
-          <AnimatePresence initial={false}>
-            <motion.div
-              key={index}
-              className="absolute inset-0"
-              initial={{ opacity: 0, scale: 1.14, x: direction * 50 }}
-              animate={{
-                opacity: 1,
-                scale: 1.04,
-                x: 0,
-                transition: {
-                  opacity: { duration: 1.1 },
-                  x: { duration: 1.2, ease: [0.16, 1, 0.3, 1] as const },
-                  scale: { duration: 7.5, ease: "linear" },
-                },
-              }}
-              exit={{ opacity: 0, transition: { duration: 0.9 } }}
-            >
-              <img src={slide.image} alt="" className="w-full h-full object-cover" />
-            </motion.div>
-          </AnimatePresence>
+        {/* Image — 60%. An accordion of every slide: the active one expands,
+           the rest sit alongside as slivers you can hover or click to bring
+           forward, which makes the slider navigable by sight instead of by
+           stepping through it blind.
 
+           Only the active panel renders below xl — a sliver is a pointer
+           idea, and splitting a 16:9 photo across a narrow column would crop
+           it hard. On its own the active panel keeps the full 16:9 frame. */}
+        <div className="xl:col-span-3 relative flex aspect-[16/9] xl:aspect-auto xl:h-full gap-1 overflow-hidden bg-secondary">
+          {slides.map((s, i) => {
+            const active = i === index;
+            return (
+              <button
+                key={s.id}
+                type="button"
+                onMouseEnter={() => goTo(i)}
+                onFocus={() => goTo(i)}
+                onClick={() => goTo(i)}
+                aria-label={`Show ${s.label}`}
+                aria-current={active}
+                className={`group relative h-full overflow-hidden outline-none transition-[flex-grow] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-inset ${
+                  active ? "flex-[6]" : "hidden xl:block xl:flex-[0.55]"
+                }`}
+              >
+                <img
+                  src={s.image}
+                  alt={active ? "" : s.label}
+                  className={`h-full w-full object-cover transition-all duration-700 ${
+                    active ? "scale-100" : "scale-105 grayscale"
+                  }`}
+                />
+
+                {/* A sliver of a landscape photo is an unreadable slice — and
+                    these have marketing text baked in — so closed panels read
+                    as labelled tabs: the photo sinks back to texture and the
+                    company name runs up the panel. Always rendered and faded
+                    by opacity rather than unmounted, so the label dissolves as
+                    the panel opens instead of blinking out. */}
+                <span
+                  className={`pointer-events-none absolute inset-0 bg-brand-blue/75 transition-opacity duration-500 ${
+                    active ? "opacity-0" : "opacity-100"
+                  }`}
+                />
+                <span
+                  className={`pointer-events-none absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
+                    active ? "opacity-0" : "opacity-100"
+                  }`}
+                >
+                  <span className="rotate-180 whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.2em] text-white [writing-mode:vertical-rl]">
+                    {s.label}
+                  </span>
+                </span>
+                {/* Autoplay progress, on the active panel so the copy column
+                    does not need a second indicator at these widths */}
+                {active && count > 1 && (
+                  <motion.span
+                    key={`progress-${index}-${paused}`}
+                    className="absolute bottom-0 left-0 hidden h-[3px] bg-accent xl:block"
+                    initial={{ width: "0%" }}
+                    animate={{ width: paused ? "40%" : "100%" }}
+                    transition={{ duration: paused ? 0.4 : slideDurationMs / 1000, ease: "linear" }}
+                  />
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
     </section>
