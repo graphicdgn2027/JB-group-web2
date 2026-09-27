@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { ArrowUpRight } from "lucide-react";
 import Header from "../components/Header";
@@ -6,6 +6,39 @@ import ContactFooter from "../components/ContactFooter";
 import { motion } from "motion/react";
 import { useSection, usePublishedBusinesses } from "../content/ContentProvider";
 import { resolveIcon } from "../content/icons";
+
+/**
+ * Brand logo that falls back to text when the image will not load.
+ *
+ * The fallback is rendered by React rather than written into innerHTML: both
+ * the logo URL and the fallback text come from the CMS, so an editor could
+ * otherwise point the logo at nothing and put markup in the text, and it would
+ * execute for every visitor.
+ */
+const BrandLogo: React.FC<{ src: string; name: string; fallbackText?: string }> = ({
+  src,
+  name,
+  fallbackText,
+}) => {
+  const [failed, setFailed] = useState(false);
+
+  if (failed || !src) {
+    return (
+      <span className="font-bold text-xl text-foreground text-center">
+        {fallbackText || name}
+      </span>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={name}
+      className="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105"
+      onError={() => setFailed(true)}
+    />
+  );
+};
 
 const BrandPartnersPage = () => {
   const content = useSection("brandPartners");
@@ -124,15 +157,10 @@ const BrandPartnersPage = () => {
                             className="flex flex-col items-center gap-4 group"
                           >
                             <div className="relative w-32 h-32 md:w-48 md:h-48 rounded-xl bg-muted p-6 flex items-center justify-center border border-border shadow-sm transition-all duration-300 group-hover:border-[#cb9733]/60 group-hover:shadow-lg group-hover:-translate-y-1">
-                              <img
+                              <BrandLogo
                                 src={brand.logo}
-                                alt={brand.name}
-                                className="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105"
-                                onError={(e) => {
-                                  // Fallback if image fails
-                                  e.currentTarget.style.display = 'none';
-                                  e.currentTarget.parentElement!.innerHTML = `<span class="font-bold text-xl text-foreground text-center">${brand.fallbackText || brand.name}</span>`;
-                                }}
+                                name={brand.name}
+                                fallbackText={brand.fallbackText}
                               />
                               <span className="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-[#cb9733] text-white opacity-0 scale-75 shadow-md transition-all duration-300 group-hover:opacity-100 group-hover:scale-100">
                                 <ArrowUpRight size={15} />

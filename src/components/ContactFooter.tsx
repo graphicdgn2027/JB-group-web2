@@ -1,3 +1,4 @@
+import { safeUrl } from "../content/safeUrl";
 import React from "react";
 import { ArrowRight } from "lucide-react";
 import Logo from "./Logo";
@@ -25,7 +26,7 @@ const ContactFooter = () => {
                 <span className="text-brand-red font-medium">{content.ctaTitleBottom}</span>
               </h2>
             </div>
-            <a href={content.ctaButtonHref} className="bg-white text-brand-blue hover:bg-brand-red hover:text-white px-10 py-5 font-bold tracking-widest uppercase text-sm flex items-center gap-3 transition-all duration-300 shadow-2xl hover:shadow-brand-red/20 group relative z-10">
+            <a href={safeUrl(content.ctaButtonHref)} className="bg-white text-brand-blue hover:bg-brand-red hover:text-white px-10 py-5 font-bold tracking-widest uppercase text-sm flex items-center gap-3 transition-all duration-300 shadow-2xl hover:shadow-brand-red/20 group relative z-10">
               {content.ctaButtonLabel} <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform duration-300" />
             </a>
           </div>
@@ -51,7 +52,7 @@ const ContactFooter = () => {
                   return (
                     <a
                       key={social.id}
-                      href={social.url}
+                      href={safeUrl(social.url)}
                       aria-label={social.platform}
                       className="w-10 h-10 -none bg-white/5 flex items-center justify-center hover:bg-brand-red hover:shadow-[0_0_15px_rgba(203,151,51,0.3)] transition-all duration-300"
                     >
@@ -72,7 +73,7 @@ const ContactFooter = () => {
               <ul className="space-y-1 lg:space-y-3 text-sm font-medium text-white/80">
                 {content.companyLinks.map((link) => (
                   <li key={link.id}>
-                    <a href={link.href} className="inline-block py-2.5 lg:py-1 hover:text-white transition">{link.label}</a>
+                    <a href={safeUrl(link.href)} className="inline-block py-2.5 lg:py-1 hover:text-white transition">{link.label}</a>
                   </li>
                 ))}
               </ul>
@@ -109,7 +110,7 @@ const ContactFooter = () => {
                   ))}
                 </li>
                 <li>
-                  <a href={content.contactExtraLink.href} className="mt-2 inline-block py-2.5 lg:py-1 hover:text-white transition">
+                  <a href={safeUrl(content.contactExtraLink.href)} className="mt-2 inline-block py-2.5 lg:py-1 hover:text-white transition">
                     {content.contactExtraLink.label}
                   </a>
                 </li>

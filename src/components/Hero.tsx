@@ -1,5 +1,6 @@
 "use client";
 
+import { safeUrl } from "../content/safeUrl";
 import React, { useState, useEffect, useCallback } from "react";
 import { ArrowRight, ChevronRight, ChevronLeft } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -109,7 +110,7 @@ const Hero = () => {
                 <motion.div variants={item} className="flex flex-wrap items-center gap-x-11 gap-y-4">
                   {slide.ctaLabel && (
                     <a
-                      href={slide.ctaHref}
+                      href={safeUrl(slide.ctaHref)}
                       className="group inline-flex items-center gap-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-foreground"
                     >
                       {/* A span, not a button — the radius sticks, where a base
@@ -130,7 +131,7 @@ const Hero = () => {
 
                   {slide.ctaSecondaryLabel && (
                     <a
-                      href={slide.ctaSecondaryHref || "#"}
+                      href={safeUrl(slide.ctaSecondaryHref)}
                       className="group relative inline-flex items-center py-2.5 text-[13px] font-medium uppercase tracking-[0.12em] text-muted-foreground transition-colors duration-300 hover:text-foreground"
                     >
                       {slide.ctaSecondaryLabel}

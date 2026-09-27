@@ -1,3 +1,4 @@
+import { safeUrl } from "../content/safeUrl";
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import ContactFooter from '../components/ContactFooter';
@@ -221,7 +222,7 @@ const ContactPage = () => {
                 {QUICK_CARDS.map((card, idx) => (
                   <motion.a
                     key={idx}
-                    href={card.href}
+                    href={safeUrl(card.href)}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -270,7 +271,7 @@ const ContactPage = () => {
                     return (
                       <a
                         key={social.id}
-                        href={social.url}
+                        href={safeUrl(social.url)}
                         aria-label={social.platform}
                         className="w-10 h-10 bg-brand-blue flex items-center justify-center text-white hover:bg-[#cb9733] hover:shadow-[0_0_15px_rgba(203,151,51,0.3)] transition-all duration-300"
                       >
