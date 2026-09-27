@@ -20,7 +20,7 @@ export const DEFAULT_CONTENT: SiteContent = {
     slides: [
       {
         id: "group",
-        image: "/assets/hero-image/kabsonnew.jpg",
+        image: "/assets/hero-image/jb-group.png",
         eyebrow: "Believing · Growing · Leading",
         label: "JB Group",
         titleTop: "Generations of Enterprise.",
@@ -34,7 +34,7 @@ export const DEFAULT_CONTENT: SiteContent = {
       },
       {
         id: "kabsons",
-        image: "/assets/hero-image/kabsonnew.jpg",
+        image: "/assets/hero-image/kabsons.png",
         eyebrow: "Manufacturing",
         label: "Kabsons Industries",
         titleTop: "Engineered for Scale.",
@@ -48,7 +48,7 @@ export const DEFAULT_CONTENT: SiteContent = {
       },
       {
         id: "hipco",
-        image: "/assets/hero-image/hipco-trading.png",
+        image: "/assets/hero-image/Montra.png",
         eyebrow: "Trading & Distribution",
         label: "Hipco Trading",
         titleTop: "Global Brands.",

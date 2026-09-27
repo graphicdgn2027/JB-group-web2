@@ -14,7 +14,7 @@ const COMPANIES = [
   {
     name: "Kabsons Industries",
     industry: "LPG Bottling",
-    img: "/assets/hero-image/kabsonnew.jpg",
+    img: "/assets/hero-image/kabsons.png",
     link: "/portfolio/kabsons-industries",
     desc: "Strengthening the Group's presence in Nepal's essential energy sector.",
   },
