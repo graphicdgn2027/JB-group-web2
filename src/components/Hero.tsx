@@ -131,7 +131,7 @@ const Hero = () => {
                   {slide.ctaSecondaryLabel && (
                     <a
                       href={slide.ctaSecondaryHref || "#"}
-                      className="group relative inline-flex items-center py-1 text-[13px] font-medium uppercase tracking-[0.12em] text-muted-foreground transition-colors duration-300 hover:text-foreground"
+                      className="group relative inline-flex items-center py-2.5 text-[13px] font-medium uppercase tracking-[0.12em] text-muted-foreground transition-colors duration-300 hover:text-foreground"
                     >
                       {slide.ctaSecondaryLabel}
                       <span className="absolute bottom-0 left-0 h-px w-full bg-foreground/20 transition-colors duration-300 group-hover:bg-accent" />
@@ -190,6 +190,26 @@ const Hero = () => {
           </div>
         </div>
       </div>
+
+      {/* Scroll Indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1, duration: 1 }}
+        className="absolute bottom-8 right-4 xl:right-8 hidden xl:flex flex-col items-center gap-3 z-10"
+      >
+        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground [writing-mode:vertical-lr] rotate-180">
+          Scroll
+        </span>
+        <div className="h-12 w-[1px] bg-muted-foreground/20 relative overflow-hidden">
+          <motion.div
+            className="absolute top-0 left-0 h-full w-full bg-muted-foreground"
+            initial={{ y: "-100%" }}
+            animate={{ y: "100%" }}
+            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+          />
+        </div>
+      </motion.div>
     </section>
   );
 };

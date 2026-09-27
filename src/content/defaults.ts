@@ -125,6 +125,15 @@ export const DEFAULT_CONTENT: SiteContent = {
     titleLine2: "Businesses",
     intro:
       "JB Group is built on a simple belief: strong businesses are created by understanding markets, serving customers reliably, empowering people, building enduring partnerships and growing responsibly.",
+    detailOverviewHeading: "The Overview",
+    detailFocusHeading: "Key Focus Areas",
+    detailFeaturesEyebrow: "In Focus",
+    detailFeaturesHeading: "Product Features",
+    detailGalleryEyebrow: "Gallery",
+    detailGalleryHeading: "Visual Archive",
+    detailBrandsHeading: "Our Brands",
+    detailCtaTitle: "Partner with us",
+    detailCtaButton: "Contact Us",
   },
 
   businesses: [

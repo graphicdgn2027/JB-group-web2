@@ -102,7 +102,7 @@ const BrandPartnersPage = () => {
 
                     <Link
                       to={`/portfolio/${business.slug}`}
-                      className="inline-flex items-center text-sm font-bold uppercase tracking-widest text-[#cb9733] hover:text-white transition-colors mt-auto relative z-10"
+                      className="inline-flex items-center py-2 text-sm font-bold uppercase tracking-widest text-[#cb9733] hover:text-white transition-colors mt-auto relative z-10"
                     >
                       View Details &rarr;
                     </Link>

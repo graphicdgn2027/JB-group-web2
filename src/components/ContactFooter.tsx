@@ -67,10 +67,12 @@ const ContactFooter = () => {
               <h4 className="text-white/40 text-xs font-bold mb-6 tracking-widest uppercase">
                 {content.companyHeading}
               </h4>
-              <ul className="space-y-4 text-sm font-medium text-white/80">
+              {/* Tighter gaps with padding inside each link, so the tap target
+                  is a usable height on a phone without the column growing. */}
+              <ul className="space-y-1 lg:space-y-3 text-sm font-medium text-white/80">
                 {content.companyLinks.map((link) => (
                   <li key={link.id}>
-                    <a href={link.href} className="hover:text-white transition">{link.label}</a>
+                    <a href={link.href} className="inline-block py-2.5 lg:py-1 hover:text-white transition">{link.label}</a>
                   </li>
                 ))}
               </ul>
@@ -81,10 +83,10 @@ const ContactFooter = () => {
               <h4 className="text-white/40 text-xs font-bold mb-6 tracking-widest uppercase">
                 {content.businessesHeading}
               </h4>
-              <ul className="space-y-4 text-sm font-medium text-white/80">
+              <ul className="space-y-1 lg:space-y-3 text-sm font-medium text-white/80">
                 {businesses.map((business) => (
                   <li key={business.id}>
-                    <a href={`/portfolio/${business.slug}`} className="hover:text-white transition">
+                    <a href={`/portfolio/${business.slug}`} className="inline-block py-2.5 lg:py-1 hover:text-white transition">
                       {business.title}
                     </a>
                   </li>
@@ -107,7 +109,7 @@ const ContactFooter = () => {
                   ))}
                 </li>
                 <li>
-                  <a href={content.contactExtraLink.href} className="hover:text-white transition mt-4 block">
+                  <a href={content.contactExtraLink.href} className="mt-2 inline-block py-2.5 lg:py-1 hover:text-white transition">
                     {content.contactExtraLink.label}
                   </a>
                 </li>

@@ -123,6 +123,17 @@ export interface BusinessesSectionContent {
   titleLine1: string;
   titleLine2: string;
   intro: string;
+  /** Headings on every individual business page. They are shared across all
+   *  of them, so they live here rather than on each business. */
+  detailOverviewHeading: string;
+  detailFocusHeading: string;
+  detailFeaturesEyebrow: string;
+  detailFeaturesHeading: string;
+  detailGalleryEyebrow: string;
+  detailGalleryHeading: string;
+  detailBrandsHeading: string;
+  detailCtaTitle: string;
+  detailCtaButton: string;
 }
 
 /* ----------------------------------------------------------- the leadership */

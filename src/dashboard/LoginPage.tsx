@@ -301,7 +301,7 @@ VITE_SUPABASE_ANON_KEY=eyJhbGciOi...`}
                           <button
                             type="button"
                             onClick={() => switchMode("reset")}
-                            className="text-[13px] font-semibold text-[#a97a20] hover:text-[#7a5614] px-1 -mr-1"
+                            className="text-[13px] font-semibold text-[#a97a20] hover:text-[#7a5614] px-1 -mr-1 py-2 -my-2"
                           >
                             Forgot password?
                           </button>

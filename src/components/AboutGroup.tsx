@@ -259,7 +259,7 @@ const AboutGroup = () => {
             <div className="mt-auto">
               <Link
                 to={content.ctaHref}
-                className="group relative inline-flex items-center gap-2 mt-10 pb-1 text-sm font-bold uppercase tracking-widest text-brand-blue dark:text-white hover:text-brand-red dark:hover:text-brand-red transition-colors"
+                className="group relative inline-flex items-center gap-2 mt-10 py-2 pb-2 text-sm font-bold uppercase tracking-widest text-brand-blue dark:text-white hover:text-brand-red dark:hover:text-brand-red transition-colors"
               >
                 <span>{content.ctaLabel}</span>
                 <ArrowRight size={18} className="transition-transform duration-300 group-hover:translate-x-1.5" />

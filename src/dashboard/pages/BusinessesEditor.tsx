@@ -96,6 +96,68 @@ const BusinessesEditor: React.FC = () => {
       </Panel>
 
       <Panel
+        title="Company page headings"
+        description="The section headings shown on every individual company page. They are shared across all of them."
+      >
+        <Grid>
+          <Field label="Overview heading">
+            <TextInput
+              value={section.draft.detailOverviewHeading}
+              onChange={(v) => section.update({ detailOverviewHeading: v })}
+            />
+          </Field>
+          <Field label="Focus areas heading">
+            <TextInput
+              value={section.draft.detailFocusHeading}
+              onChange={(v) => section.update({ detailFocusHeading: v })}
+            />
+          </Field>
+          <Field label="Features eyebrow">
+            <TextInput
+              value={section.draft.detailFeaturesEyebrow}
+              onChange={(v) => section.update({ detailFeaturesEyebrow: v })}
+            />
+          </Field>
+          <Field label="Features heading">
+            <TextInput
+              value={section.draft.detailFeaturesHeading}
+              onChange={(v) => section.update({ detailFeaturesHeading: v })}
+            />
+          </Field>
+          <Field label="Gallery eyebrow">
+            <TextInput
+              value={section.draft.detailGalleryEyebrow}
+              onChange={(v) => section.update({ detailGalleryEyebrow: v })}
+            />
+          </Field>
+          <Field label="Gallery heading">
+            <TextInput
+              value={section.draft.detailGalleryHeading}
+              onChange={(v) => section.update({ detailGalleryHeading: v })}
+            />
+          </Field>
+          <Field label="Brands heading">
+            <TextInput
+              value={section.draft.detailBrandsHeading}
+              onChange={(v) => section.update({ detailBrandsHeading: v })}
+            />
+          </Field>
+          <Field label="Call-to-action title">
+            <TextInput
+              value={section.draft.detailCtaTitle}
+              onChange={(v) => section.update({ detailCtaTitle: v })}
+            />
+          </Field>
+          <Field label="Call-to-action button">
+            <TextInput
+              value={section.draft.detailCtaButton}
+              onChange={(v) => section.update({ detailCtaButton: v })}
+            />
+          </Field>
+        </Grid>
+      </Panel>
+
+      <Panel
         title="Companies"
         description="Drag order is set with the arrows. Unpublish to hide a company everywhere without deleting it."
       >

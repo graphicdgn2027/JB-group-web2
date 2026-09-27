@@ -4,11 +4,12 @@ import { ArrowLeft } from "lucide-react";
 import Header from "../components/Header";
 import ContactFooter from "../components/ContactFooter";
 import { motion } from "motion/react";
-import { usePublishedBusinesses } from "../content/ContentProvider";
+import { usePublishedBusinesses, useSection } from "../content/ContentProvider";
 
 const PortfolioDetails = () => {
   const { id } = useParams();
   const businesses = usePublishedBusinesses();
+  const labels = useSection("businessesSection");
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -84,7 +85,7 @@ const PortfolioDetails = () => {
 
             {/* Left Column: Editorial Overview */}
             <div className="lg:w-2/3">
-              <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-brand-red mb-8 border-b border-border pb-4">The Overview</h2>
+              <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-brand-red mb-8 border-b border-border pb-4">{labels.detailOverviewHeading}</h2>
 
               <div className="prose prose-lg md:prose-xl max-w-none text-muted-foreground font-light leading-relaxed md:columns-2 gap-12">
                 <p className="first-letter:text-8xl first-letter:font-black first-letter:text-brand-red first-letter:float-left first-letter:mr-4 first-letter:mt-[-0.15em] first-letter:leading-[0.8]">
@@ -123,7 +124,7 @@ const PortfolioDetails = () => {
 
                   {data.details.length > 0 && (
                     <>
-                      <h3 className="text-2xl font-black text-foreground mb-10 uppercase tracking-widest text-center">Key Focus Areas</h3>
+                      <h3 className="text-2xl font-black text-foreground mb-10 uppercase tracking-widest text-center">{labels.detailFocusHeading}</h3>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-8">
                         {data.details.map((detail, idx) => (
                           <div key={idx} className="flex items-start gap-4">
@@ -155,10 +156,10 @@ const PortfolioDetails = () => {
                 {/* Elegant CTA */}
                 <div className="p-10 bg-brand-blue text-white rounded-none border border-brand-blue relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-brand-red/20 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
-                  <h3 className="text-2xl font-serif font-bold mb-4 italic">Partner with us</h3>
+                  <h3 className="text-2xl font-serif font-bold mb-4 italic">{labels.detailCtaTitle}</h3>
                   <p className="text-white/80 mb-8 font-light leading-relaxed">Discover how our {data.title.toLowerCase()} solutions can transform your business.</p>
                   <Link to="/contact" className="inline-block bg-white text-brand-blue px-8 py-4 font-bold transition-all duration-300 hover:bg-brand-red hover:text-white uppercase tracking-widest text-sm text-center w-full">
-                    Contact Us
+                    {labels.detailCtaButton}
                   </Link>
                 </div>
 
@@ -174,8 +175,8 @@ const PortfolioDetails = () => {
         <section className="py-24 bg-muted border-t border-border relative">
           <div className="container mx-auto px-6 max-w-6xl">
             <div className="mb-20 text-center">
-              <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-brand-red mb-4">In Focus</h2>
-              <h3 className="text-5xl font-black text-foreground uppercase tracking-tighter">Product Features</h3>
+              <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-brand-red mb-4">{labels.detailFeaturesEyebrow}</h2>
+              <h3 className="text-5xl font-black text-foreground uppercase tracking-tighter">{labels.detailFeaturesHeading}</h3>
               <div className="w-16 h-1 bg-brand-red mx-auto mt-8"></div>
             </div>
 
@@ -211,8 +212,8 @@ const PortfolioDetails = () => {
         <section className="py-24 bg-muted border-t border-border">
           <div className="container mx-auto px-6 max-w-6xl">
             <div className="mb-16">
-              <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-brand-red mb-4">Gallery</h2>
-              <h3 className="text-5xl font-black text-foreground uppercase tracking-tighter">Visual Archive</h3>
+              <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-brand-red mb-4">{labels.detailGalleryEyebrow}</h2>
+              <h3 className="text-5xl font-black text-foreground uppercase tracking-tighter">{labels.detailGalleryHeading}</h3>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 auto-rows-[300px] lg:auto-rows-[350px]">
@@ -251,7 +252,7 @@ const PortfolioDetails = () => {
             }}
           ></div>
           <div className="container mx-auto px-6 max-w-6xl relative z-10">
-            <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-brand-red mb-16 text-center border-b border-white/10 pb-8">Our Brands</h2>
+            <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-brand-red mb-16 text-center border-b border-white/10 pb-8">{labels.detailBrandsHeading}</h2>
 
             <div className="flex flex-wrap justify-center items-center gap-16">
               {data.brands.map((brand) => (

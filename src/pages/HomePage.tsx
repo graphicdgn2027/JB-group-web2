@@ -88,6 +88,10 @@ function App() {
         {/* We don't wrap Hero in whileInView because it's at the very top and should load immediately after the loading screen */}
         <Hero />
 
+        <div className="container mx-auto px-6 max-w-7xl my-12 md:my-20">
+          <hr className="border-border/40" />
+        </div>
+
         <motion.div id="about" initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={sectionVariants}>
           <AboutGroup />
         </motion.div>
