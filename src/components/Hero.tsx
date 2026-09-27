@@ -106,84 +106,44 @@ const Hero = () => {
                   {slide.description}
                 </motion.p>
 
-                <motion.div variants={item} className="flex flex-wrap items-center gap-x-8 gap-y-4">
+                <motion.div variants={item} className="flex flex-wrap items-center gap-x-11 gap-y-4">
                   {slide.ctaLabel && (
                     <a
                       href={slide.ctaHref}
-                      className="group inline-flex items-center gap-3 bg-foreground px-8 py-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-background transition-colors duration-300 hover:bg-accent hover:text-white"
+                      className="group inline-flex items-center gap-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-foreground"
                     >
+                      {/* A span, not a button — the radius sticks, where a base
+                          rule would force a button back to square corners. */}
+                      <span
+                        style={{ borderRadius: 9999 }}
+                        className="flex h-11 w-11 shrink-0 items-center justify-center border border-foreground/25 transition-colors duration-300 group-hover:border-accent group-hover:bg-accent group-hover:text-white"
+                      >
+                        <ArrowRight
+                          size={16}
+                          strokeWidth={1.75}
+                          className="transition-transform duration-300 group-hover:translate-x-0.5"
+                        />
+                      </span>
                       {slide.ctaLabel}
-                      <ArrowRight
-                        size={16}
-                        strokeWidth={2}
-                        className="transition-transform duration-300 group-hover:translate-x-1"
-                      />
                     </a>
                   )}
 
                   {slide.ctaSecondaryLabel && (
                     <a
                       href={slide.ctaSecondaryHref || "#"}
-                      className="group relative inline-flex items-center py-1 text-[13px] font-semibold uppercase tracking-[0.12em] text-foreground"
+                      className="group relative inline-flex items-center py-1 text-[13px] font-medium uppercase tracking-[0.12em] text-muted-foreground transition-colors duration-300 hover:text-foreground"
                     >
                       {slide.ctaSecondaryLabel}
-                      <span className="absolute bottom-0 left-0 h-px w-full bg-foreground/25 transition-colors duration-300 group-hover:bg-accent" />
+                      <span className="absolute bottom-0 left-0 h-px w-full bg-foreground/20 transition-colors duration-300 group-hover:bg-accent" />
                     </a>
                   )}
                 </motion.div>
               </motion.div>
             </AnimatePresence>
 
-            {/* Slider controls sit under the content, not on the photograph */}
-            {count > 1 && (
-              <div className="mt-12 flex items-center gap-6 xl:mt-16">
-                <div className="flex items-center gap-3">
-                  {[
-                    { onClick: prev, label: "Previous slide", Icon: ChevronLeft },
-                    { onClick: next, label: "Next slide", Icon: ChevronRight },
-                  ].map(({ onClick, label, Icon }) => (
-                    // The border sits on the round wrapper, not the button: a
-                    // base rule forces buttons square site-wide, so a border on
-                    // the button itself gets sliced apart by this clip.
-                    <div
-                      key={label}
-                      style={{ borderRadius: 9999 }}
-                      className="overflow-hidden border border-foreground/20 transition-colors duration-300 hover:border-accent"
-                    >
-                      <button
-                        type="button"
-                        onClick={onClick}
-                        aria-label={label}
-                        className="flex h-11 w-11 items-center justify-center text-foreground transition-colors duration-300 hover:bg-accent hover:text-white"
-                      >
-                        <Icon size={16} strokeWidth={1.75} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="h-px flex-1 bg-foreground/15">
-                  <motion.span
-                    key={`progress-${index}-${paused}`}
-                    className="block h-px bg-accent"
-                    initial={{ width: "0%" }}
-                    animate={{ width: paused ? "40%" : "100%" }}
-                    transition={{ duration: paused ? 0.4 : slideDurationMs / 1000, ease: "linear" }}
-                  />
-                </div>
-
-                <span className="shrink-0 text-[13px] tabular-nums text-muted-foreground">
-                  <span className="font-semibold text-foreground">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  {" / "}
-                  {String(count).padStart(2, "0")}
-                </span>
-              </div>
-            )}
           </div>
 
-          {/* Photograph — nothing sits over it */}
+          {/* Photograph, with the slider's only controls on it */}
           <div
             style={{ borderRadius: 24 }}
             className="relative aspect-[4/3] overflow-hidden bg-secondary xl:col-span-7 xl:aspect-auto xl:h-full"
@@ -203,6 +163,30 @@ const Hero = () => {
                 <img src={slide.image} alt="" className="h-full w-full object-cover" />
               </motion.div>
             </AnimatePresence>
+
+            {count > 1 &&
+              [
+                { onClick: prev, label: "Previous slide", Icon: ChevronLeft, side: "left-4 md:left-6" },
+                { onClick: next, label: "Next slide", Icon: ChevronRight, side: "right-4 md:right-6" },
+              ].map(({ onClick, label, Icon, side }) => (
+                // The clip and the fill live on the round wrapper: a base rule
+                // forces buttons square site-wide, so rounding the button
+                // itself does nothing.
+                <div
+                  key={label}
+                  style={{ borderRadius: 9999 }}
+                  className={`absolute ${side} top-1/2 z-10 -translate-y-1/2 overflow-hidden bg-white/90 shadow-[0_6px_20px_-6px_rgba(17,29,67,0.45)] backdrop-blur-sm transition-colors duration-300 hover:bg-accent`}
+                >
+                  <button
+                    type="button"
+                    onClick={onClick}
+                    aria-label={label}
+                    className="flex h-11 w-11 items-center justify-center text-brand-blue transition-colors duration-300 hover:text-white"
+                  >
+                    <Icon size={17} strokeWidth={1.75} />
+                  </button>
+                </div>
+              ))}
           </div>
         </div>
       </div>
