@@ -115,6 +115,20 @@ const HeroEditor: React.FC = () => {
                   <TextInput value={slide.ctaHref} onChange={(v) => patch({ ctaHref: v })} />
                 </Field>
               </Grid>
+              <Grid>
+                <Field label="Second button label" hint="Leave empty to hide the second button">
+                  <TextInput
+                    value={slide.ctaSecondaryLabel ?? ""}
+                    onChange={(v) => patch({ ctaSecondaryLabel: v })}
+                  />
+                </Field>
+                <Field label="Second button link">
+                  <TextInput
+                    value={slide.ctaSecondaryHref ?? ""}
+                    onChange={(v) => patch({ ctaSecondaryHref: v })}
+                  />
+                </Field>
+              </Grid>
             </>
           )}
         />

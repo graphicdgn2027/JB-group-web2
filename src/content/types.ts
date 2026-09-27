@@ -24,6 +24,10 @@ export interface HeroSlide extends Identified {
   description: string;
   ctaLabel: string;
   ctaHref: string;
+  /** Optional quieter second action beside the primary button. Leave the
+   *  label empty to hide it. */
+  ctaSecondaryLabel?: string;
+  ctaSecondaryHref?: string;
 }
 
 export interface HeroContent {

@@ -29,6 +29,8 @@ export const DEFAULT_CONTENT: SiteContent = {
           "JB Group is a diversified business group built on a multi-generational tradition of entrepreneurship, market knowledge and trusted relationships in Nepal.",
         ctaLabel: "Learn More",
         ctaHref: "/about",
+        ctaSecondaryLabel: "Discover More",
+        ctaSecondaryHref: "/#journey",
       },
       {
         id: "kabsons",
@@ -41,6 +43,8 @@ export const DEFAULT_CONTENT: SiteContent = {
           "Industrial manufacturing and LPG bottling capacity that powers homes and businesses across the country, with uncompromising safety standards.",
         ctaLabel: "Our Businesses",
         ctaHref: "/businesses",
+        ctaSecondaryLabel: "Discover More",
+        ctaSecondaryHref: "/portfolio/kabsons-industries",
       },
       {
         id: "hipco",
@@ -53,6 +57,8 @@ export const DEFAULT_CONTENT: SiteContent = {
           "A trusted distribution network connecting world-class products to markets across Nepal through decades of relationships and reach.",
         ctaLabel: "Brand Partners",
         ctaHref: "/brand-partners",
+        ctaSecondaryLabel: "Discover More",
+        ctaSecondaryHref: "/portfolio/hipco-trading",
       },
       {
         id: "mobil",
@@ -65,6 +71,8 @@ export const DEFAULT_CONTENT: SiteContent = {
           "Authorised distribution of world-leading lubricants, keeping vehicles, plants and machinery running at peak efficiency.",
         ctaLabel: "Explore Portfolio",
         ctaHref: "/businesses",
+        ctaSecondaryLabel: "Discover More",
+        ctaSecondaryHref: "/portfolio/reliance-trade-international",
       },
     ],
   },
