@@ -70,201 +70,191 @@ const Hero = () => {
 
   return (
     <section
-      /* pt-20 clears the fixed navbar with plain background, so the image
-         panel starts below it rather than running behind it. */
-      className="relative w-full bg-background pt-20"
+      /* pt-20 clears the fixed navbar, so the photo starts below it rather
+         than running behind it. */
+      className="relative w-full bg-brand-blue pt-20"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* 2 of 5 columns for the copy, 3 of 5 for the image — a 40/60 split.
-         Height tracks viewport width (the image column is 60vw, so 34vw keeps
-         it near the photos' own 16:9 and avoids gouging the sides), with a
-         floor so the copy always fits. Below xl the two stack, copy first:
-         a 60%-wide column is taller than it is wide there, which would crop
-         a landscape photo down to a sliver. */}
-      <div className="xl:grid xl:grid-cols-5 xl:h-[34vw] xl:max-h-[760px] xl:min-h-[580px]">
-        {/* Copy — 40%. The left gutter matches the site container's 6.25vw so
-            the headline lines up with the logo and every section below it. */}
-        <div className="xl:col-span-2 flex flex-col justify-center px-4 md:px-8 xl:pl-[6.25vw] xl:pr-12 py-14 xl:py-0">
-          {/* One measure for the whole column, so the rule above the controls
-              ends with the text instead of running past it. */}
-          <div className="w-full max-w-2xl xl:max-w-[30rem]">
-            <AnimatePresence mode="wait">
-              <motion.div key={index} variants={container} initial="hidden" animate="visible" exit="exit">
-                <motion.div variants={item} className="inline-flex items-center gap-3 mb-7">
-                  <span className="h-px w-8 bg-accent" />
-                  <span className="text-[11px] font-semibold tracking-[0.28em] uppercase text-accent">
-                    {slide.eyebrow}
-                  </span>
-                </motion.div>
+      <div className="relative flex min-h-[600px] flex-col overflow-hidden xl:h-[calc(100vh-5rem)] xl:max-h-[800px]">
+        {/* Active slide, full bleed behind everything */}
+        <AnimatePresence initial={false}>
+          <motion.div
+            key={index}
+            className="absolute inset-0"
+            initial={{ opacity: 0, scale: 1.08 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              transition: { opacity: { duration: 1 }, scale: { duration: 7, ease: "linear" } },
+            }}
+            exit={{ opacity: 0, transition: { duration: 0.8 } }}
+          >
+            <img src={slide.image} alt="" className="h-full w-full object-cover" />
+          </motion.div>
+        </AnimatePresence>
 
-                <h1 className="text-[2.15rem] md:text-5xl xl:text-[3.25rem] 2xl:text-6xl tracking-[-0.02em] mb-6 leading-[1.06] text-brand-blue dark:text-white transition-colors duration-500">
-                  <motion.span variants={item} className="block font-light text-accent">
-                    {slide.titleTop}
-                  </motion.span>
-                  <motion.span variants={item} className="block mt-1 font-bold">
-                    {slide.titleBottom}
-                  </motion.span>
-                </h1>
+        {/* These photos are bright, so the copy needs its own ground to sit
+            on: a heavy wash from the left for the text, and a lift from the
+            bottom for the card rail and controls. */}
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-blue via-brand-blue/85 to-brand-blue/25 xl:to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-blue/90 via-brand-blue/20 to-transparent" />
 
-                <motion.p
-                  variants={item}
-                  className="text-[15px] xl:text-base text-brand-blue/70 dark:text-white/70 mb-9 leading-[1.75] font-light max-w-[46ch] transition-colors duration-500"
-                >
-                  {slide.description}
-                </motion.p>
+        {/* Copy + card rail */}
+        <div className="relative z-10 flex flex-1 items-center px-4 py-12 md:px-8 xl:px-[6.25vw] xl:py-0">
+          <div className="grid w-full items-center gap-10 xl:grid-cols-12 xl:gap-12">
+            <div className="xl:col-span-5">
+              <AnimatePresence mode="wait">
+                <motion.div key={index} variants={container} initial="hidden" animate="visible" exit="exit">
+                  <motion.div variants={item} className="mb-6 inline-flex items-center gap-3">
+                    <span className="h-px w-8 bg-accent" />
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-accent">
+                      {slide.eyebrow}
+                    </span>
+                  </motion.div>
 
-                {slide.ctaLabel && (
-                  <motion.div variants={item}>
-                    <a
-                      href={slide.ctaHref}
-                      className="group inline-flex items-center gap-3 text-sm font-medium uppercase tracking-[0.15em] text-brand-blue dark:text-white transition-colors duration-500"
-                    >
-                      <span className="w-11 h-11 rounded-full border-[1.5px] border-brand-blue/30 dark:border-white/50 flex items-center justify-center transition-all duration-300 group-hover:bg-accent group-hover:border-accent group-hover:text-white dark:group-hover:text-white">
+                  <h1 className="mb-6 text-[2.15rem] uppercase leading-[1.02] tracking-[-0.02em] text-white md:text-5xl xl:text-[3.4rem]">
+                    <motion.span variants={item} className="block font-light text-accent">
+                      {slide.titleTop}
+                    </motion.span>
+                    <motion.span variants={item} className="mt-1 block font-bold">
+                      {slide.titleBottom}
+                    </motion.span>
+                  </h1>
+
+                  <motion.p
+                    variants={item}
+                    className="mb-9 max-w-[46ch] text-[15px] font-light leading-[1.75] text-white/70 xl:text-base"
+                  >
+                    {slide.description}
+                  </motion.p>
+
+                  {slide.ctaLabel && (
+                    <motion.div variants={item}>
+                      <a
+                        href={slide.ctaHref}
+                        className="group inline-flex items-center gap-3 rounded-full bg-accent py-4 pl-7 pr-5 text-xs font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:bg-white hover:text-brand-blue"
+                      >
+                        {slide.ctaLabel}
                         <ChevronRight
                           size={16}
                           strokeWidth={2.5}
-                          className="transition-transform duration-300 group-hover:translate-x-0.5"
+                          className="transition-transform duration-300 group-hover:translate-x-1"
                         />
-                      </span>
-                      <span className="relative pb-1">
-                        {slide.ctaLabel}
-                        <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-accent transition-all duration-300 group-hover:w-full" />
-                      </span>
-                    </a>
-                  </motion.div>
-                )}
-              </motion.div>
-            </AnimatePresence>
+                      </a>
+                    </motion.div>
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </div>
 
-            {/* Slider controls. Outside the AnimatePresence so they stay put
-                instead of re-animating on every slide, and off the photo so
-                nothing covers it. The current slide's company name lives here
-                rather than over the image, which keeps the photo clean and
-                saves a third stacked line above the headline. */}
-            {count > 1 && (
-              <div className="mt-10 xl:mt-12 flex items-center justify-between gap-6 border-t border-brand-blue/10 dark:border-white/15 pt-6">
-                <div className="flex min-w-0 items-center gap-4">
-                  <span className="truncate text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-blue/60 dark:text-white/60 transition-colors duration-500">
-                    {slide.label}
-                  </span>
-                  {/* Hidden at xl: the accordion itself shows which slide is
-                      up and carries the autoplay progress there */}
-                  <div className="flex shrink-0 items-center gap-1.5 xl:hidden">
-                    {slides.map((s, i) => (
+            {/* Card rail — one card per slide, the active one raised. Scrolls
+                sideways on narrow screens instead of shrinking to nothing.
+                min-w-0 matters: a grid item defaults to min-width:auto, so the
+                rail's full width would otherwise push the whole column — copy
+                included — past the right edge of a phone. */}
+            <div className="min-w-0 xl:col-span-7">
+              <div className="-mx-4 flex gap-4 overflow-x-auto px-4 pb-4 pt-6 md:-mx-8 md:px-8 xl:mx-0 xl:justify-end xl:overflow-visible xl:px-0">
+                {slides.map((s, i) => {
+                  const active = i === index;
+                  return (
+                    <div
+                      key={s.id}
+                      style={{ borderRadius: 16 }}
+                      className={`relative shrink-0 overflow-hidden transition-all duration-500 ease-out ${
+                        active
+                          ? "h-[220px] w-[160px] -translate-y-3 shadow-[0_24px_50px_-20px_rgba(0,0,0,0.65)] xl:h-[260px] xl:w-[190px]"
+                          : "h-[190px] w-[140px] opacity-75 hover:opacity-100 xl:h-[230px] xl:w-[170px]"
+                      }`}
+                    >
                       <button
-                        key={s.id}
+                        type="button"
                         onClick={() => goTo(i)}
-                        aria-label={`Go to slide ${i + 1}: ${s.label}`}
-                        className={`relative h-[3px] overflow-hidden transition-all duration-500 ${
-                          i === index
-                            ? "w-12 bg-brand-blue/15 dark:bg-white/25"
-                            : "w-4 bg-brand-blue/20 dark:bg-white/30 hover:bg-brand-blue/40 dark:hover:bg-white/60"
-                        }`}
+                        aria-label={`Show ${s.label}`}
+                        aria-current={active}
+                        className="group block h-full w-full text-left outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent"
                       >
-                        {i === index && (
+                        <img
+                          src={s.image}
+                          alt=""
+                          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                        <span className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+                        <span className="absolute inset-x-0 bottom-0 p-3.5">
+                          <span className="block text-[9px] font-medium uppercase tracking-[0.16em] text-white/65">
+                            {s.eyebrow}
+                          </span>
+                          <span className="mt-1 block text-[11px] font-bold uppercase leading-tight tracking-wide text-white">
+                            {s.label}
+                          </span>
+                        </span>
+                        {/* Timed opening: the bar runs for the slide's dwell,
+                            then the rail advances to the next card. */}
+                        {active && count > 1 && (
                           <motion.span
-                            key={`bar-${index}-${paused}`}
-                            className="absolute inset-y-0 left-0 bg-accent"
+                            key={`progress-${index}-${paused}`}
+                            className="absolute bottom-0 left-0 h-[3px] bg-accent"
                             initial={{ width: "0%" }}
                             animate={{ width: paused ? "40%" : "100%" }}
                             transition={{ duration: paused ? 0.4 : slideDurationMs / 1000, ease: "linear" }}
                           />
                         )}
                       </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex shrink-0 items-center">
-                  {[
-                    { onClick: prev, label: "Previous slide", Icon: ChevronLeft },
-                    { onClick: next, label: "Next slide", Icon: ChevronRight },
-                  ].map(({ onClick, label, Icon }, i) => (
-                    <button
-                      key={label}
-                      onClick={onClick}
-                      aria-label={label}
-                      className={`w-10 h-10 flex items-center justify-center border border-brand-blue/20 dark:border-white/25 text-brand-blue dark:text-white transition-all duration-300 hover:bg-accent hover:border-accent hover:text-white ${
-                        i === 1 ? "-ml-px" : ""
-                      }`}
-                    >
-                      <Icon size={17} strokeWidth={2} />
-                    </button>
-                  ))}
-                </div>
+                    </div>
+                  );
+                })}
               </div>
-            )}
+            </div>
           </div>
         </div>
 
-        {/* Image — 60%. An accordion of every slide: the active one expands,
-           the rest sit alongside as slivers you can hover or click to bring
-           forward, which makes the slider navigable by sight instead of by
-           stepping through it blind.
+        {/* Arrows and counter along the bottom */}
+        {count > 1 && (
+          <div className="relative z-10 flex items-center justify-between gap-6 px-4 pb-8 md:px-8 xl:px-[6.25vw] xl:pb-10">
+            <div className="flex items-center gap-5">
+              {/* The border lives on the round wrapper, not the button: a base
+                  rule forces buttons square site-wide, so a border on the
+                  button itself gets sliced into fragments by this clip. */}
+              <div className="flex items-center gap-2.5">
+                {[
+                  { onClick: prev, label: "Previous slide", Icon: ChevronLeft },
+                  { onClick: next, label: "Next slide", Icon: ChevronRight },
+                ].map(({ onClick, label, Icon }) => (
+                  <div
+                    key={label}
+                    style={{ borderRadius: 9999 }}
+                    className="overflow-hidden border border-white/30 transition-colors duration-300 hover:border-accent"
+                  >
+                    <button
+                      type="button"
+                      onClick={onClick}
+                      aria-label={label}
+                      className="flex h-11 w-11 items-center justify-center text-white transition-colors duration-300 hover:bg-accent"
+                    >
+                      <Icon size={17} strokeWidth={2} />
+                    </button>
+                  </div>
+                ))}
+              </div>
 
-           Only the active panel renders below xl — a sliver is a pointer
-           idea, and splitting a 16:9 photo across a narrow column would crop
-           it hard. On its own the active panel keeps the full 16:9 frame. */}
-        <div className="xl:col-span-3 relative flex aspect-[16/9] xl:aspect-auto xl:h-full gap-1 overflow-hidden bg-secondary">
-          {slides.map((s, i) => {
-            const active = i === index;
-            return (
-              <button
-                key={s.id}
-                type="button"
-                onMouseEnter={() => goTo(i)}
-                onFocus={() => goTo(i)}
-                onClick={() => goTo(i)}
-                aria-label={`Show ${s.label}`}
-                aria-current={active}
-                className={`group relative h-full overflow-hidden outline-none transition-[flex-grow] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-inset ${
-                  active ? "flex-[6]" : "hidden xl:block xl:flex-[0.55]"
-                }`}
-              >
-                <img
-                  src={s.image}
-                  alt={active ? "" : s.label}
-                  className={`h-full w-full object-cover transition-all duration-700 ${
-                    active ? "scale-100" : "scale-105 grayscale"
-                  }`}
+              <div className="hidden h-px w-28 bg-white/25 sm:block xl:w-44">
+                <motion.span
+                  key={`line-${index}-${paused}`}
+                  className="block h-px bg-accent"
+                  initial={{ width: "0%" }}
+                  animate={{ width: paused ? "40%" : "100%" }}
+                  transition={{ duration: paused ? 0.4 : slideDurationMs / 1000, ease: "linear" }}
                 />
+              </div>
+            </div>
 
-                {/* A sliver of a landscape photo is an unreadable slice — and
-                    these have marketing text baked in — so closed panels read
-                    as labelled tabs: the photo sinks back to texture and the
-                    company name runs up the panel. Always rendered and faded
-                    by opacity rather than unmounted, so the label dissolves as
-                    the panel opens instead of blinking out. */}
-                <span
-                  className={`pointer-events-none absolute inset-0 bg-brand-blue/75 transition-opacity duration-500 ${
-                    active ? "opacity-0" : "opacity-100"
-                  }`}
-                />
-                <span
-                  className={`pointer-events-none absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
-                    active ? "opacity-0" : "opacity-100"
-                  }`}
-                >
-                  <span className="rotate-180 whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.2em] text-white [writing-mode:vertical-rl]">
-                    {s.label}
-                  </span>
-                </span>
-                {/* Autoplay progress, on the active panel so the copy column
-                    does not need a second indicator at these widths */}
-                {active && count > 1 && (
-                  <motion.span
-                    key={`progress-${index}-${paused}`}
-                    className="absolute bottom-0 left-0 hidden h-[3px] bg-accent xl:block"
-                    initial={{ width: "0%" }}
-                    animate={{ width: paused ? "40%" : "100%" }}
-                    transition={{ duration: paused ? 0.4 : slideDurationMs / 1000, ease: "linear" }}
-                  />
-                )}
-              </button>
-            );
-          })}
-        </div>
+            <span className="text-sm tabular-nums text-white/50">
+              <span className="text-2xl font-bold text-white">{String(index + 1).padStart(2, "0")}</span>
+              <span className="mx-1">/</span>
+              {String(count).padStart(2, "0")}
+            </span>
+          </div>
+        )}
       </div>
     </section>
   );
