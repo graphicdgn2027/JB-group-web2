@@ -74,6 +74,20 @@ export const DEFAULT_CONTENT: SiteContent = {
         ctaSecondaryLabel: "Discover More",
         ctaSecondaryHref: "/portfolio/reliance-trade-international",
       },
+      {
+        id: "eastman",
+        image: "/assets/hero-image/eastman.jpg",
+        eyebrow: "Energy Storage",
+        label: "Eastman",
+        titleTop: "Reliable Power.",
+        titleBottom: "Every Home, Every Hour.",
+        description:
+          "Batteries, inverters and solar-ready energy storage built for uninterrupted power, backed by Reliance Trade International's distribution network.",
+        ctaLabel: "Explore Portfolio",
+        ctaHref: "/businesses",
+        ctaSecondaryLabel: "Discover More",
+        ctaSecondaryHref: "/portfolio/reliance-trade-international",
+      },
     ],
   },
 
