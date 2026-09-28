@@ -87,7 +87,7 @@ const BusinessPortfolio: React.FC<BusinessPortfolioProps> = ({
                   {/* Image — square, matching the 1:1 brand-lockup artwork so
                       the company logo at the top is never cropped away. */}
                   <div className="relative aspect-square overflow-hidden bg-secondary">
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={item.cardImage}
                       alt={item.title}
                       className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"

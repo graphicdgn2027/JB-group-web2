@@ -420,7 +420,7 @@ export const DEFAULT_CONTENT: SiteContent = {
         id: "siddarth-jajodia",
         name: "Siddarth Jajodia",
         role: "Joint Managing Director",
-        photo: "/assets/Leadership/Siddarth-Jajodia.png",
+        photo: "/assets/Leadership/Siddarth-Jajodia.jpg",
         bio: [
           "Mr. Siddarth Jajodia represents the fourth generation of the family’s entrepreneurial journey and is actively involved in the Group’s trading, distribution, strategic partnerships and new-generation mobility businesses.",
           "He leads Reliance Trade International Pvt. Ltd. and is closely involved in developing JB Group’s electric mobility initiatives through HIPCO Trading Pvt. Ltd., including the representation and growth of Montra Electric Vehicles in Nepal.",

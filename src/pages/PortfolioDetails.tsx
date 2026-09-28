@@ -108,7 +108,7 @@ const PortfolioDetails = () => {
                       }`}
                     >
                       {data.brands.map((brand) => (
-                        <img
+                        <img loading="lazy" decoding="async"
                           key={brand.id}
                           src={brand.logo}
                           alt={brand.name}
@@ -117,7 +117,7 @@ const PortfolioDetails = () => {
                         />
                       ))}
                       {data.logo && (
-                        <img
+                        <img loading="lazy" decoding="async"
                           src={data.logo}
                           alt={`${data.title} logo`}
                           className="h-16 md:h-20 object-contain"
@@ -190,7 +190,7 @@ const PortfolioDetails = () => {
                 <div key={feature.id} className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                   <div className={`lg:col-span-5 ${idx % 2 !== 0 ? 'lg:order-2' : ''}`}>
                     <div className="bg-white p-2 shadow-2xl border border-border/50">
-                      <img
+                      <img loading="lazy" decoding="async"
                         src={feature.image}
                         alt={feature.title}
                         className="w-full h-auto object-contain filter contrast-125 transition-transform duration-700 hover:scale-105"
@@ -231,7 +231,7 @@ const PortfolioDetails = () => {
                       : 'md:col-span-1 md:row-span-1'
                   }`}
                 >
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={img}
                     alt={`${data.title} archive ${idx + 1}`}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
@@ -262,7 +262,7 @@ const PortfolioDetails = () => {
             <div className="flex flex-wrap justify-center items-center gap-16">
               {data.brands.map((brand) => (
                 <div key={brand.id} className="group cursor-pointer bg-white rounded-2xl w-32 h-32 md:w-40 md:h-40 flex items-center justify-center p-6 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={brand.logo}
                     alt={brand.name}
                     className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"

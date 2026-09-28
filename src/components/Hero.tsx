@@ -172,7 +172,16 @@ const Hero = () => {
                 }}
                 exit={{ opacity: 0, transition: { duration: 0.7 } }}
               >
-                <img src={slide.image} alt="" className="h-full w-full object-cover" />
+                {/* The hero photo is the largest thing above the fold, so it
+                    is the LCP element — fetched eagerly at high priority while
+                    everything further down the page is lazy. */}
+                <img
+                  src={slide.image}
+                  alt=""
+                  fetchPriority="high"
+                  decoding="async"
+                  className="h-full w-full object-cover"
+                />
               </motion.div>
             </AnimatePresence>
 

@@ -119,7 +119,7 @@ const LeadershipPage = () => {
                     <div className="lg:col-span-3 relative group">
                       <div className="aspect-[3/4] overflow-hidden relative z-10 flex items-center justify-center">
                         {leader.photo ? (
-                          <img
+                          <img loading="lazy" decoding="async"
                             src={leader.photo}
                             alt={leader.name}
                             className="w-full h-full object-contain transition-all duration-700 group-hover:scale-105"

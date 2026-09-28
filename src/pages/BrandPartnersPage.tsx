@@ -31,7 +31,7 @@ const BrandLogo: React.FC<{ src: string; name: string; fallbackText?: string }> 
   }
 
   return (
-    <img
+    <img loading="lazy" decoding="async"
       src={src}
       alt={name}
       className="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105"
