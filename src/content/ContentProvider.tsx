@@ -6,7 +6,19 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { CONTENT_TABLE, isSupabaseConfigured, supabase } from "../lib/supabase";
+// Config only — importing ../lib/supabase here would put the ~227KB SDK on
+// the critical path. The client is pulled in on demand below, after the
+// bundled defaults have already rendered.
+import { CONTENT_TABLE, isSupabaseConfigured } from "../lib/supabaseConfig";
+import type { SupabaseClient } from "@supabase/supabase-js";
+
+/** Loads and memoises the Supabase client. Null when unconfigured. */
+let clientPromise: Promise<SupabaseClient | null> | null = null;
+function loadSupabase(): Promise<SupabaseClient | null> {
+  if (!isSupabaseConfigured) return Promise.resolve(null);
+  clientPromise ??= import("../lib/supabase").then((m) => m.supabase);
+  return clientPromise;
+}
 import { DEFAULT_CONTENT } from "./defaults";
 import { isPreviewMode, PREVIEW_STORAGE_KEY, readPreviewDrafts } from "./preview";
 import type { SectionKey, SiteContent } from "./types";
@@ -66,6 +78,7 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
+    const supabase = await loadSupabase();
     if (!supabase) {
       setStatus("offline");
       return;
@@ -107,6 +120,7 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const saveSection = useCallback<ContentContextValue["saveSection"]>(
     async (key, value) => {
+      const supabase = await loadSupabase();
       if (!supabase) {
         throw new Error(
           "Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your .env file."
@@ -130,6 +144,7 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
   );
 
   const publishAll = useCallback(async () => {
+    const supabase = await loadSupabase();
     if (!supabase) throw new Error("Supabase is not configured.");
     const rows = (Object.keys(content) as SectionKey[]).map((key) => ({
       id: key,

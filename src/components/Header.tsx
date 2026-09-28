@@ -73,7 +73,9 @@ const Header = () => {
   ];
 
   return (
-    <header ref={headerRef} className="w-full fixed top-0 left-0 z-50 flex flex-wrap justify-center">
+    // absolute, not fixed: the bar belongs to the top of the page and scrolls
+    // away with it, rather than following the reader down.
+    <header ref={headerRef} className="w-full absolute top-0 left-0 z-50 flex flex-wrap justify-center">
       {/* flex-wrap matters here: the nav bar and the (conditionally rendered)
           mobile menu panel are both w-full flex children — without wrap they'd
           share one row and get squeezed to ~50% width each instead of the
