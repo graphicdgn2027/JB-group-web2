@@ -72,26 +72,29 @@ const Hero = () => {
       /* pt-20 clears the fixed navbar. The gutter is the site container's
          6.25vw rather than a flat 80px, so the headline lines up with the
          logo and every section below it. */
-      className="relative w-full bg-background pt-20"
+      /* Below xl the whole hero is sized to one screen, so the photo is never
+         half-cut at the fold. min-h rather than h: if a slide's copy runs long
+         on a very short phone it grows instead of crushing the photo. */
+      className="relative flex min-h-[100dvh] w-full flex-col bg-background pt-20 xl:block xl:min-h-0"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="px-4 pb-14 md:px-8 xl:px-[6.25vw] xl:pb-0">
+      <div className="flex flex-1 flex-col px-4 pb-4 md:px-8 xl:block xl:px-[6.25vw] xl:pb-0">
         {/* 42 / 58 split: five of twelve columns for the copy, seven for the
             photograph. They stack below xl, copy first. */}
-        <div className="grid items-center gap-10 xl:h-[720px] xl:grid-cols-12 xl:gap-14">
+        <div className="flex flex-1 flex-col justify-center gap-5 xl:grid xl:h-[720px] xl:grid-cols-12 xl:items-center xl:gap-14">
           {/* Content */}
-          <div className="max-w-[560px] xl:col-span-5">
+          <div className="max-w-[560px] shrink-0 xl:col-span-5">
             <AnimatePresence mode="wait">
               <motion.div key={index} variants={container} initial="hidden" animate="visible" exit="exit">
                 <motion.p
                   variants={item}
-                  className="mb-7 text-[13px] font-medium uppercase tracking-[0.2em] text-accent"
+                  className="mb-3 text-[11px] font-medium uppercase tracking-[0.2em] text-accent sm:mb-5 sm:text-[13px] xl:mb-7"
                 >
                   {slide.eyebrow}
                 </motion.p>
 
-                <h1 className="mb-7 text-[2.5rem] font-bold leading-[1.02] tracking-[-0.025em] text-foreground md:text-[3.25rem] xl:text-[4rem]">
+                <h1 className="mb-4 text-[1.75rem] font-bold leading-[1.05] tracking-[-0.025em] text-foreground sm:mb-6 sm:text-[2.25rem] md:text-[3.25rem] xl:mb-7 xl:text-[4rem]">
                   <motion.span variants={item} className="block">
                     {slide.titleTop}
                   </motion.span>
@@ -102,12 +105,12 @@ const Hero = () => {
 
                 <motion.p
                   variants={item}
-                  className="mb-10 text-[17px] font-light leading-[1.7] text-muted-foreground xl:text-[18px]"
+                  className="mb-5 text-[14px] font-light leading-[1.6] text-muted-foreground sm:mb-8 sm:text-[15px] md:text-[17px] xl:mb-10 xl:text-[18px]"
                 >
                   {slide.description}
                 </motion.p>
 
-                <motion.div variants={item} className="flex flex-wrap items-center gap-x-11 gap-y-4">
+                <motion.div variants={item} className="flex flex-wrap items-center gap-x-7 gap-y-3 sm:gap-x-11 sm:gap-y-4">
                   {slide.ctaLabel && (
                     <a
                       href={safeUrl(slide.ctaHref)}
@@ -147,7 +150,11 @@ const Hero = () => {
           {/* Photograph, with the slider's only controls on it */}
           <div
             style={{ borderRadius: 24 }}
-            className="relative aspect-[4/3] overflow-hidden bg-secondary xl:col-span-7 xl:aspect-auto xl:h-full"
+            /* Keeps the source photos' own 4:3 below xl. Letting it stretch to
+               fill the leftover height instead turns the box portrait, and
+               object-cover then crops nearly half the width away. At xl it
+               goes back to filling the split's fixed height. */
+            className="relative aspect-[4/3] shrink-0 overflow-hidden bg-secondary xl:col-span-7 xl:aspect-auto xl:h-full"
           >
             <AnimatePresence initial={false}>
               <motion.div
