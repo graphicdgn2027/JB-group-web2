@@ -186,7 +186,7 @@ const ContactEditor: React.FC = () => {
               >
                 web3forms.com
               </a>
-              : sign up with the inbox you want enquiries sent to (e.g. info@rtinepal.com),
+              : sign up with the inbox you want enquiries sent to (e.g. info@jbgroup.com.np),
               then paste the access key it gives you here. Leave empty and the form falls
               back to opening the visitor's own email app instead.
             </>

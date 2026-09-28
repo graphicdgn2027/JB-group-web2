@@ -537,7 +537,7 @@ export const DEFAULT_CONTENT: SiteContent = {
     heroSubtitle: "Reach out and our team will get back to you.",
     phone: "+977-1-5361050",
     phoneSub: "Sun–Fri, 10AM–6PM",
-    email: "info@rtinepal.com",
+    email: "info@jbgroup.com.np",
     emailSub: "We reply within one business day",
     addressTitle: "BNJ Tower",
     addressSub: "Tripureshwor, Kathmandu",
@@ -575,7 +575,7 @@ export const DEFAULT_CONTENT: SiteContent = {
     privacyNote:
       "By submitting, you agree to our privacy policy. We'll never share your information.",
     // Set from the dashboard (Contact page → Form delivery) once a Web3Forms
-    // access key exists — sign up free at web3forms.com with info@rtinepal.com.
+    // access key exists — sign up free at web3forms.com with info@jbgroup.com.np.
     formAccessKey: "",
   },
 

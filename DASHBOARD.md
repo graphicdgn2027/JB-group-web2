@@ -124,7 +124,7 @@ All three come from whichever businesses are marked published.
 The enquiry form on the Contact page sends through
 [Web3Forms](https://web3forms.com) rather than a server of our own — there's
 nothing to host or maintain. Sign up free with the inbox you want enquiries
-sent to (e.g. `info@rtinepal.com`), then paste the access key it gives you
+sent to (e.g. `info@jbgroup.com.np`), then paste the access key it gives you
 into **Contact page → Form delivery**. Submissions also show up in your
 Web3Forms dashboard as a backup record. Leave the key empty and the form
 instead opens the visitor's own email app with everything filled in.

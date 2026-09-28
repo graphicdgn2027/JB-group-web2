@@ -41,11 +41,17 @@ const AboutPage = () => {
             mountains themselves are never cut) instead of being rendered as
             a stranded sliver of blank space. */}
         <div className="relative w-full flex flex-col xl:flex-row xl:items-center xl:aspect-[1920/350] border-b-[4px] border-brand-red overflow-hidden">
-          {/* Cover photo — shown clean, no blur, no overlay */}
+          {/* Cover photo — a small soft blur, no overlay. scale-105 hides the
+              blur's edge (otherwise the softened pixels at the boundary would
+              show through as a visible fringe against the container edge). */}
           <div
             aria-hidden
-            className="order-2 w-full aspect-[21/9] md:aspect-[3/1] lg:aspect-[4/1] bg-cover bg-no-repeat xl:absolute xl:inset-0 xl:aspect-auto"
-            style={{ backgroundImage: "url('/assets/cover-image/cover-about.jpg')", backgroundPosition: "right bottom" }}
+            className="order-2 w-full aspect-[21/9] md:aspect-[3/1] lg:aspect-[4/1] scale-105 bg-cover bg-no-repeat xl:absolute xl:inset-0 xl:aspect-auto"
+            style={{
+              backgroundImage: "url('/assets/cover-image/cover-about.jpg')",
+              backgroundPosition: "right bottom",
+              filter: "blur(2px)",
+            }}
           />
 
           <div className="order-1 container mx-auto px-6 py-10 xl:py-0 relative z-20 w-full max-w-6xl">

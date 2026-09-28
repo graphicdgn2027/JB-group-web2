@@ -40,40 +40,45 @@ const PortfolioDetails = () => {
     <div ref={containerRef} className="min-h-screen font-sans bg-background text-foreground overflow-x-hidden selection:bg-brand-red selection:text-white">
       <Header />
 
-      {/* Minimal Hero */}
-      <section className="min-h-[350px] pt-20 pb-8 bg-brand-blue relative flex items-center border-b-[4px] border-brand-red overflow-hidden transition-colors duration-500">
-        {/* Nepal panoramic cover — blurred & softened */}
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-cover bg-center scale-105"
-          style={{ backgroundImage: "url('/assets/nepal-panoramic-cover.jpg')", filter: "blur(3px) brightness(0.45) saturate(0.85)" }}
-        />
-        {/* Soft dark veil */}
-        <div className="absolute inset-0 bg-brand-blue/40" />
-        <div className="container mx-auto px-6 relative z-20 flex flex-col justify-center h-full pt-16 w-full max-w-6xl">
+      {/* Cover Hero */}
+      <section className="pt-20 bg-white relative">
+        <div className="relative w-full flex flex-col xl:flex-row xl:items-center xl:aspect-[1920/350] border-b-[4px] border-brand-red overflow-hidden">
+          {/* Cover photo — a small soft blur, no overlay. scale-105 hides the
+              blur's edge (otherwise the softened pixels at the boundary would
+              show through as a visible fringe against the container edge). */}
+          <div
+            aria-hidden
+            className="order-2 w-full aspect-[21/9] md:aspect-[3/1] lg:aspect-[4/1] scale-105 bg-cover bg-no-repeat xl:absolute xl:inset-0 xl:aspect-auto"
+            style={{
+              backgroundImage: "url('/assets/cover-image/cover-all.jpg')",
+              backgroundPosition: "right bottom",
+              filter: "blur(2px)",
+            }}
+          />
 
-          <div className="w-[90%] md:w-[75%] lg:w-[60%] border-l-4 border-brand-red pl-6 md:pl-12 lg:pl-16">
+          <div className="order-1 container mx-auto px-6 py-10 xl:py-0 relative z-20 w-full max-w-6xl">
+            <div className="w-[90%] md:w-[75%] lg:w-[60%] border-l-4 border-brand-red pl-6 md:pl-12 lg:pl-16">
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                className="text-3xl md:text-4xl lg:text-5xl font-medium mb-3 tracking-tight leading-[1.2] text-brand-blue drop-shadow-[0_2px_10px_rgba(255,255,255,0.9)] line-clamp-2"
+              >
+                {firstWord} <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-yellow-500">
+                  {restWords.join(" ")}
+                </span>
+              </motion.h1>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-2xl md:text-3xl lg:text-4xl font-medium mb-3 tracking-tight leading-[1.2] text-white line-clamp-2"
-            >
-              {firstWord} <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-yellow-500">
-                {restWords.join(" ")}
-              </span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-sm md:text-base text-white/75 font-light uppercase tracking-[0.15em] leading-relaxed max-w-3xl"
-            >
-              {data.description}
-            </motion.p>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="text-sm md:text-base text-brand-blue/70 font-light uppercase tracking-[0.15em] leading-relaxed max-w-3xl drop-shadow-[0_2px_8px_rgba(255,255,255,0.9)]"
+              >
+                {data.description}
+              </motion.p>
+            </div>
           </div>
         </div>
       </section>
