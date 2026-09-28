@@ -94,7 +94,11 @@ const Hero = () => {
                   {slide.eyebrow}
                 </motion.p>
 
-                <h1 className="mb-4 text-[1.75rem] font-bold leading-[1.05] tracking-[-0.025em] text-foreground sm:mb-6 sm:text-[2.25rem] md:text-[3.25rem] xl:mb-7 xl:text-[4rem]">
+                {/* Phone sizing is pinned by height, not width: a 667px screen
+                    has ~8px of slack on the longest slide, so it keeps 28px,
+                    while an 844px one has ~240px spare and can carry 32px.
+                    max-sm: keeps this off tablets, which have their own step. */}
+                <h1 className="mb-4 text-[1.75rem] font-bold leading-[1.05] tracking-[-0.025em] text-foreground max-sm:[@media(min-height:700px)]:text-[2rem] sm:mb-6 sm:text-[2.25rem] md:text-[3.25rem] xl:mb-7 xl:text-[4rem]">
                   <motion.span variants={item} className="block">
                     {slide.titleTop}
                   </motion.span>
