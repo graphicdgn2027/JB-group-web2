@@ -34,7 +34,7 @@ export const DEFAULT_CONTENT: SiteContent = {
       },
       {
         id: "kabsons",
-        image: "/assets/hero-image/kabsons.png",
+        image: "/assets/hero-image/kabsons.jpg",
         eyebrow: "Manufacturing",
         label: "Kabsons Industries",
         titleTop: "Engineered for Scale.",
@@ -48,7 +48,7 @@ export const DEFAULT_CONTENT: SiteContent = {
       },
       {
         id: "hipco",
-        image: "/assets/hero-image/Montra.png",
+        image: "/assets/hero-image/Montra.jpg",
         eyebrow: "Trading & Distribution",
         label: "Hipco Trading",
         titleTop: "Global Brands.",
@@ -62,7 +62,7 @@ export const DEFAULT_CONTENT: SiteContent = {
       },
       {
         id: "mobil",
-        image: "/assets/hero-image/mobil.png",
+        image: "/assets/hero-image/mobil-hero.jpg",
         eyebrow: "Lubricants",
         label: "Mobil Nepal",
         titleTop: "Performance That",
