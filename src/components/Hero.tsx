@@ -1,14 +1,15 @@
 "use client";
 
-import { safeUrl } from "../content/safeUrl";
 import React, { useState, useEffect, useCallback } from "react";
-import { ArrowRight, ChevronRight, ChevronLeft } from "lucide-react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useSection } from "../content/ContentProvider";
+import { safeUrl } from "../content/safeUrl";
 
 const Hero = () => {
   const { slides, slideDurationMs } = useSection("hero");
   const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState(1);
   const [paused, setPaused] = useState(false);
 
   const count = slides.length;
@@ -16,7 +17,11 @@ const Hero = () => {
   const goTo = useCallback(
     (next: number) => {
       if (count === 0) return;
-      setIndex((next + count) % count);
+      setIndex((prev) => {
+        const target = (next + count) % count;
+        setDirection(target === prev ? 1 : target > prev ? 1 : -1);
+        return target;
+      });
     },
     [count]
   );
@@ -46,21 +51,23 @@ const Hero = () => {
 
   const container = {
     hidden: {},
-    visible: { transition: { staggerChildren: 0.09, delayChildren: 0.15 } },
-    exit: { transition: { staggerChildren: 0.03, staggerDirection: -1 } },
+    visible: { transition: { staggerChildren: 0.11, delayChildren: 0.25 } },
+    exit: { transition: { staggerChildren: 0.04, staggerDirection: -1 } },
   };
 
   const item = {
-    hidden: { opacity: 0, y: 24 },
+    hidden: { opacity: 0, y: 32, filter: "blur(8px)" },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const },
+      filter: "blur(0px)",
+      transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const },
     },
     exit: {
       opacity: 0,
-      y: -12,
-      transition: { duration: 0.35, ease: [0.4, 0, 1, 1] as const },
+      y: -18,
+      filter: "blur(6px)",
+      transition: { duration: 0.4, ease: [0.4, 0, 1, 1] as const },
     },
   };
 
@@ -69,168 +76,173 @@ const Hero = () => {
 
   return (
     <section
-      /* pt-20 clears the fixed navbar. The gutter is the site container's
-         6.25vw rather than a flat 80px, so the headline lines up with the
-         logo and every section below it. */
-      /* Below xl the whole hero is sized to one screen, so the photo is never
-         half-cut at the fold. min-h rather than h: if a slide's copy runs long
-         on a very short phone it grows instead of crushing the photo. */
-      className="relative flex min-h-[100dvh] w-full flex-col bg-background pt-20 xl:block xl:min-h-0"
+      className="relative w-full h-screen min-h-[640px] flex items-center overflow-hidden bg-background"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="flex flex-1 flex-col px-4 pb-4 md:px-8 xl:block xl:px-[6.25vw] xl:pb-0">
-        {/* 42 / 58 split: five of twelve columns for the copy, seven for the
-            photograph. They stack below xl, copy first. */}
-        <div className="flex flex-1 flex-col justify-center gap-5 xl:grid xl:h-[720px] xl:grid-cols-12 xl:items-center xl:gap-14">
-          {/* Content */}
-          <div className="max-w-[560px] shrink-0 xl:col-span-5">
-            <AnimatePresence mode="wait">
-              <motion.div key={index} variants={container} initial="hidden" animate="visible" exit="exit">
-                <motion.p
-                  variants={item}
-                  className="mb-3 text-[11px] font-medium uppercase tracking-[0.2em] text-accent sm:mb-5 sm:text-[13px] xl:mb-7"
-                >
-                  {slide.eyebrow}
-                </motion.p>
-
-                {/* Phone sizing is pinned by height, not width: a 667px screen
-                    has ~8px of slack on the longest slide, so it keeps 28px,
-                    while an 844px one has ~240px spare and can carry 32px.
-                    max-sm: keeps this off tablets, which have their own step. */}
-                <h1 className="mb-4 text-[1.75rem] font-bold leading-[1.05] tracking-[-0.025em] text-foreground max-sm:[@media(min-height:700px)]:text-[2rem] sm:mb-6 sm:text-[2.25rem] md:text-[3.25rem] xl:mb-7 xl:text-[4rem]">
-                  <motion.span variants={item} className="block">
-                    {slide.titleTop}
-                  </motion.span>
-                  <motion.span variants={item} className="block text-brand-blue/55 dark:text-white/55">
-                    {slide.titleBottom}
-                  </motion.span>
-                </h1>
-
-                <motion.p
-                  variants={item}
-                  className="mb-5 text-[14px] font-light leading-[1.6] text-muted-foreground sm:mb-8 sm:text-[15px] md:text-[17px] xl:mb-10 xl:text-[18px]"
-                >
-                  {slide.description}
-                </motion.p>
-
-                <motion.div variants={item} className="flex flex-wrap items-center gap-x-7 gap-y-3 sm:gap-x-11 sm:gap-y-4">
-                  {slide.ctaLabel && (
-                    <a
-                      href={safeUrl(slide.ctaHref)}
-                      className="group inline-flex items-center gap-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-foreground"
-                    >
-                      {/* A span, not a button — the radius sticks, where a base
-                          rule would force a button back to square corners. */}
-                      <span
-                        style={{ borderRadius: 9999 }}
-                        className="flex h-11 w-11 shrink-0 items-center justify-center border border-foreground/25 transition-colors duration-300 group-hover:border-accent group-hover:bg-accent group-hover:text-white"
-                      >
-                        <ArrowRight
-                          size={16}
-                          strokeWidth={1.75}
-                          className="transition-transform duration-300 group-hover:translate-x-0.5"
-                        />
-                      </span>
-                      {slide.ctaLabel}
-                    </a>
-                  )}
-
-                  {slide.ctaSecondaryLabel && (
-                    <a
-                      href={safeUrl(slide.ctaSecondaryHref)}
-                      className="group relative inline-flex items-center py-2.5 text-[13px] font-medium uppercase tracking-[0.12em] text-muted-foreground transition-colors duration-300 hover:text-foreground"
-                    >
-                      {slide.ctaSecondaryLabel}
-                      <span className="absolute bottom-0 left-0 h-px w-full bg-foreground/20 transition-colors duration-300 group-hover:bg-accent" />
-                    </a>
-                  )}
-                </motion.div>
-              </motion.div>
-            </AnimatePresence>
-
-          </div>
-
-          {/* Photograph, with the slider's only controls on it */}
-          <div
-            style={{ borderRadius: 24 }}
-            /* Keeps the source photos' own 4:3 below xl. Letting it stretch to
-               fill the leftover height instead turns the box portrait, and
-               object-cover then crops nearly half the width away. At xl it
-               goes back to filling the split's fixed height. */
-            className="relative aspect-[4/3] shrink-0 overflow-hidden bg-secondary xl:col-span-7 xl:aspect-auto xl:h-full"
+      {/* Background slider with Ken Burns drift */}
+      <div className="absolute inset-0">
+        <AnimatePresence initial={false}>
+          <motion.div
+            key={index}
+            className="absolute inset-0"
+            initial={{ opacity: 0, scale: 1.14, x: direction * 50 }}
+            animate={{
+              opacity: 1,
+              scale: 1.04,
+              x: 0,
+              transition: {
+                opacity: { duration: 1.1 },
+                x: { duration: 1.2, ease: [0.16, 1, 0.3, 1] as const },
+                scale: { duration: 7.5, ease: "linear" },
+              },
+            }}
+            exit={{ opacity: 0, transition: { duration: 0.9 } }}
           >
-            <AnimatePresence initial={false}>
-              <motion.div
-                key={index}
-                className="absolute inset-0"
-                initial={{ opacity: 0, scale: 1.06 }}
-                animate={{
-                  opacity: 1,
-                  scale: 1,
-                  transition: { opacity: { duration: 0.9 }, scale: { duration: 7, ease: "linear" } },
-                }}
-                exit={{ opacity: 0, transition: { duration: 0.7 } }}
-              >
-                {/* The hero photo is the largest thing above the fold, so it
-                    is the LCP element — fetched eagerly at high priority while
-                    everything further down the page is lazy. */}
-                <img
-                  src={slide.image}
-                  alt=""
-                  fetchPriority="high"
-                  decoding="async"
-                  className="h-full w-full object-cover"
-                />
-              </motion.div>
-            </AnimatePresence>
+            {/* The hero photo is the largest thing above the fold, so it is
+                the LCP element — fetched eagerly at high priority. */}
+            <img
+              src={slide.image}
+              alt=""
+              fetchPriority="high"
+              decoding="async"
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
+        </AnimatePresence>
+      </div>
 
-            {count > 1 &&
-              [
-                { onClick: prev, label: "Previous slide", Icon: ChevronLeft, side: "left-4 md:left-6" },
-                { onClick: next, label: "Next slide", Icon: ChevronRight, side: "right-4 md:right-6" },
-              ].map(({ onClick, label, Icon, side }) => (
-                // The clip and the fill live on the round wrapper: a base rule
-                // forces buttons square site-wide, so rounding the button
-                // itself does nothing.
-                <div
-                  key={label}
-                  style={{ borderRadius: 9999 }}
-                  className={`absolute ${side} top-1/2 z-10 -translate-y-1/2 overflow-hidden bg-white/90 shadow-[0_6px_20px_-6px_rgba(17,29,67,0.45)] backdrop-blur-sm transition-colors duration-300 hover:bg-accent`}
-                >
-                  <button
-                    type="button"
-                    onClick={onClick}
-                    aria-label={label}
-                    className="flex h-11 w-11 items-center justify-center text-brand-blue transition-colors duration-300 hover:text-white"
+      {/* Soft overall tint */}
+      <div className="absolute inset-0 bg-white/40 dark:bg-[#0a2a66]/40 transition-colors duration-500" />
+      <div
+        className="absolute inset-0 transition-colors duration-500"
+        style={{
+          background:
+            "linear-gradient(90deg, var(--hero-grad-1) 0%, var(--hero-grad-2) 32%, var(--hero-grad-3) 58%, transparent 80%)",
+        }}
+      />
+      <style>{`
+        :root {
+          --hero-grad-1: rgba(255, 255, 255, 0.70);
+          --hero-grad-2: rgba(255, 255, 255, 0.50);
+          --hero-grad-3: rgba(255, 255, 255, 0.15);
+        }
+        .dark {
+          --hero-grad-1: rgba(6, 24, 64, 0.90);
+          --hero-grad-2: rgba(8, 34, 86, 0.75);
+          --hero-grad-3: rgba(12, 48, 120, 0.35);
+        }
+      `}</style>
+      {/* Top shade so header nav stays legible */}
+      <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white/30 dark:from-[#061840]/60 to-transparent transition-colors duration-500" />
+
+      {/* Content */}
+      <div className="relative z-10 container mx-auto px-6 md:px-10">
+        <div className="max-w-3xl">
+          <AnimatePresence mode="wait">
+            <motion.div key={index} variants={container} initial="hidden" animate="visible" exit="exit">
+              <motion.div variants={item} className="inline-flex items-center gap-3 mb-6">
+                <span className="h-px w-10 bg-accent" />
+                <span className="text-xs font-semibold tracking-[0.25em] uppercase text-accent">
+                  {slide.eyebrow}
+                </span>
+              </motion.div>
+
+              <motion.h2
+                variants={item}
+                className="text-sm md:text-base font-bold tracking-[0.3em] uppercase text-brand-blue/70 dark:text-white/70 mb-4 transition-colors duration-500"
+              >
+                {slide.label}
+              </motion.h2>
+
+              <h1 className="text-4xl md:text-6xl lg:text-7xl tracking-tight mb-6 leading-[1.08] text-brand-blue dark:text-white drop-shadow-sm dark:drop-shadow-[0_2px_20px_rgba(0,0,0,0.35)] transition-colors duration-500">
+                <motion.span variants={item} className="block font-light text-accent">
+                  {slide.titleTop}
+                </motion.span>
+                <motion.span variants={item} className="block mt-1 font-bold">
+                  {slide.titleBottom}
+                </motion.span>
+              </h1>
+
+              <motion.p
+                variants={item}
+                className="text-base md:text-lg text-brand-blue/80 dark:text-white/80 max-w-2xl mb-10 leading-relaxed font-light transition-colors duration-500"
+              >
+                {slide.description}
+              </motion.p>
+
+              {slide.ctaLabel && (
+                <motion.div variants={item}>
+                  <a
+                    href={safeUrl(slide.ctaHref)}
+                    className="group inline-flex items-center gap-3 text-sm font-medium uppercase tracking-[0.15em] text-brand-blue dark:text-white transition-colors duration-500"
                   >
-                    <Icon size={17} strokeWidth={1.75} />
-                  </button>
-                </div>
-              ))}
-          </div>
+                    <span className="w-11 h-11 rounded-full border-[1.5px] border-brand-blue/30 dark:border-white/50 flex items-center justify-center transition-all duration-300 group-hover:bg-accent group-hover:border-accent group-hover:text-white dark:group-hover:text-white">
+                      <ChevronRight
+                        size={16}
+                        strokeWidth={2.5}
+                        className="transition-transform duration-300 group-hover:translate-x-0.5"
+                      />
+                    </span>
+                    <span className="relative pb-1">
+                      {slide.ctaLabel}
+                      <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-accent transition-all duration-300 group-hover:w-full" />
+                    </span>
+                  </a>
+                </motion.div>
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 1 }}
-        className="absolute bottom-8 right-4 xl:right-8 hidden xl:flex flex-col items-center gap-3 z-10"
-      >
-        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground [writing-mode:vertical-lr] rotate-180">
-          Scroll
-        </span>
-        <div className="h-12 w-[1px] bg-muted-foreground/20 relative overflow-hidden">
-          <motion.div
-            className="absolute top-0 left-0 h-full w-full bg-muted-foreground"
-            initial={{ y: "-100%" }}
-            animate={{ y: "100%" }}
-            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          />
+      {/* Side arrows */}
+      {count > 1 &&
+        [
+          { onClick: prev, label: "Previous slide", Icon: ChevronLeft, side: "left-4 md:left-6" },
+          { onClick: next, label: "Next slide", Icon: ChevronRight, side: "right-4 md:right-6" },
+        ].map(({ onClick, label, Icon, side }) => (
+          <button
+            key={label}
+            onClick={onClick}
+            aria-label={label}
+            style={{ borderRadius: 9999 }}
+            className={`hidden sm:flex absolute ${side} top-1/2 -translate-y-1/2 z-20 w-12 h-12 items-center justify-center bg-white/10 border border-white/20 text-white backdrop-blur-md shadow-lg transition-all duration-300 hover:bg-accent hover:border-accent hover:scale-110`}
+          >
+            <Icon size={22} strokeWidth={2} />
+          </button>
+        ))}
+
+      {/* Pill indicator */}
+      {count > 1 && (
+        <div
+          style={{ borderRadius: 9999 }}
+          className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-3 py-2 bg-black/25 backdrop-blur-md border border-white/10"
+        >
+          {slides.map((s, i) => (
+            <button
+              key={s.id}
+              onClick={() => goTo(i)}
+              aria-label={`Go to slide ${i + 1}: ${s.label}`}
+              style={{ borderRadius: 9999 }}
+              className={`relative h-2 overflow-hidden transition-all duration-500 ${
+                i === index ? "w-10 bg-white/30" : "w-2 bg-white/50 hover:bg-white/80"
+              }`}
+            >
+              {i === index && (
+                <motion.span
+                  key={`bar-${index}-${paused}`}
+                  style={{ borderRadius: 9999 }}
+                  className="absolute inset-y-0 left-0 bg-accent"
+                  initial={{ width: "0%" }}
+                  animate={{ width: paused ? "40%" : "100%" }}
+                  transition={{ duration: paused ? 0.4 : slideDurationMs / 1000, ease: "linear" }}
+                />
+              )}
+            </button>
+          ))}
         </div>
-      </motion.div>
+      )}
     </section>
   );
 };
