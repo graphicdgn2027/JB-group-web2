@@ -134,14 +134,22 @@ const Hero = () => {
             "linear-gradient(90deg, var(--hero-grad-1) 0%, var(--hero-grad-2) 32%, var(--hero-grad-3) 58%, transparent 80%)",
         }}
       />
-      {/* Mobile scrim: bottom-anchored panel, dark regardless of theme. Text
-          legibility comes from this scrim, not from the photo underneath —
-          the one guarantee that holds across every slide's photo. */}
+      {/* Mobile scrim: top-anchored fade behind the header and the text that
+          now sits under it, using the same --hero-grad-* tokens as the
+          desktop scrim below so it flips with the theme the same way (white
+          wash in light mode, navy wash in dark mode) instead of staying a
+          hardcoded white patch over a dark page. All five mobile crops read
+          light in their top band except the Montra/HIPCO sky (measured
+          luminance ~106, against ~180-240 for the rest) — the white
+          drop-shadow on the text below is the second layer that covers that
+          one. Peaks strong right behind the header, settles to the
+          requested ~40% through the text zone, clears to nothing by mid
+          image so the photo reads full strength lower down. */}
       <div
-        className="absolute inset-x-0 bottom-0 block h-[88%] md:hidden"
+        className="absolute inset-x-0 top-0 block h-[64%] transition-colors duration-500 md:hidden"
         style={{
           background:
-            "linear-gradient(to top, rgba(6,20,50,0.95) 0%, rgba(6,20,50,0.9) 45%, rgba(6,20,50,0.68) 66%, rgba(6,20,50,0.15) 92%, transparent 100%)",
+            "linear-gradient(to bottom, var(--hero-grad-1) 0%, var(--hero-grad-2) 30%, var(--hero-grad-3) 62%, transparent 100%)",
         }}
       />
       <style>{`
@@ -156,20 +164,23 @@ const Hero = () => {
           --hero-grad-3: rgba(12, 48, 120, 0.35);
         }
       `}</style>
-      {/* Top shade so header nav stays legible */}
-      <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white/30 dark:from-[#061840]/60 to-transparent transition-colors duration-500" />
+      {/* Desktop-only top shade so the header stays legible over the widescreen
+          crop. Below md the mobile scrim above already covers this. */}
+      <div className="absolute inset-x-0 top-0 hidden h-40 bg-gradient-to-b from-white/30 to-transparent transition-colors duration-500 dark:from-[#061840]/60 md:block" />
 
-      {/* Content. Below md this is pinned to the bottom of the section over
-          the dark scrim, so text colour is unconditionally white there —
-          the mobile photos vary between light and dark, so text that tried
-          to adapt to the photo (the way the desktop text adapts to the light
-          gradient) would be unreadable on some slides. At md+ the original
-          theme-aware colours return, since the light gradient scrim is back. */}
-      <div className="absolute inset-x-0 bottom-0 z-10 px-6 pb-24 md:relative md:inset-auto md:container md:mx-auto md:px-10 md:pb-0">
+      {/* Content. Below md this sits at the top, right under the header,
+          over the light fade above — not at the bottom, and nothing is
+          anchored down there anymore. Text colour is the same theme-aware
+          brand-blue/white used on desktop rather than a forced colour, since
+          the fade (like the desktop gradient) already flips light/dark with
+          the theme. A white drop-shadow backs the title up as a second
+          legibility layer for the one slide (Montra/HIPCO) whose photo is
+          darker at the very top than the fade alone comfortably covers. */}
+      <div className="absolute inset-x-0 top-0 z-10 px-6 pt-20 md:relative md:inset-auto md:container md:mx-auto md:px-10 md:pt-0">
         <div className="w-full md:max-w-3xl">
           <AnimatePresence mode="wait">
             <motion.div key={index} variants={container} initial="hidden" animate="visible" exit="exit">
-              <motion.div variants={item} className="inline-flex items-center gap-3 mb-4 md:mb-6">
+              <motion.div variants={item} className="inline-flex items-center gap-3 mb-3 md:mb-6">
                 <span className="h-px w-10 bg-accent" />
                 <span className="text-xs font-semibold tracking-[0.25em] uppercase text-accent">
                   {slide.eyebrow}
@@ -178,12 +189,12 @@ const Hero = () => {
 
               <motion.h2
                 variants={item}
-                className="text-sm md:text-base font-bold tracking-[0.3em] uppercase text-white/80 mb-3 transition-colors duration-500 md:mb-4 md:text-brand-blue/70 md:dark:text-white/70"
+                className="text-sm md:text-base font-bold tracking-[0.3em] uppercase text-brand-blue/70 dark:text-white/70 mb-2 transition-colors duration-500 md:mb-4"
               >
                 {slide.label}
               </motion.h2>
 
-              <h1 className="text-[2rem] leading-[1.08] tracking-tight mb-4 text-white transition-colors duration-500 md:mb-6 md:text-6xl md:text-brand-blue md:drop-shadow-sm md:dark:text-white md:dark:drop-shadow-[0_2px_20px_rgba(0,0,0,0.35)] lg:text-7xl">
+              <h1 className="text-[1.75rem] leading-[1.1] tracking-tight mb-3 text-brand-blue drop-shadow-[0_2px_10px_rgba(255,255,255,0.85)] dark:text-white dark:drop-shadow-none transition-colors duration-500 md:mb-6 md:text-6xl md:drop-shadow-sm md:dark:drop-shadow-[0_2px_20px_rgba(0,0,0,0.35)] lg:text-7xl">
                 <motion.span variants={item} className="block font-light text-accent">
                   {slide.titleTop}
                 </motion.span>
@@ -194,7 +205,7 @@ const Hero = () => {
 
               <motion.p
                 variants={item}
-                className="text-[15px] text-white/85 mb-6 leading-relaxed font-light transition-colors duration-500 md:mb-10 md:max-w-2xl md:text-lg md:text-brand-blue/80 md:dark:text-white/80"
+                className="text-[14px] text-brand-blue/80 dark:text-white/80 mb-4 leading-snug font-light transition-colors duration-500 md:mb-10 md:max-w-2xl md:text-lg"
               >
                 {slide.description}
               </motion.p>
@@ -203,9 +214,9 @@ const Hero = () => {
                 <motion.div variants={item}>
                   <a
                     href={safeUrl(slide.ctaHref)}
-                    className="group inline-flex items-center gap-3 text-sm font-medium uppercase tracking-[0.15em] text-white transition-colors duration-500 md:text-brand-blue md:dark:text-white"
+                    className="group inline-flex items-center gap-3 text-sm font-medium uppercase tracking-[0.15em] text-brand-blue dark:text-white transition-colors duration-500"
                   >
-                    <span className="w-11 h-11 rounded-full border-[1.5px] border-white/50 flex items-center justify-center transition-all duration-300 group-hover:bg-accent group-hover:border-accent group-hover:text-white md:border-brand-blue/30 md:dark:border-white/50">
+                    <span className="w-11 h-11 rounded-full border-[1.5px] border-brand-blue/30 dark:border-white/50 flex items-center justify-center transition-all duration-300 group-hover:bg-accent group-hover:border-accent group-hover:text-white">
                       <ChevronRight
                         size={16}
                         strokeWidth={2.5}
