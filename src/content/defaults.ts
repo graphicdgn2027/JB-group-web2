@@ -16,7 +16,7 @@ import type { SiteContent } from "./types";
  */
 export const DEFAULT_CONTENT: SiteContent = {
   hero: {
-    slideDurationMs: 6500,
+    slideDurationMs: 4500,
     slides: [
       {
         id: "group",

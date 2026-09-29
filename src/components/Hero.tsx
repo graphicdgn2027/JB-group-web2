@@ -259,7 +259,7 @@ const Hero = () => {
             onClick={onClick}
             aria-label={label}
             style={{ borderRadius: 9999 }}
-            className={`hidden sm:flex absolute ${side} top-1/2 -translate-y-1/2 z-20 w-12 h-12 items-center justify-center bg-white/10 border border-white/20 text-white backdrop-blur-md shadow-lg transition-all duration-300 hover:bg-accent hover:border-accent hover:scale-110`}
+            className={`hidden sm:flex absolute ${side} top-1/2 -translate-y-1/2 z-20 w-12 h-12 items-center justify-center bg-white/10 border-2 border-accent/70 text-white backdrop-blur-md shadow-lg transition-all duration-300 hover:bg-accent hover:border-accent hover:scale-110`}
           >
             <Icon size={22} strokeWidth={2} />
           </button>
