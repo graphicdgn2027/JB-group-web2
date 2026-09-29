@@ -129,12 +129,14 @@ const Hero = () => {
       </div>
 
       {/* Desktop scrim: soft tint + left-to-right gradient behind the
-          left-anchored text column. Starts where the image now starts
-          (below the header) rather than at y=0, so it never sits over the
-          plain background the opaque header already fully covers. */}
-      <div className="absolute inset-x-0 bottom-0 top-0 hidden bg-white/40 transition-colors duration-500 dark:bg-[#0a2a66]/40 md:top-20 md:block" />
+          left-anchored text column. Starts a little above where the image's
+          layout box starts (md:top-16 vs. the image's md:top-20) because the
+          Ken Burns scale on the image bleeds a few px above its own box —
+          without that overlap a sliver of untinted photo shows through
+          right under the header. */}
+      <div className="absolute inset-x-0 bottom-0 top-0 hidden bg-white/40 transition-colors duration-500 dark:bg-[#0a2a66]/40 md:top-16 md:block" />
       <div
-        className="absolute inset-x-0 bottom-0 top-0 hidden transition-colors duration-500 md:top-20 md:block"
+        className="absolute inset-x-0 bottom-0 top-0 hidden transition-colors duration-500 md:top-16 md:block"
         style={{
           background:
             "linear-gradient(90deg, var(--hero-grad-1) 0%, var(--hero-grad-2) 32%, var(--hero-grad-3) 58%, transparent 80%)",
@@ -170,11 +172,14 @@ const Hero = () => {
           --hero-grad-3: rgba(12, 48, 120, 0.35);
         }
       `}</style>
-      {/* Desktop-only soft shade at the image's new top edge (right below the
-          header) so the transition from the opaque nav bar into the photo
-          isn't a hard line. Below md the mobile scrim above already covers
-          this. */}
-      <div className="absolute inset-x-0 top-0 hidden h-40 bg-gradient-to-b from-white/30 to-transparent transition-colors duration-500 dark:from-[#061840]/60 md:top-20 md:block" />
+      {/* Desktop-only shade at the image's top edge, starting fully opaque in
+          the exact navbar colour (white / #0a1230) so the photo appears to
+          emerge from the header rather than butt up against it with a hard
+          seam — matters most on light-toned photos (e.g. the JB Group gold)
+          where even a 30%-opacity fade still showed a visible line. Starts
+          at md:top-16, same overlap reasoning as the scrims above. Below md
+          the mobile scrim above already covers this. */}
+      <div className="absolute inset-x-0 top-0 hidden h-64 bg-gradient-to-b from-white via-white/60 to-transparent transition-colors duration-500 dark:from-[#0a1230] dark:via-[#0a1230]/60 md:top-16 md:block" />
 
       {/* Content. Below md this sits at the top, right under the header,
           over the light fade above — not at the bottom, and nothing is
