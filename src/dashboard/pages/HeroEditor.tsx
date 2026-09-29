@@ -66,8 +66,14 @@ const HeroEditor: React.FC = () => {
               <ImageInput
                 value={slide.image}
                 onChange={(v) => patch({ image: v })}
-                label="Background image"
+                label="Background image (desktop)"
                 hint="Wide landscape images work best — roughly 1920×1080."
+              />
+              <ImageInput
+                value={slide.imageMobile ?? ""}
+                onChange={(v) => patch({ imageMobile: v })}
+                label="Background image (mobile)"
+                hint="A separate portrait crop shown on phones — roughly 1080×1600. Text sits over the bottom of this image, so keep the subject clear of the lower third. Leave empty to reuse the desktop image."
               />
               <Grid>
                 <Field label="Eyebrow" hint="Small label above the title.">

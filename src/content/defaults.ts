@@ -20,7 +20,8 @@ export const DEFAULT_CONTENT: SiteContent = {
     slides: [
       {
         id: "group",
-        image: "/assets/hero-image/jb-group.png",
+        image: "/assets/hero-image-desktop/group.jpg",
+        imageMobile: "/assets/hero-image-mobile/group.jpg",
         eyebrow: "Believing · Growing · Leading",
         label: "JB Group",
         titleTop: "Generations of Enterprise.",
@@ -34,7 +35,8 @@ export const DEFAULT_CONTENT: SiteContent = {
       },
       {
         id: "kabsons",
-        image: "/assets/hero-image/kabsons.jpg",
+        image: "/assets/hero-image-desktop/kabsons.jpg",
+        imageMobile: "/assets/hero-image-mobile/kabsons.jpg",
         eyebrow: "Manufacturing",
         label: "Kabsons Industries",
         titleTop: "Engineered for Scale.",
@@ -48,7 +50,8 @@ export const DEFAULT_CONTENT: SiteContent = {
       },
       {
         id: "hipco",
-        image: "/assets/hero-image/Montra.jpg",
+        image: "/assets/hero-image-desktop/hipco.jpg",
+        imageMobile: "/assets/hero-image-mobile/hipco.jpg",
         eyebrow: "Trading & Distribution",
         label: "Hipco Trading",
         titleTop: "Global Brands.",
@@ -62,7 +65,8 @@ export const DEFAULT_CONTENT: SiteContent = {
       },
       {
         id: "mobil",
-        image: "/assets/hero-image/mobil-hero.jpg",
+        image: "/assets/hero-image-desktop/mobil.jpg",
+        imageMobile: "/assets/hero-image-mobile/mobil.jpg",
         eyebrow: "Lubricants",
         label: "Mobil Nepal",
         titleTop: "Performance That",
@@ -76,7 +80,8 @@ export const DEFAULT_CONTENT: SiteContent = {
       },
       {
         id: "eastman",
-        image: "/assets/hero-image/eastman.jpg",
+        image: "/assets/hero-image-desktop/eastman.jpg",
+        imageMobile: "/assets/hero-image-mobile/eastman.jpg",
         eyebrow: "Energy Storage",
         label: "Eastman",
         titleTop: "Reliable Power.",

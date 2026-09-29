@@ -80,7 +80,14 @@ const Hero = () => {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* Background slider with Ken Burns drift */}
+      {/* Background slider with Ken Burns drift. <picture> so the browser
+          fetches only the crop it needs — never both. The mobile crops are
+          shot specifically for phones (portrait, ~1080x1600) rather than the
+          desktop 16:9 stretched or center-cropped, and their composition
+          varies slide to slide: some leave empty space up top, others (the
+          product shots) run edge to edge with no safe zone at all. That is
+          exactly why the mobile scrim below is a full bottom-anchored panel
+          rather than text placed to dodge each photo's content. */}
       <div className="absolute inset-0">
         <AnimatePresence initial={false}>
           <motion.div
@@ -101,24 +108,40 @@ const Hero = () => {
           >
             {/* The hero photo is the largest thing above the fold, so it is
                 the LCP element — fetched eagerly at high priority. */}
-            <img
-              src={slide.image}
-              alt=""
-              fetchPriority="high"
-              decoding="async"
-              className="w-full h-full object-cover"
-            />
+            <picture>
+              {slide.imageMobile && (
+                <source media="(min-width: 768px)" srcSet={slide.image} />
+              )}
+              <img
+                src={slide.imageMobile || slide.image}
+                alt=""
+                fetchPriority="high"
+                decoding="async"
+                className="w-full h-full object-cover"
+              />
+            </picture>
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* Soft overall tint */}
-      <div className="absolute inset-0 bg-white/40 dark:bg-[#0a2a66]/40 transition-colors duration-500" />
+      {/* Desktop scrim: soft tint + left-to-right gradient behind the
+          left-anchored text column. */}
+      <div className="absolute inset-0 hidden bg-white/40 transition-colors duration-500 dark:bg-[#0a2a66]/40 md:block" />
       <div
-        className="absolute inset-0 transition-colors duration-500"
+        className="absolute inset-0 hidden transition-colors duration-500 md:block"
         style={{
           background:
             "linear-gradient(90deg, var(--hero-grad-1) 0%, var(--hero-grad-2) 32%, var(--hero-grad-3) 58%, transparent 80%)",
+        }}
+      />
+      {/* Mobile scrim: bottom-anchored panel, dark regardless of theme. Text
+          legibility comes from this scrim, not from the photo underneath —
+          the one guarantee that holds across every slide's photo. */}
+      <div
+        className="absolute inset-x-0 bottom-0 block h-[88%] md:hidden"
+        style={{
+          background:
+            "linear-gradient(to top, rgba(6,20,50,0.95) 0%, rgba(6,20,50,0.9) 45%, rgba(6,20,50,0.68) 66%, rgba(6,20,50,0.15) 92%, transparent 100%)",
         }}
       />
       <style>{`
@@ -136,12 +159,17 @@ const Hero = () => {
       {/* Top shade so header nav stays legible */}
       <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white/30 dark:from-[#061840]/60 to-transparent transition-colors duration-500" />
 
-      {/* Content */}
-      <div className="relative z-10 container mx-auto px-6 md:px-10">
-        <div className="max-w-3xl">
+      {/* Content. Below md this is pinned to the bottom of the section over
+          the dark scrim, so text colour is unconditionally white there —
+          the mobile photos vary between light and dark, so text that tried
+          to adapt to the photo (the way the desktop text adapts to the light
+          gradient) would be unreadable on some slides. At md+ the original
+          theme-aware colours return, since the light gradient scrim is back. */}
+      <div className="absolute inset-x-0 bottom-0 z-10 px-6 pb-24 md:relative md:inset-auto md:container md:mx-auto md:px-10 md:pb-0">
+        <div className="w-full md:max-w-3xl">
           <AnimatePresence mode="wait">
             <motion.div key={index} variants={container} initial="hidden" animate="visible" exit="exit">
-              <motion.div variants={item} className="inline-flex items-center gap-3 mb-6">
+              <motion.div variants={item} className="inline-flex items-center gap-3 mb-4 md:mb-6">
                 <span className="h-px w-10 bg-accent" />
                 <span className="text-xs font-semibold tracking-[0.25em] uppercase text-accent">
                   {slide.eyebrow}
@@ -150,12 +178,12 @@ const Hero = () => {
 
               <motion.h2
                 variants={item}
-                className="text-sm md:text-base font-bold tracking-[0.3em] uppercase text-brand-blue/70 dark:text-white/70 mb-4 transition-colors duration-500"
+                className="text-sm md:text-base font-bold tracking-[0.3em] uppercase text-white/80 mb-3 transition-colors duration-500 md:mb-4 md:text-brand-blue/70 md:dark:text-white/70"
               >
                 {slide.label}
               </motion.h2>
 
-              <h1 className="text-4xl md:text-6xl lg:text-7xl tracking-tight mb-6 leading-[1.08] text-brand-blue dark:text-white drop-shadow-sm dark:drop-shadow-[0_2px_20px_rgba(0,0,0,0.35)] transition-colors duration-500">
+              <h1 className="text-[2rem] leading-[1.08] tracking-tight mb-4 text-white transition-colors duration-500 md:mb-6 md:text-6xl md:text-brand-blue md:drop-shadow-sm md:dark:text-white md:dark:drop-shadow-[0_2px_20px_rgba(0,0,0,0.35)] lg:text-7xl">
                 <motion.span variants={item} className="block font-light text-accent">
                   {slide.titleTop}
                 </motion.span>
@@ -166,7 +194,7 @@ const Hero = () => {
 
               <motion.p
                 variants={item}
-                className="text-base md:text-lg text-brand-blue/80 dark:text-white/80 max-w-2xl mb-10 leading-relaxed font-light transition-colors duration-500"
+                className="text-[15px] text-white/85 mb-6 leading-relaxed font-light transition-colors duration-500 md:mb-10 md:max-w-2xl md:text-lg md:text-brand-blue/80 md:dark:text-white/80"
               >
                 {slide.description}
               </motion.p>
@@ -175,9 +203,9 @@ const Hero = () => {
                 <motion.div variants={item}>
                   <a
                     href={safeUrl(slide.ctaHref)}
-                    className="group inline-flex items-center gap-3 text-sm font-medium uppercase tracking-[0.15em] text-brand-blue dark:text-white transition-colors duration-500"
+                    className="group inline-flex items-center gap-3 text-sm font-medium uppercase tracking-[0.15em] text-white transition-colors duration-500 md:text-brand-blue md:dark:text-white"
                   >
-                    <span className="w-11 h-11 rounded-full border-[1.5px] border-brand-blue/30 dark:border-white/50 flex items-center justify-center transition-all duration-300 group-hover:bg-accent group-hover:border-accent group-hover:text-white dark:group-hover:text-white">
+                    <span className="w-11 h-11 rounded-full border-[1.5px] border-white/50 flex items-center justify-center transition-all duration-300 group-hover:bg-accent group-hover:border-accent group-hover:text-white md:border-brand-blue/30 md:dark:border-white/50">
                       <ChevronRight
                         size={16}
                         strokeWidth={2.5}

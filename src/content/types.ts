@@ -16,7 +16,12 @@ export interface Identified {
 /* ---------------------------------------------------------------- home hero */
 
 export interface HeroSlide extends Identified {
+  /** Shown at md and up. Source photos are 16:9 landscape crops. */
   image: string;
+  /** Shown below md. Source photos are portrait crops shot specifically for
+   *  phones — never the same crop as `image` stretched or cropped further.
+   *  Falls back to `image` when empty, so existing slides keep working. */
+  imageMobile?: string;
   eyebrow: string;
   label: string;
   titleTop: string;
