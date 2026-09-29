@@ -86,9 +86,13 @@ const Hero = () => {
           desktop 16:9 stretched or center-cropped, and their composition
           varies slide to slide: some leave empty space up top, others (the
           product shots) run edge to edge with no safe zone at all. That is
-          exactly why the mobile scrim below is a full bottom-anchored panel
-          rather than text placed to dodge each photo's content. */}
-      <div className="absolute inset-0">
+          exactly why the mobile scrim below is a top-anchored panel rather
+          than text placed to dodge each photo's content. On md+ the image
+          starts below the header (md:top-20) instead of at y=0 — the header
+          is absolutely positioned with an opaque background, so anything
+          drawn behind it (like a logo baked into a source photo) was
+          otherwise invisible until the page scrolled. */}
+      <div className="absolute inset-x-0 bottom-0 top-0 md:top-20">
         <AnimatePresence initial={false}>
           <motion.div
             key={index}
@@ -125,10 +129,12 @@ const Hero = () => {
       </div>
 
       {/* Desktop scrim: soft tint + left-to-right gradient behind the
-          left-anchored text column. */}
-      <div className="absolute inset-0 hidden bg-white/40 transition-colors duration-500 dark:bg-[#0a2a66]/40 md:block" />
+          left-anchored text column. Starts where the image now starts
+          (below the header) rather than at y=0, so it never sits over the
+          plain background the opaque header already fully covers. */}
+      <div className="absolute inset-x-0 bottom-0 top-0 hidden bg-white/40 transition-colors duration-500 dark:bg-[#0a2a66]/40 md:top-20 md:block" />
       <div
-        className="absolute inset-0 hidden transition-colors duration-500 md:block"
+        className="absolute inset-x-0 bottom-0 top-0 hidden transition-colors duration-500 md:top-20 md:block"
         style={{
           background:
             "linear-gradient(90deg, var(--hero-grad-1) 0%, var(--hero-grad-2) 32%, var(--hero-grad-3) 58%, transparent 80%)",
@@ -164,9 +170,11 @@ const Hero = () => {
           --hero-grad-3: rgba(12, 48, 120, 0.35);
         }
       `}</style>
-      {/* Desktop-only top shade so the header stays legible over the widescreen
-          crop. Below md the mobile scrim above already covers this. */}
-      <div className="absolute inset-x-0 top-0 hidden h-40 bg-gradient-to-b from-white/30 to-transparent transition-colors duration-500 dark:from-[#061840]/60 md:block" />
+      {/* Desktop-only soft shade at the image's new top edge (right below the
+          header) so the transition from the opaque nav bar into the photo
+          isn't a hard line. Below md the mobile scrim above already covers
+          this. */}
+      <div className="absolute inset-x-0 top-0 hidden h-40 bg-gradient-to-b from-white/30 to-transparent transition-colors duration-500 dark:from-[#061840]/60 md:top-20 md:block" />
 
       {/* Content. Below md this sits at the top, right under the header,
           over the light fade above — not at the bottom, and nothing is
@@ -176,7 +184,7 @@ const Hero = () => {
           the theme. A white drop-shadow backs the title up as a second
           legibility layer for the one slide (Montra/HIPCO) whose photo is
           darker at the very top than the fade alone comfortably covers. */}
-      <div className="absolute inset-x-0 top-0 z-10 px-6 pt-20 md:relative md:inset-auto md:container md:mx-auto md:px-10 md:pt-0">
+      <div className="absolute inset-x-0 top-0 z-10 px-6 pt-28 md:relative md:inset-auto md:container md:mx-auto md:px-10 md:pt-0">
         <div className="w-full md:max-w-3xl">
           <AnimatePresence mode="wait">
             <motion.div key={index} variants={container} initial="hidden" animate="visible" exit="exit">
