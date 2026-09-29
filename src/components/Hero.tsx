@@ -211,7 +211,7 @@ const Hero = () => {
                 <motion.span variants={item} className="block font-light text-accent">
                   {slide.titleTop}
                 </motion.span>
-                <motion.span variants={item} className="block mt-1 font-bold">
+                <motion.span variants={item} className="block mt-1 font-bold text-balance">
                   {slide.titleBottom}
                 </motion.span>
               </h1>
