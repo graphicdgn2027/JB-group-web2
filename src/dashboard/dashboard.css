@@ -38,9 +38,9 @@
   --dash-shadow-md: 0 12px 32px -8px rgba(15, 23, 42, 0.08), 0 4px 12px -3px rgba(15, 23, 42, 0.04);
   --dash-shadow-lg: 0 24px 64px -12px rgba(15, 23, 42, 0.15), 0 12px 24px -8px rgba(15, 23, 42, 0.08);
 
-  --dash-radius-sm: 10px;
-  --dash-radius: 14px;
-  --dash-radius-lg: 20px;
+  --dash-radius-sm: 12px;
+  --dash-radius: 16px;
+  --dash-radius-lg: 26px;
 
   background: var(--dash-bg);
   color: var(--dash-text);
@@ -59,7 +59,11 @@
  */
 @layer base {
   .dash button {
-    border-radius: var(--dash-radius-sm);
+    /* Pill-shaped by default — buttons, icon-buttons and badges across the
+       dashboard all inherit this from the shared Button/IconButton
+       components, so this one rule is what gives the whole app its rounded,
+       modern feel without having to touch every page. */
+    border-radius: 9999px;
     font-size: inherit;
     line-height: inherit;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);

@@ -71,7 +71,7 @@ export const Field: React.FC<{
 /* ------------------------------------------------------------------ inputs */
 
 const inputCls =
-  "w-full border border-[var(--dash-border-strong)] rounded-[10px] px-3.5 py-2.5 outline-none bg-white text-[13.5px] transition-all focus:border-[#cb9733] focus:ring-4 focus:ring-[var(--dash-gold-ring)] hover:border-slate-400";
+  "w-full border border-[var(--dash-border-strong)] rounded-2xl px-3.5 py-2.5 outline-none bg-white text-[13.5px] transition-all focus:border-[#cb9733] focus:ring-4 focus:ring-[var(--dash-gold-ring)] hover:border-slate-400";
 
 export const TextInput: React.FC<{
   value: string;

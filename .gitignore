@@ -7,3 +7,4 @@ dist/
 
 # Local deployment packages (e.g. cPanel upload zips) — build artifacts, not source.
 *.zip
+cpanel-node-app/public/

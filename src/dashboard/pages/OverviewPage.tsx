@@ -102,7 +102,7 @@ const OverviewPage: React.FC = () => {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="relative overflow-hidden rounded-[20px] mb-6 p-6 sm:p-7 text-white bg-gradient-to-br from-[#0f172a] via-[#16213f] to-[#1e2b52] shadow-[var(--dash-shadow-md)]"
+        className="relative overflow-hidden rounded-[28px] mb-5 p-6 sm:p-7 text-white bg-gradient-to-br from-[#0f172a] via-[#16213f] to-[#1e2b52] shadow-[var(--dash-shadow-md)]"
       >
         <div className="absolute -right-16 -top-16 w-64 h-64 rounded-full bg-[#cb9733]/15 blur-3xl pointer-events-none" />
         <div className="relative flex flex-col lg:flex-row lg:items-center gap-5">
@@ -188,7 +188,7 @@ const OverviewPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${tint.bg} shadow-sm`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-4 ${tint.bg} shadow-sm`}>
                     <s.icon size={18} className={tint.text} />
                   </div>
                   <p className="text-[14px] font-semibold text-slate-700">{s.label}</p>
@@ -329,8 +329,10 @@ const OverviewPage: React.FC = () => {
               text: "Press Publish (or Ctrl+S) to put every draft live at once, or publish one section from its own page.",
             },
           ].map((step) => (
-            <li key={step.title} className="rounded-xl bg-slate-50 p-4">
-              <step.icon size={17} className="text-[#cb9733] mb-2.5" />
+            <li key={step.title} className="rounded-2xl bg-slate-50 p-4">
+              <div className="w-9 h-9 rounded-full flex items-center justify-center mb-2.5 bg-[#cb9733]/10">
+                <step.icon size={16} className="text-[#cb9733]" />
+              </div>
               <p className="text-[13px] font-bold text-slate-800">{step.title}</p>
               <p className="text-[12.5px] text-slate-500 mt-1 leading-relaxed">{step.text}</p>
             </li>

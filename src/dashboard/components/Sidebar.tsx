@@ -244,7 +244,7 @@ const Sidebar: React.FC<{
                         }}
                         {...tipProps(badge ? `${label} · ${badge} waiting` : dirty ? `${label} · unpublished` : label)}
                         className={({ isActive }) =>
-                          `group/item relative flex items-center h-10 rounded-[10px] outline-none transition-colors duration-200 ${
+                          `group/item relative flex items-center h-10 rounded-full outline-none transition-colors duration-200 ${
                             collapsed ? "lg:justify-center lg:px-0 px-3 gap-3" : "px-3 gap-3"
                           } ${isActive ? "text-white" : "text-white/55 hover:text-white hover:bg-white/[0.05]"}`
                         }
@@ -254,7 +254,7 @@ const Sidebar: React.FC<{
                             {isActive && (
                               <motion.span
                                 layoutId="dash-nav-active"
-                                className="absolute inset-0 rounded-[10px] bg-gradient-to-r from-white/[0.12] to-white/[0.05] ring-1 ring-inset ring-white/[0.08]"
+                                className="absolute inset-0 rounded-full bg-gradient-to-r from-white/[0.12] to-white/[0.05] ring-1 ring-inset ring-white/[0.08]"
                                 transition={{ type: "spring", stiffness: 500, damping: 40 }}
                               />
                             )}
@@ -334,7 +334,7 @@ const Sidebar: React.FC<{
                 className={`w-9 h-9 shrink-0 flex items-center justify-center text-[12.5px] font-bold bg-gradient-to-br shadow-sm transition-transform group-hover/acct:scale-105 ${
                   roleStyle(role).avatar
                 }`}
-                style={{ borderRadius: 10 }}
+                style={{ borderRadius: 9999 }}
               >
                 {initials(displayName, user.email ?? "")}
               </span>

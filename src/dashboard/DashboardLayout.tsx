@@ -401,7 +401,7 @@ const DashboardShell: React.FC<{ user: User; onSignOut: () => void }> = ({ user,
               target="_blank"
               rel="noreferrer"
               title="Open the published page in a new tab"
-              className="hidden md:inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-slate-700 hover:text-slate-900 ring-1 ring-slate-200 hover:ring-slate-300 bg-white rounded-[10px] px-3 py-2 transition"
+              className="hidden md:inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-slate-700 hover:text-slate-900 ring-1 ring-slate-200 hover:ring-slate-300 bg-white rounded-full px-3.5 py-2 transition"
             >
               <ExternalLink size={14} /> View live
             </a>
