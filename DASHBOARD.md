@@ -85,6 +85,30 @@ No extra configuration is needed: Supabase gives Edge Functions their keys
 automatically. Until it's deployed, the Users page still lets you change roles, page
 access and enable/disable accounts — it just can't add or remove logins.
 
+### 6b. Contact inbox and email
+
+Contact-form messages are saved to the dashboard **Inbox** and emailed through
+your own mail account by a second Edge Function:
+
+```
+npx supabase functions deploy contact-form --no-verify-jwt --project-ref cbfkuatjuvlwhgptytcx
+```
+
+`--no-verify-jwt` is needed because visitors aren't signed in; the function
+checks the login itself for the "send test email" action.
+
+Then open **Inbox → Email setup** and enter your mail server details, the
+same ones a mail app uses (on cPanel: **Email Accounts → Connect Devices**):
+
+- **Mail server:** usually `mail.yourdomain.com`
+- **Port:** `465` (SSL). Supabase blocks ports 25 and 587, so 465 is required.
+- **Username / password:** the full email address and its password. The password
+  is stored privately and is never shown again, even to Super Admins.
+
+Set the main inbox, and optionally a separate address for each company or
+enquiry type, then press **Send test email**. Until the function is deployed the
+form keeps working through Web3Forms (or the visitor's email app).
+
 ### 7. Deploy the website
 
 On Vercel, add the same two variables under
@@ -110,6 +134,13 @@ variables at build time, so a redeploy is required for them to take effect.
 | **Footer & nav** | Header menu, mega-menu headings, footer columns, address, social icons, copyright |
 | **Media library** | Upload, browse, copy URLs, delete images |
 | **Settings** | Site title, meta description, brand colours, loading screen |
+| **Inbox** | Contact-form messages (read, reply, notes, archive) and the email setup |
+| **Blog** | Write posts in a word-processor style editor, with cover image, category, tags and per-post SEO |
+| **SEO** | Page titles and descriptions with a Google preview, share images, verification codes, organisation details, redirects from old addresses |
+
+The sitemap (`/sitemap.xml`) lists every published page, business and blog post.
+It, and the Google/Bing verification codes, are written when the site is
+**built**, so rebuild and redeploy after publishing new posts or adding a code.
 
 Some things are generated rather than typed, so they can never drift out of sync:
 

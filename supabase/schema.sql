@@ -92,7 +92,7 @@ as $$
     'content.edit', 'content.publish',
     'media.upload', 'media.delete',
     'settings.manage', 'activity.view',
-    'users.manage'
+    'inbox.manage', 'users.manage'
   ]
 $$;
 
@@ -691,6 +691,162 @@ create policy "media_remove"
   using (bucket_id = 'media' and public.has_perm('media.delete'));
 
 
+-- ---------------------------------------------------------------------
+-- 10. Contact inbox
+-- ---------------------------------------------------------------------
+-- Messages arrive only through the contact-form Edge Function (service
+-- role), which filters spam and sends the email notification. Visitors can't
+-- write to this table directly.
+create table if not exists public.contact_messages (
+  id            uuid primary key default gen_random_uuid(),
+  created_at    timestamptz not null default now(),
+  first_name    text not null default '',
+  last_name     text not null default '',
+  email         text not null,
+  phone         text not null default '',
+  company       text not null default '',
+  inquiry_type  text not null default '',
+  message       text not null,
+  page          text not null default '',
+  status        text not null default 'new'
+                check (status in ('new', 'read', 'replied', 'archived')),
+  notes         text not null default '',
+  email_status  text not null default 'skipped'
+                check (email_status in ('sent', 'failed', 'skipped')),
+  email_error   text not null default '',
+  routed_to     text not null default '',
+  ip_hash       text not null default ''
+);
+alter table public.contact_messages add column if not exists routed_to text not null default '';
+create index if not exists contact_messages_created_idx on public.contact_messages (created_at desc);
+create index if not exists contact_messages_status_idx on public.contact_messages (status);
+create index if not exists contact_messages_ip_idx on public.contact_messages (ip_hash, created_at desc);
+alter table public.contact_messages enable row level security;
+
+drop policy if exists "inbox_select" on public.contact_messages;
+create policy "inbox_select"
+  on public.contact_messages for select
+  to authenticated
+  using (public.has_perm('inbox.manage'));
+
+drop policy if exists "inbox_update" on public.contact_messages;
+create policy "inbox_update"
+  on public.contact_messages for update
+  to authenticated
+  using (public.has_perm('inbox.manage'))
+  with check (public.has_perm('inbox.manage'));
+
+drop policy if exists "inbox_delete" on public.contact_messages;
+create policy "inbox_delete"
+  on public.contact_messages for delete
+  to authenticated
+  using (public.has_perm('inbox.manage'));
+
+revoke insert, update, delete on public.contact_messages from anon, authenticated;
+grant update (status, notes) on public.contact_messages to authenticated;
+grant delete on public.contact_messages to authenticated;
+
+-- Admins get the inbox once; after that the Roles page is in charge.
+update public.roles
+set permissions = permissions || '{"inbox.manage": true}'::jsonb
+where key = 'admin' and not (permissions ? 'inbox.manage');
+
+
+-- ---------------------------------------------------------------------
+-- 11. Outgoing mail (your own SMTP server)
+-- ---------------------------------------------------------------------
+-- One row. No policies, so no browser can read it; the dashboard goes through
+-- the two functions below, which never return the password. The Edge
+-- Function reads it with the service role to send mail.
+create table if not exists public.mail_settings (
+  id                 int primary key default 1 check (id = 1),
+  enabled            boolean not null default false,
+  smtp_host          text not null default '',
+  smtp_port          int  not null default 465,
+  smtp_user          text not null default '',
+  smtp_password      text not null default '',
+  from_email         text not null default '',
+  from_name          text not null default 'JB Group website',
+  notify_to          text not null default '',
+  autoreply_enabled  boolean not null default false,
+  autoreply_subject  text not null default 'We received your message',
+  autoreply_body     text not null default '',
+  -- Per-company / per-enquiry-type mailboxes: {"companies": {"<id>": "a@x"}, "inquiries": {...}}
+  routes             jsonb not null default '{}'::jsonb,
+  -- Also send routed messages to the main address(es) above.
+  copy_main_inbox    boolean not null default true,
+  updated_at         timestamptz not null default now()
+);
+alter table public.mail_settings add column if not exists routes jsonb not null default '{}'::jsonb;
+alter table public.mail_settings add column if not exists copy_main_inbox boolean not null default true;
+alter table public.mail_settings enable row level security;
+insert into public.mail_settings (id) values (1) on conflict (id) do nothing;
+
+create or replace function public.get_mail_settings()
+returns jsonb
+language plpgsql stable security definer set search_path = public
+as $$
+declare
+  s public.mail_settings;
+begin
+  if not public.has_perm('settings.manage') then
+    raise exception 'You don''t have permission to view email settings.' using errcode = '42501';
+  end if;
+  select * into s from public.mail_settings where id = 1;
+  return jsonb_build_object(
+    'enabled', s.enabled,
+    'smtp_host', s.smtp_host,
+    'smtp_port', s.smtp_port,
+    'smtp_user', s.smtp_user,
+    'has_password', s.smtp_password <> '',
+    'from_email', s.from_email,
+    'from_name', s.from_name,
+    'notify_to', s.notify_to,
+    'autoreply_enabled', s.autoreply_enabled,
+    'autoreply_subject', s.autoreply_subject,
+    'autoreply_body', s.autoreply_body,
+    'routes', s.routes,
+    'copy_main_inbox', s.copy_main_inbox,
+    'updated_at', s.updated_at
+  );
+end;
+$$;
+
+-- The password is only changed when a new one is sent; an empty value keeps
+-- the stored one, so the dashboard never needs to know it.
+create or replace function public.save_mail_settings(p jsonb)
+returns void
+language plpgsql security definer set search_path = public
+as $$
+begin
+  if not public.has_perm('settings.manage') then
+    raise exception 'You don''t have permission to change email settings.' using errcode = '42501';
+  end if;
+  update public.mail_settings set
+    enabled           = coalesce((p ->> 'enabled')::boolean, enabled),
+    smtp_host         = coalesce(trim(p ->> 'smtp_host'), smtp_host),
+    smtp_port         = coalesce((p ->> 'smtp_port')::int, smtp_port),
+    smtp_user         = coalesce(trim(p ->> 'smtp_user'), smtp_user),
+    smtp_password     = case when coalesce(p ->> 'smtp_password', '') <> '' then p ->> 'smtp_password' else smtp_password end,
+    from_email        = coalesce(trim(p ->> 'from_email'), from_email),
+    from_name         = coalesce(p ->> 'from_name', from_name),
+    notify_to         = coalesce(p ->> 'notify_to', notify_to),
+    autoreply_enabled = coalesce((p ->> 'autoreply_enabled')::boolean, autoreply_enabled),
+    autoreply_subject = coalesce(p ->> 'autoreply_subject', autoreply_subject),
+    autoreply_body    = coalesce(p ->> 'autoreply_body', autoreply_body),
+    routes            = case when jsonb_typeof(p -> 'routes') = 'object' then p -> 'routes' else routes end,
+    copy_main_inbox   = coalesce((p ->> 'copy_main_inbox')::boolean, copy_main_inbox),
+    updated_at        = now()
+  where id = 1;
+  perform public.log_activity('mail.settings_updated', 'mail_settings', '{}'::jsonb);
+end;
+$$;
+revoke execute on function public.get_mail_settings() from public, anon;
+revoke execute on function public.save_mail_settings(jsonb) from public, anon;
+grant execute on function public.get_mail_settings() to authenticated;
+grant execute on function public.save_mail_settings(jsonb) to authenticated;
+
+
 -- =====================================================================
 --  AFTER RUNNING THIS — see DASHBOARD.md for the full walkthrough
 --
@@ -707,4 +863,7 @@ create policy "media_remove"
 --     so Super Admins can create, edit and delete users from the dashboard.
 --
 --  4. Open /dashboard, sign in, and press "Seed database" on the Overview.
+--
+--  5. Deploy the contact form (supabase/functions/contact-form) with
+--     --no-verify-jwt, then fill in Inbox → Email setup.
 -- =====================================================================

@@ -12,11 +12,14 @@ import {
   Handshake,
   History,
   Image as ImageIcon,
+  Inbox,
   LayoutDashboard,
   LayoutTemplate,
   LogOut,
   Mail,
   PanelBottom,
+  PenLine,
+  Search,
   Settings as SettingsIcon,
   ShieldCheck,
   Sparkles,
@@ -47,6 +50,7 @@ export const NAV_GROUPS: NavGroup[] = [
     heading: null,
     items: [
       { to: "/dashboard", end: true, label: "Overview", icon: LayoutDashboard },
+      { to: "/dashboard/inbox", label: "Inbox", icon: Inbox },
       { to: "/dashboard/review", label: "Review", icon: ClipboardCheck },
     ],
   },
@@ -62,6 +66,13 @@ export const NAV_GROUPS: NavGroup[] = [
       { to: "/dashboard/timeline", label: "Journey timeline", icon: CalendarClock },
       { to: "/dashboard/brand-partners", label: "Brand partners", icon: Handshake },
       { to: "/dashboard/contact", label: "Contact page", icon: Mail },
+    ],
+  },
+  {
+    heading: "Publishing",
+    items: [
+      { to: "/dashboard/blog", label: "Blog", icon: PenLine },
+      { to: "/dashboard/seo", label: "SEO", icon: Search },
     ],
   },
   {
@@ -86,9 +97,8 @@ export const ACCOUNT_NAV_ITEM: NavItem = { to: "/dashboard/account", label: "My 
 
 export const ALL_NAV_ITEMS = [...NAV_GROUPS.flatMap((g) => g.items), ACCOUNT_NAV_ITEM];
 
-// Includes the 12px inset on each side of the floating panel.
-const EXPANDED_WIDTH = 284;
-const COLLAPSED_WIDTH = 96;
+const EXPANDED_WIDTH = 264;
+const COLLAPSED_WIDTH = 80;
 
 /** The white logo, or just its JB mark when collapsed. */
 const Brand: React.FC<{ collapsed: boolean }> = ({ collapsed }) => (
@@ -169,13 +179,13 @@ const Sidebar: React.FC<{
       <aside
         ref={asideRef}
         style={{ ["--sidebar-w" as string]: `${collapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH}px` }}
-        className={`group/sidebar fixed lg:sticky lg:top-0 inset-y-0 left-0 z-50 h-[100dvh] shrink-0 p-3 w-[300px] lg:w-[var(--sidebar-w)] transition-[width,transform] duration-300 ease-out ${
-          mobileOpen ? "translate-x-0" : "-translate-x-[110%] lg:translate-x-0"
+        className={`group/sidebar fixed lg:sticky lg:top-0 inset-y-0 left-0 z-50 h-[100dvh] shrink-0 w-72 lg:w-[var(--sidebar-w)] transition-[width,transform] duration-300 ease-out ${
+          mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
-        {/* Floating panel: inset from the screen edges with its own radius,
-            rather than a flat strip glued to the left of the viewport. */}
-        <div className="dash-sidebar relative h-full flex flex-col rounded-[28px] text-white">
+        {/* Flush with the left edge of the screen; only the side facing the
+            content is rounded. */}
+        <div className="dash-sidebar relative h-full flex flex-col rounded-r-[28px] text-white">
         {/* Brand */}
         <div
           className={`relative h-[72px] shrink-0 flex items-center border-b border-white/[0.06] ${
@@ -248,7 +258,7 @@ const Sidebar: React.FC<{
                         }}
                         {...tipProps(badge ? `${label} · ${badge} waiting` : dirty ? `${label} · unpublished` : label)}
                         className={({ isActive }) =>
-                          `group/item relative flex items-center h-10 rounded-full outline-none transition-colors duration-200 ${
+                          `group/item relative flex items-center h-10 rounded-xl outline-none transition-colors duration-200 ${
                             collapsed ? "lg:justify-center lg:px-0 px-3 gap-3" : "px-3 gap-3"
                           } ${isActive ? "text-white" : "text-white/55 hover:text-white hover:bg-white/[0.05]"}`
                         }
@@ -258,7 +268,7 @@ const Sidebar: React.FC<{
                             {isActive && (
                               <motion.span
                                 layoutId="dash-nav-active"
-                                className="absolute inset-0 rounded-full bg-gradient-to-r from-white/[0.12] to-white/[0.05] ring-1 ring-inset ring-white/[0.08]"
+                                className="absolute inset-0 rounded-xl bg-gradient-to-r from-white/[0.12] to-white/[0.05] ring-1 ring-inset ring-white/[0.08]"
                                 transition={{ type: "spring", stiffness: 500, damping: 40 }}
                               />
                             )}

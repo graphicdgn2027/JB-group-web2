@@ -220,3 +220,111 @@ export async function listActivity(opts: { before?: number; limit?: number; pref
   if (error) throw new Error(error.message);
   return (data ?? []) as ActivityEntry[];
 }
+
+/* ------------------------------------------------------------------ inbox */
+
+export type MessageStatus = "new" | "read" | "replied" | "archived";
+
+export interface ContactMessage {
+  id: string;
+  created_at: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  company: string;
+  inquiry_type: string;
+  message: string;
+  page: string;
+  status: MessageStatus;
+  notes: string;
+  email_status: "sent" | "failed" | "skipped";
+  email_error: string;
+  routed_to: string;
+}
+
+export async function listMessages(): Promise<ContactMessage[]> {
+  const { data, error } = await db()
+    .from("contact_messages")
+    .select(
+      "id, created_at, first_name, last_name, email, phone, company, inquiry_type, message, page, status, notes, email_status, email_error, routed_to"
+    )
+    .order("created_at", { ascending: false })
+    .limit(500);
+  if (error) throw new Error(error.message);
+  return (data ?? []) as ContactMessage[];
+}
+
+export async function countNewMessages(): Promise<number> {
+  const { count, error } = await db()
+    .from("contact_messages")
+    .select("id", { count: "exact", head: true })
+    .eq("status", "new");
+  if (error) throw new Error(error.message);
+  return count ?? 0;
+}
+
+export async function updateMessage(id: string, patch: { status?: MessageStatus; notes?: string }) {
+  const { error } = await db().from("contact_messages").update(patch).eq("id", id);
+  if (error) throw new Error(error.message);
+}
+
+export async function deleteMessage(id: string) {
+  const { error } = await db().from("contact_messages").delete().eq("id", id);
+  if (error) throw new Error(error.message);
+}
+
+/* ------------------------------------------------------------- mail setup */
+
+export interface MailSettings {
+  enabled: boolean;
+  smtp_host: string;
+  smtp_port: number;
+  smtp_user: string;
+  /** Never returned; true when one is stored. */
+  has_password: boolean;
+  from_email: string;
+  from_name: string;
+  notify_to: string;
+  autoreply_enabled: boolean;
+  autoreply_subject: string;
+  autoreply_body: string;
+  routes: { companies?: Record<string, string>; inquiries?: Record<string, string> };
+  copy_main_inbox: boolean;
+  updated_at: string;
+}
+
+export async function getMailSettings(): Promise<MailSettings> {
+  const { data, error } = await db().rpc("get_mail_settings");
+  if (error) throw new Error(error.message);
+  return data as MailSettings;
+}
+
+/** An empty `smtp_password` keeps the stored one. */
+export async function saveMailSettings(
+  settings: Omit<MailSettings, "has_password" | "updated_at"> & { smtp_password: string }
+) {
+  const { error } = await db().rpc("save_mail_settings", { p: settings });
+  if (error) throw new Error(error.message);
+}
+
+export class MailServiceMissingError extends Error {
+  constructor() {
+    super("The contact-form service isn't deployed yet. See DASHBOARD.md → “Contact inbox and email”.");
+  }
+}
+
+export async function sendTestEmail(to: string): Promise<string> {
+  const { data, error } = await db().functions.invoke("contact-form", { body: { action: "test", to } });
+  if (!error) return (data as { to: string }).to;
+  if (error instanceof FunctionsHttpError) {
+    const response = error.context as Response;
+    if (response.status === 404) throw new MailServiceMissingError();
+    const payload = await response.json().catch(() => null);
+    throw new Error(payload?.error ?? `Request failed (${response.status}).`);
+  }
+  if (error instanceof FunctionsFetchError || error instanceof FunctionsRelayError) {
+    throw new MailServiceMissingError();
+  }
+  throw new Error(error.message);
+}

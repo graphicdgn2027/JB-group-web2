@@ -4,9 +4,11 @@ import ContactFooter from "../components/ContactFooter";
 import { Quote } from "lucide-react";
 import { motion } from "motion/react";
 import { useSection } from "../content/ContentProvider";
+import { useSeo } from "../content/seo";
 
 const LeadershipPage = () => {
   const content = useSection("leadership");
+  useSeo({ path: "/leadership", title: "Leadership", description: content.heroSubtitle, image: content.heroImage });
 
   useEffect(() => {
     window.scrollTo(0, 0);

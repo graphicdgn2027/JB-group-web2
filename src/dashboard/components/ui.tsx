@@ -228,7 +228,7 @@ const IconButton: React.FC<{
 
 /* ------------------------------------------------------------ media picker */
 
-const MediaPicker: React.FC<{
+export const MediaPicker: React.FC<{
   onPick: (url: string) => void;
   onClose: () => void;
 }> = ({ onPick, onClose }) => {

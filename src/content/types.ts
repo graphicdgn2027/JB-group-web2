@@ -311,6 +311,86 @@ export interface SettingsContent {
   loaderDurationMs: number;
 }
 
+/* -------------------------------------------------------------------- SEO */
+
+/** Search and share settings for one public page. Empty fields fall back to
+ *  the page's own heading and the site-wide defaults. */
+export interface PageSeo extends Identified {
+  /** Public path this applies to, e.g. "/about". */
+  path: string;
+  label: string;
+  title: string;
+  description: string;
+  /** Share image (Facebook, LinkedIn, WhatsApp, X). */
+  image: string;
+  /** Ask search engines not to list this page. */
+  noindex: boolean;
+}
+
+/** Sends visitors from an old address to a current one. */
+export interface SeoRedirect extends Identified {
+  from: string;
+  to: string;
+}
+
+export interface SeoContent {
+  /** Appended to every page title, e.g. "About us | JB Group". */
+  siteName: string;
+  titleSeparator: string;
+  defaultDescription: string;
+  defaultImage: string;
+  /** The live domain, used for canonical links and share previews. */
+  siteUrl: string;
+  twitterHandle: string;
+  /** Verification codes from Google Search Console and Bing Webmaster Tools.
+   *  Written into the page HTML at build time, so they need a rebuild. */
+  googleVerification: string;
+  bingVerification: string;
+  /** Structured data so search engines know who runs the site. */
+  organizationName: string;
+  organizationLogo: string;
+  organizationPhone: string;
+  organizationEmail: string;
+  /** Official profiles elsewhere (LinkedIn, Facebook…) tied to this site. */
+  profileLinks: LinkItem[];
+  pages: PageSeo[];
+  redirects: SeoRedirect[];
+}
+
+/* ------------------------------------------------------------------- blog */
+
+export interface BlogPost extends Identified {
+  /** URL segment used by `/blog/:slug`. */
+  slug: string;
+  title: string;
+  /** One or two sentences shown on cards and in search results. */
+  excerpt: string;
+  coverImage: string;
+  /** Rich text from the dashboard editor, stored as HTML. Always sanitised
+   *  before it is rendered on the public site. */
+  content: string;
+  author: string;
+  category: string;
+  tags: string[];
+  /** Unpublished posts never appear on the public site. */
+  published: boolean;
+  /** Shown as the post date, YYYY-MM-DD. */
+  publishedAt: string;
+  /** ISO timestamp of the last edit. */
+  updatedAt: string;
+  /** Pinned to the top of the blog page. */
+  featured: boolean;
+  seoTitle: string;
+  seoDescription: string;
+}
+
+export interface BlogContent {
+  heroTitle: string;
+  heroSubtitle: string;
+  categories: string[];
+  posts: BlogPost[];
+}
+
 /* --------------------------------------------------------------- the whole */
 
 export interface SiteContent {
@@ -327,6 +407,8 @@ export interface SiteContent {
   footer: FooterContent;
   nav: NavContent;
   settings: SettingsContent;
+  seo: SeoContent;
+  blog: BlogContent;
 }
 
 export type SectionKey = keyof SiteContent;

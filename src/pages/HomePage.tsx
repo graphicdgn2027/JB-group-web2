@@ -8,9 +8,12 @@ import AboutGroup from "../components/AboutGroup";
 import MissionVision from "../components/MissionVision";
 import ContactFooter from "../components/ContactFooter";
 import { useSection } from "../content/ContentProvider";
+import { useOrganizationJsonLd, useSeo } from "../content/seo";
 
 function App() {
   const settings = useSection("settings");
+  const organization = useOrganizationJsonLd();
+  useSeo({ path: "/", jsonLd: organization });
   const [isLoading, setIsLoading] = useState(settings.loaderEnabled);
 
   useEffect(() => {

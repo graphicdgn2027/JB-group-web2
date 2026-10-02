@@ -6,6 +6,7 @@ import ContactFooter from "../components/ContactFooter";
 import { motion } from "motion/react";
 import { useSection, usePublishedBusinesses } from "../content/ContentProvider";
 import { resolveIcon } from "../content/icons";
+import { useSeo } from "../content/seo";
 
 /**
  * Brand logo that falls back to text when the image will not load.
@@ -42,6 +43,12 @@ const BrandLogo: React.FC<{ src: string; name: string; fallbackText?: string }> 
 
 const BrandPartnersPage = () => {
   const content = useSection("brandPartners");
+  useSeo({
+    path: "/brand-partners",
+    title: "Brand & business partners",
+    description: content.intro || content.heroSubtitle,
+    image: content.heroImage,
+  });
   const businesses = usePublishedBusinesses();
 
   useEffect(() => {

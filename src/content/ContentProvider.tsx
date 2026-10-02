@@ -185,10 +185,6 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
     root.style.setProperty("--accent", effective.settings.brandGold);
   }, [effective.settings.brandBlue, effective.settings.brandGold]);
 
-  useEffect(() => {
-    if (effective.settings.siteTitle) document.title = effective.settings.siteTitle;
-  }, [effective.settings.siteTitle]);
-
   const value = useMemo<ContentContextValue>(
     () => ({
       content: effective,

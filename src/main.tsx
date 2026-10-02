@@ -2,7 +2,6 @@ import { lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { ThemeProvider } from "next-themes";
 import { BrowserRouter, Navigate, Routes, Route } from "react-router";
-import NotFoundPage from "./pages/NotFoundPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import PortfolioDetails from "./pages/PortfolioDetails.tsx";
 import ContactPage from "./pages/ContactPage.tsx";
@@ -10,6 +9,7 @@ import AboutPage from "./pages/AboutPage.tsx";
 import LeadershipPage from "./pages/LeadershipPage.tsx";
 import BrandPartnersPage from "./pages/BrandPartnersPage.tsx";
 import { ContentProvider } from "./content/ContentProvider.tsx";
+import RedirectOrNotFound from "./pages/RedirectOrNotFound.tsx";
 import "./styles/index.css";
 
 /**
@@ -41,6 +41,16 @@ const UsersPage = lazy(() => import("./dashboard/pages/UsersPage.tsx"));
 const RolesPage = lazy(() => import("./dashboard/pages/RolesPage.tsx"));
 const ActivityPage = lazy(() => import("./dashboard/pages/ActivityPage.tsx"));
 const AccountPage = lazy(() => import("./dashboard/pages/AccountPage.tsx"));
+const BlogListEditor = lazy(() => import("./dashboard/pages/BlogListEditor.tsx"));
+const BlogPostEditor = lazy(() => import("./dashboard/pages/BlogPostEditor.tsx"));
+const SeoEditor = lazy(() => import("./dashboard/pages/SeoEditor.tsx"));
+const InboxPage = lazy(() => import("./dashboard/pages/InboxPage.tsx"));
+
+// Blog pages carry the HTML sanitiser, so they load on demand too.
+const BlogPage = lazy(() => import("./pages/BlogPage.tsx"));
+const BlogPostPage = lazy(() => import("./pages/BlogPostPage.tsx"));
+
+const PublicFallback = () => <div className="min-h-[100dvh] bg-background" />;
 
 /** Shown only while an admin chunk is in flight — never on the public site. */
 const DashboardFallback = () => (
@@ -61,6 +71,22 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/leadership" element={<LeadershipPage />} />
           <Route path="/brand-partners" element={<BrandPartnersPage />} />
+          <Route
+            path="/blog"
+            element={
+              <Suspense fallback={<PublicFallback />}>
+                <BlogPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/blog/:slug"
+            element={
+              <Suspense fallback={<PublicFallback />}>
+                <BlogPostPage />
+              </Suspense>
+            }
+          />
           {/* "Our Businesses" links point here; the section lives on the homepage. */}
           <Route path="/businesses" element={<Navigate to="/#businesses" replace />} />
 
@@ -88,6 +114,10 @@ createRoot(document.getElementById("root")!).render(
             <Route path="brand-partners" element={<BrandPartnersEditor />} />
             <Route path="contact" element={<ContactEditor />} />
             <Route path="footer" element={<FooterNavEditor />} />
+            <Route path="blog" element={<BlogListEditor />} />
+            <Route path="blog/:postId" element={<BlogPostEditor />} />
+            <Route path="seo" element={<SeoEditor />} />
+            <Route path="inbox" element={<InboxPage />} />
             <Route path="media" element={<MediaPage />} />
             <Route path="settings" element={<SettingsEditor />} />
             <Route path="review" element={<ReviewPage />} />
@@ -97,8 +127,8 @@ createRoot(document.getElementById("root")!).render(
             <Route path="account" element={<AccountPage />} />
           </Route>
 
-          {/* Anything else */}
-          <Route path="*" element={<NotFoundPage />} />
+          {/* Anything else: an SEO redirect from the dashboard, or a 404. */}
+          <Route path="*" element={<RedirectOrNotFound />} />
         </Routes>
       </BrowserRouter>
     </ContentProvider>

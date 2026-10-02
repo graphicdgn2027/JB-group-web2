@@ -37,6 +37,8 @@ export const SECTION_META: Record<SectionKey, SectionMeta> = {
   footer: { label: "Footer", route: "/dashboard/footer", previewPath: () => "/contact" },
   nav: { label: "Navigation", route: "/dashboard/footer", previewPath: () => "/" },
   settings: { label: "Settings", route: "/dashboard/settings", previewPath: () => "/" },
+  seo: { label: "SEO", route: "/dashboard/seo", previewPath: () => "/" },
+  blog: { label: "Blog", route: "/dashboard/blog", previewPath: () => "/blog" },
 };
 
 /**
@@ -66,6 +68,8 @@ export const WORK_AREAS: WorkArea[] = [
   { id: "brand-partners", label: "Brand partners", route: "/dashboard/brand-partners", keys: ["brandPartners"] },
   { id: "contact", label: "Contact page", route: "/dashboard/contact", keys: ["contact"] },
   { id: "footer", label: "Footer & nav", route: "/dashboard/footer", keys: ["footer", "nav"] },
+  { id: "blog", label: "Blog", route: "/dashboard/blog", keys: ["blog"] },
+  { id: "seo", label: "SEO", route: "/dashboard/seo", keys: ["seo"] },
   { id: "settings", label: "Settings", route: "/dashboard/settings", keys: ["settings"] },
 ];
 
@@ -82,10 +86,19 @@ const ROUTE_SECTION: Record<string, SectionKey> = {
   "/dashboard/contact": "contact",
   "/dashboard/footer": "footer",
   "/dashboard/settings": "settings",
+  "/dashboard/seo": "seo",
+  "/dashboard/blog": "blog",
 };
 
 export function previewPathForRoute(pathname: string, content: SiteContent): string {
-  const key = ROUTE_SECTION[pathname.replace(/\/+$/, "")];
+  const path = pathname.replace(/\/+$/, "");
+  // Editing one post previews that post.
+  const post = path.match(/^\/dashboard\/blog\/([^/]+)$/);
+  if (post) {
+    const found = content.blog.posts.find((p) => p.id === post[1]);
+    return found?.slug ? `/blog/${found.slug}` : "/blog";
+  }
+  const key = ROUTE_SECTION[path];
   return key ? SECTION_META[key].previewPath(content) : "/";
 }
 
@@ -96,11 +109,15 @@ export function publicPages(content: SiteContent): { label: string; path: string
     { label: "About", path: "/about" },
     { label: "Leadership", path: "/leadership" },
     { label: "Brand partners", path: "/brand-partners" },
+    { label: "Blog", path: "/blog" },
     { label: "Contact", path: "/contact" },
   ];
   const businesses = [...content.businesses]
     .filter((b) => b.published && b.slug)
     .sort((a, b) => a.order - b.order)
     .map((b) => ({ label: b.title || b.slug, path: `/portfolio/${b.slug}` }));
-  return [...pages, ...businesses];
+  const posts = content.blog.posts
+    .filter((p) => p.published && p.slug)
+    .map((p) => ({ label: p.title || p.slug, path: `/blog/${p.slug}` }));
+  return [...pages, ...businesses, ...posts];
 }

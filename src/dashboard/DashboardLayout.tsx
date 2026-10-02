@@ -18,7 +18,7 @@ import {
 import Sidebar, { ALL_NAV_ITEMS } from "./components/Sidebar";
 import { useMediaQuery } from "./useMediaQuery";
 import { useAccess, useAuth } from "./AuthProvider";
-import { countPendingSubmissions } from "./adminApi";
+import { countNewMessages, countPendingSubmissions } from "./adminApi";
 import { ReviewQueueContext, type ReviewQueue } from "./reviewQueue";
 import {
   AccessProblemScreen,
@@ -284,8 +284,33 @@ const DashboardShell: React.FC<{ user: User; onSignOut: () => void }> = ({ user,
       window.removeEventListener("focus", refreshPending);
     };
   }, [refreshPending]);
-  const reviewQueue = useMemo<ReviewQueue>(() => ({ pending, refresh: refreshPending }), [pending, refreshPending]);
-  const badges = useMemo(() => ({ "/dashboard/review": pending }), [pending]);
+  // Unread contact-form messages, for whoever handles the inbox.
+  const [unreadMessages, setUnreadMessages] = useState(0);
+  const inboxReader = access.can("inbox.manage") && status !== "error";
+  const refreshInbox = useCallback(() => {
+    if (!inboxReader) return setUnreadMessages(0);
+    countNewMessages()
+      .then(setUnreadMessages)
+      .catch(() => setUnreadMessages(0));
+  }, [inboxReader]);
+  useEffect(() => {
+    refreshInbox();
+    const id = window.setInterval(refreshInbox, 60_000);
+    window.addEventListener("focus", refreshInbox);
+    return () => {
+      window.clearInterval(id);
+      window.removeEventListener("focus", refreshInbox);
+    };
+  }, [refreshInbox]);
+
+  const reviewQueue = useMemo<ReviewQueue>(
+    () => ({ pending, refresh: refreshPending, unreadMessages, refreshInbox }),
+    [pending, refreshPending, unreadMessages, refreshInbox]
+  );
+  const badges = useMemo(
+    () => ({ "/dashboard/review": pending, "/dashboard/inbox": unreadMessages }),
+    [pending, unreadMessages]
+  );
 
   // Ctrl/Cmd+S publishes everything; Ctrl/Cmd+B toggles the sidebar.
   useEffect(() => {
@@ -441,13 +466,7 @@ const DashboardShell: React.FC<{ user: User; onSignOut: () => void }> = ({ user,
 
           <div className="flex-1 flex min-w-0">
             <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
-              {/* The overview is a full-width dashboard; editor forms stay at a
-                  readable measure so long text fields don't stretch edge to edge. */}
-              <div
-                className={`mx-auto ${
-                  location.pathname === "/dashboard" ? "max-w-[1480px]" : "max-w-5xl"
-                }`}
-              >
+              <div className="w-full">
                 {status === "error" && (
                   <div className="text-[12.5px] leading-relaxed rounded-xl px-4 py-3 mb-5 border flex items-start gap-2.5 bg-[var(--dash-danger-soft)] border-[var(--dash-danger-border)] text-[#991b1b]">
                     <AlertTriangle size={16} className="shrink-0 mt-0.5" />

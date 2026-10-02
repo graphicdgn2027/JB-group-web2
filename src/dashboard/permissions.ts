@@ -37,6 +37,12 @@ export const PERMISSIONS = [
     group: "Site",
   },
   {
+    key: "inbox.manage",
+    label: "Contact inbox",
+    description: "Read, answer and archive messages sent through the contact form.",
+    group: "Site",
+  },
+  {
     key: "activity.view",
     label: "Activity log",
     description: "See who changed what, and when.",
@@ -131,13 +137,16 @@ export function buildAccess(profile: AccessProfile): Access {
   const canOpenRoute = (pathname: string) => {
     const path = pathname.replace(/\/+$/, "") || "/dashboard";
     if (path === "/dashboard" || path === "/dashboard/account") return true;
-    const area = WORK_AREAS.find((a) => a.route === path);
+    // Sub-routes (e.g. one blog post under /dashboard/blog) follow their area.
+    const area = WORK_AREAS.find((a) => path === a.route || path.startsWith(`${a.route}/`));
     if (area) return area.keys.every(canEditSection);
     switch (path) {
       case "/dashboard/media":
         return can("media.upload") || can("media.delete") || can("content.edit");
       case "/dashboard/review":
         return can("content.publish") || can("content.edit");
+      case "/dashboard/inbox":
+        return can("inbox.manage") || can("settings.manage");
       case "/dashboard/users":
         return can("users.manage");
       case "/dashboard/roles":

@@ -1,4 +1,6 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
+import { DEFAULT_CONTENT } from './src/content/defaults'
+import type { SiteContent } from './src/content/types'
 import path from 'path'
 import fs from 'fs'
 import tailwindcss from '@tailwindcss/vite'
@@ -44,21 +46,94 @@ function watcherErrorGuard() {
  * `VITE_SITE_URL` (set it in the host's environment variables, e.g. Vercel).
  * It also emits robots.txt and sitemap.xml so both always agree with that URL.
  */
-function seoAssets() {
-  const siteUrl = (process.env.VITE_SITE_URL || 'https://jbgroup.com.np').replace(/\/+$/, '')
-  const routes = ['/', '/about', '/leadership', '/brand-partners', '/contact']
+type PublishedContent = Pick<SiteContent, 'businesses' | 'blog' | 'seo'>
+
+/**
+ * Reads the published content the sitemap and verification tags depend on.
+ * The anon key only has public read access, which is all this needs. If the
+ * database can't be reached the bundled defaults are used, so a build never
+ * fails because of the network.
+ */
+async function loadPublishedContent(env: Record<string, string>): Promise<PublishedContent> {
+  const fallback: PublishedContent = {
+    businesses: DEFAULT_CONTENT.businesses,
+    blog: DEFAULT_CONTENT.blog,
+    seo: DEFAULT_CONTENT.seo,
+  }
+  const url = env.VITE_SUPABASE_URL
+  const key = env.VITE_SUPABASE_ANON_KEY
+  if (!url || !key) return fallback
+  try {
+    const res = await fetch(`${url.replace(/\/+$/, '')}/rest/v1/site_content?select=id,data&id=in.(businesses,blog,seo)`, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` },
+      signal: AbortSignal.timeout(8000),
+    })
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const rows = (await res.json()) as { id: keyof PublishedContent; data: unknown }[]
+    const out = { ...fallback }
+    for (const row of rows) {
+      if (row.id === 'businesses' && Array.isArray(row.data)) out.businesses = row.data as SiteContent['businesses']
+      if (row.id === 'blog' && row.data) out.blog = { ...fallback.blog, ...(row.data as object) }
+      if (row.id === 'seo' && row.data) out.seo = { ...fallback.seo, ...(row.data as object) }
+    }
+    return out
+  } catch (err) {
+    console.warn(`[seo] using built-in content for the sitemap: ${err instanceof Error ? err.message : err}`)
+    return fallback
+  }
+}
+
+const escapeXml = (s: string) =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+
+function seoAssets(env: Record<string, string>) {
+  const siteUrl = (env.VITE_SITE_URL || 'https://jbgroup.com.np').replace(/\/+$/, '')
+  let content: PublishedContent | null = null
+  const load = async () => (content ??= await loadPublishedContent(env))
 
   return {
     name: 'seo-assets',
-    transformIndexHtml(html: string) {
-      return html.replaceAll('__SITE_URL__', siteUrl)
+    async buildStart() {
+      await load()
     },
-    generateBundle(this: { emitFile: (f: { type: 'asset'; fileName: string; source: string }) => void }) {
+    async transformIndexHtml(html: string) {
+      const { seo } = await load()
+      const tags = [
+        seo.googleVerification &&
+          `<meta name="google-site-verification" content="${escapeXml(seo.googleVerification)}" />`,
+        seo.bingVerification && `<meta name="msvalidate.01" content="${escapeXml(seo.bingVerification)}" />`,
+      ]
+        .filter(Boolean)
+        .join('\n  ')
+      const withUrl = html.replaceAll('__SITE_URL__', siteUrl)
+      return tags ? withUrl.replace('</head>', `  ${tags}\n</head>`) : withUrl
+    },
+    async generateBundle(this: { emitFile: (f: { type: 'asset'; fileName: string; source: string }) => void }) {
+      const { businesses, blog, seo } = await load()
       const today = new Date().toISOString().slice(0, 10)
-      const urls = routes
+      const hidden = new Set(seo.pages.filter((p) => p.noindex).map((p) => p.path))
+      const entries: { path: string; lastmod: string; freq: string }[] = [
+        ...['/', '/about', '/leadership', '/brand-partners', '/blog', '/contact'].map((path) => ({
+          path,
+          lastmod: today,
+          freq: path === '/blog' ? 'weekly' : 'monthly',
+        })),
+        ...businesses
+          .filter((b) => b.published && b.slug)
+          .map((b) => ({ path: `/portfolio/${b.slug}`, lastmod: today, freq: 'monthly' })),
+        ...blog.posts
+          .filter((p) => p.published && p.slug)
+          .map((p) => ({
+            path: `/blog/${p.slug}`,
+            lastmod: (p.updatedAt || p.publishedAt || today).slice(0, 10),
+            freq: 'yearly',
+          })),
+      ].filter((e) => !hidden.has(e.path))
+
+      const urls = entries
         .map(
-          (r) =>
-            `  <url>\n    <loc>${siteUrl}${r}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>monthly</changefreq>\n  </url>`
+          (e) =>
+            `  <url>\n    <loc>${escapeXml(siteUrl + e.path)}</loc>\n    <lastmod>${e.lastmod}</lastmod>\n    <changefreq>${e.freq}</changefreq>\n  </url>`
         )
         .join('\n')
 
@@ -122,12 +197,12 @@ function stripNonWebAssets() {
   }
 }
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   publicDir: 'Public',
   plugins: [
     figmaAssetResolver(),
     watcherErrorGuard(),
-    seoAssets(),
+    seoAssets(loadEnv(mode, process.cwd(), '')),
     stripNonWebAssets(),
     // The React and Tailwind plugins are both required for Make, even if
     // Tailwind is not being actively used – do not remove them
@@ -158,4 +233,4 @@ export default defineConfig({
     },
     chunkSizeWarningLimit: 700,
   },
-})
+}))

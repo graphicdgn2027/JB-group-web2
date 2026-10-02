@@ -6,9 +6,12 @@ import { MapPin, Phone, Mail, Clock, ArrowRight, CheckCircle, Send, ChevronDown 
 import { motion, AnimatePresence } from 'motion/react';
 import { useSection } from '../content/ContentProvider';
 import { resolveSocialIcon } from '../content/socialIcons';
+import { useSeo } from '../content/seo';
+import { isSupabaseConfigured, SUPABASE_ANON_KEY, SUPABASE_URL } from '../lib/supabaseConfig';
 
 const ContactPage = () => {
   const content = useSection('contact');
+  useSeo({ path: '/contact', title: 'Contact us', description: content.heroSubtitle });
 
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
@@ -23,6 +26,8 @@ const ContactPage = () => {
   // Distinct from field errors: a submission-level problem (send failed, or
   // no delivery method is configured yet), shown near the submit button.
   const [submitNotice, setSubmitNotice] = useState<{ type: 'error' | 'info'; text: string } | null>(null);
+  // Spam trap: hidden from people, filled in by bots.
+  const [honeypot, setHoneypot] = useState('');
 
   const validate = () => {
     const e: Record<string, string> = {};
@@ -50,6 +55,48 @@ const ContactPage = () => {
     const fullName = `${formData.firstName} ${formData.lastName}`.trim();
     const inquiryLabel = content.inquiryTypes.find(t => t.id === formData.inquiryType)?.label ?? formData.inquiryType;
     const companyLabel = content.companies.find(c => c.id === formData.company)?.label;
+
+    // Preferred route: the contact-form Edge Function saves the message to the
+    // dashboard inbox and emails it through the company's own mail server.
+    // If it isn't deployed (404) or is unreachable, fall through to the older
+    // routes below so an enquiry is never lost.
+    if (isSupabaseConfigured) {
+      setSubmitting(true);
+      try {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/contact-form`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            apikey: SUPABASE_ANON_KEY!,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({
+            ...formData,
+            inquiryType: inquiryLabel,
+            company: companyLabel ?? '',
+            // Ids only: the server looks up which mailbox each one goes to.
+            inquiryTypeId: formData.inquiryType,
+            companyId: formData.company,
+            website: honeypot,
+            page: window.location.pathname,
+          }),
+        });
+        if (res.ok) {
+          setSubmitted(true);
+          setSubmitting(false);
+          return;
+        }
+        if (res.status === 400 || res.status === 429) {
+          const result = await res.json().catch(() => null);
+          setSubmitNotice({ type: 'error', text: result?.error || 'Please check the form and try again.' });
+          setSubmitting(false);
+          return;
+        }
+      } catch {
+        // Network trouble: try the fallback routes.
+      }
+      setSubmitting(false);
+    }
 
     // No delivery key configured yet (dashboard: Contact page → Form delivery) —
     // fall back to opening the visitor's own email app with everything filled in,
@@ -329,6 +376,12 @@ const ContactPage = () => {
                     </div>
 
                     <form onSubmit={handleSubmit} noValidate className="space-y-6 bg-card p-6 md:p-10 rounded-3xl border border-border shadow-2xl relative overflow-hidden">
+                      <div aria-hidden="true" className="absolute -left-[9999px] top-0 w-px h-px overflow-hidden">
+                        <label>
+                          Website
+                          <input type="text" name="website" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+                        </label>
+                      </div>
                       <div className="absolute top-0 left-0 w-full h-1.5 bg-brand-blue"></div>
 
                       {/* Inquiry Dropdown */}

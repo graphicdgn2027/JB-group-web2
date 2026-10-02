@@ -5,9 +5,11 @@ import ContactFooter from "../components/ContactFooter";
 import CorporateTimeline from "../components/CorporateTimeline";
 import { motion } from "motion/react";
 import { useSection } from "../content/ContentProvider";
+import { useSeo } from "../content/seo";
 
 const AboutPage = () => {
   const content = useSection("aboutPage");
+  useSeo({ path: "/about", title: "About us", description: content.heroSubtitle, image: content.heroImage });
 
   useEffect(() => {
     const hash = window.location.hash;

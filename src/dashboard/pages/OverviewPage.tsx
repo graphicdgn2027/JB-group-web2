@@ -207,7 +207,7 @@ const OverviewPage: React.FC = () => {
         )}
 
         {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
           {stats.map((s, i) => {
             const tint = STAT_TINTS[i % STAT_TINTS.length];
             return (

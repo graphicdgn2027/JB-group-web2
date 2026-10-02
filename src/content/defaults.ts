@@ -635,6 +635,7 @@ export const DEFAULT_CONTENT: SiteContent = {
       { id: "n2", label: "About", href: "/about" },
       { id: "n4", label: "Brand & Businesses Partners", href: "/brand-partners" },
       { id: "n5", label: "Leadership", href: "/leadership" },
+      { id: "n7", label: "Blog", href: "/blog" },
       { id: "n6", label: "Contact Us", href: "/contact" },
     ],
     megaMenuGroup1Heading: "Industries, Trading, Mobility & Energy",
@@ -649,6 +650,58 @@ export const DEFAULT_CONTENT: SiteContent = {
     brandGold: "#CB9733",
     loaderEnabled: true,
     loaderDurationMs: 1500,
+  },
+
+  seo: {
+    siteName: "JB Group",
+    titleSeparator: " | ",
+    defaultDescription:
+      "JB Group is a diversified Nepali business group spanning lubricants and energy storage, LPG bottling, trading and distribution, electric mobility, real estate and investments.",
+    defaultImage: "/assets/company%20profile/company%20profile%20pic.jpg",
+    siteUrl: "https://jbgroup.com.np",
+    twitterHandle: "",
+    googleVerification: "",
+    bingVerification: "",
+    organizationName: "JB Group",
+    organizationLogo: "/assets/Our%20Businesses/jb-group.png",
+    organizationPhone: "+977-1-5361050",
+    organizationEmail: "info@jbgroup.com.np",
+    profileLinks: [],
+    pages: [
+      { id: "home", path: "/", label: "Home", title: "", description: "", image: "", noindex: false },
+      { id: "about", path: "/about", label: "About", title: "About us", description: "", image: "", noindex: false },
+      { id: "leadership", path: "/leadership", label: "Leadership", title: "Leadership", description: "", image: "", noindex: false },
+      { id: "brand-partners", path: "/brand-partners", label: "Brand partners", title: "Brand & business partners", description: "", image: "", noindex: false },
+      { id: "blog", path: "/blog", label: "Blog", title: "News & insights", description: "", image: "", noindex: false },
+      { id: "contact", path: "/contact", label: "Contact", title: "Contact us", description: "", image: "", noindex: false },
+    ],
+    redirects: [],
+  },
+
+  blog: {
+    heroTitle: "News & insights",
+    heroSubtitle: "Updates from across JB Group's businesses, partners and people.",
+    categories: ["Company news", "Industry", "Partnerships", "Community"],
+    posts: [
+      {
+        id: "post-welcome",
+        slug: "welcome-to-the-jb-group-blog",
+        title: "Welcome to the JB Group blog",
+        excerpt: "A starting template. Replace this with your first article, then publish it.",
+        coverImage: "",
+        content:
+          "<p>This is a starter post so you can see how the editor works. It is <strong>not published</strong>, so visitors cannot see it.</p><h2>Writing a post</h2><p>Use the toolbar like a word processor: headings, bold, lists, links, images and tables all work. Everything is saved as a draft until you publish.</p><ul><li>Add a cover image and a short summary in Post settings.</li><li>Check the search preview under SEO.</li><li>Switch on Published, then press Publish.</li></ul>",
+        author: "JB Group",
+        category: "Company news",
+        tags: [],
+        published: false,
+        publishedAt: "2026-10-01",
+        updatedAt: "2026-10-01T00:00:00.000Z",
+        featured: false,
+        seoTitle: "",
+        seoDescription: "",
+      },
+    ],
   },
 };
 

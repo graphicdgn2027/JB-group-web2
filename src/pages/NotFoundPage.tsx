@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
+import { useSeo } from "../content/seo";
 import { ArrowLeft, Home } from "lucide-react";
 import Header from "../components/Header";
 import ContactFooter from "../components/ContactFooter";
@@ -8,6 +9,8 @@ import { useSection } from "../content/ContentProvider";
 /** Shown for any URL that matches no route, so a mistyped link never renders a blank page. */
 const NotFoundPage: React.FC = () => {
   const nav = useSection("nav");
+  const location = useLocation();
+  useSeo({ path: location.pathname, title: "Page not found", noindex: true });
 
   useEffect(() => {
     window.scrollTo(0, 0);

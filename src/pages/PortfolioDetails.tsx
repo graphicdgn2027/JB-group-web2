@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import ContactFooter from "../components/ContactFooter";
 import { motion } from "motion/react";
 import { usePublishedBusinesses, useSection } from "../content/ContentProvider";
+import { useSeo } from "../content/seo";
 
 const PortfolioDetails = () => {
   const { id } = useParams();
@@ -20,6 +21,14 @@ const PortfolioDetails = () => {
     () => businesses.find((b) => b.slug.toLowerCase() === (id ?? "").toLowerCase()),
     [businesses, id]
   );
+
+  useSeo({
+    path: `/portfolio/${data?.slug ?? id ?? ""}`,
+    title: data?.title ?? "Business not found",
+    description: data?.description,
+    image: data?.heroImage || data?.cardImage,
+    noindex: !data,
+  });
 
   if (!data) {
     return (
