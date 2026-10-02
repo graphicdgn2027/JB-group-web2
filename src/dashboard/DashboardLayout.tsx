@@ -353,7 +353,7 @@ const DashboardShell: React.FC<{ user: User; onSignOut: () => void }> = ({ user,
 
         {/* Main */}
         <div className="flex-1 min-w-0 flex flex-col">
-          <header className="sticky top-0 z-30 h-16 flex items-center gap-2 sm:gap-3 px-4 lg:px-8 bg-white/80 backdrop-blur-md border-b border-slate-200/60">
+          <header className="sticky top-0 z-30 h-[72px] flex items-center gap-2 sm:gap-3 px-4 lg:px-8 bg-[var(--dash-bg)]/85 backdrop-blur-md">
             <button
               onClick={() => setMenuOpen(true)}
               className="lg:hidden p-2 -ml-1 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition"
@@ -440,8 +440,14 @@ const DashboardShell: React.FC<{ user: User; onSignOut: () => void }> = ({ user,
           </header>
 
           <div className="flex-1 flex min-w-0">
-            <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-10 py-8">
-              <div className="max-w-4xl mx-auto">
+            <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+              {/* The overview is a full-width dashboard; editor forms stay at a
+                  readable measure so long text fields don't stretch edge to edge. */}
+              <div
+                className={`mx-auto ${
+                  location.pathname === "/dashboard" ? "max-w-[1480px]" : "max-w-5xl"
+                }`}
+              >
                 {status === "error" && (
                   <div className="text-[12.5px] leading-relaxed rounded-xl px-4 py-3 mb-5 border flex items-start gap-2.5 bg-[var(--dash-danger-soft)] border-[var(--dash-danger-border)] text-[#991b1b]">
                     <AlertTriangle size={16} className="shrink-0 mt-0.5" />
@@ -466,7 +472,7 @@ const DashboardShell: React.FC<{ user: User; onSignOut: () => void }> = ({ user,
             </main>
 
             {previewOpen && isWide && (
-              <aside className="sticky top-16 self-start h-[calc(100vh-4rem)] w-[46%] max-w-[780px] shrink-0 border-l border-slate-200">
+              <aside className="sticky top-[72px] self-start h-[calc(100vh-72px)] w-[46%] max-w-[780px] shrink-0 border-l border-slate-200">
                 {preview}
               </aside>
             )}

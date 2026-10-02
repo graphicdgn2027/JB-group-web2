@@ -86,8 +86,9 @@ export const ACCOUNT_NAV_ITEM: NavItem = { to: "/dashboard/account", label: "My 
 
 export const ALL_NAV_ITEMS = [...NAV_GROUPS.flatMap((g) => g.items), ACCOUNT_NAV_ITEM];
 
-const EXPANDED_WIDTH = 264;
-const COLLAPSED_WIDTH = 76;
+// Includes the 12px inset on each side of the floating panel.
+const EXPANDED_WIDTH = 284;
+const COLLAPSED_WIDTH = 96;
 
 /** The white logo, or just its JB mark when collapsed. */
 const Brand: React.FC<{ collapsed: boolean }> = ({ collapsed }) => (
@@ -168,10 +169,13 @@ const Sidebar: React.FC<{
       <aside
         ref={asideRef}
         style={{ ["--sidebar-w" as string]: `${collapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH}px` }}
-        className={`dash-sidebar group/sidebar fixed lg:sticky lg:top-0 inset-y-0 left-0 z-50 h-screen shrink-0 flex flex-col text-white w-72 lg:w-[var(--sidebar-w)] transition-[width,transform] duration-300 ease-out ${
-          mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        className={`group/sidebar fixed lg:sticky lg:top-0 inset-y-0 left-0 z-50 h-[100dvh] shrink-0 p-3 w-[300px] lg:w-[var(--sidebar-w)] transition-[width,transform] duration-300 ease-out ${
+          mobileOpen ? "translate-x-0" : "-translate-x-[110%] lg:translate-x-0"
         }`}
       >
+        {/* Floating panel: inset from the screen edges with its own radius,
+            rather than a flat strip glued to the left of the viewport. */}
+        <div className="dash-sidebar relative h-full flex flex-col rounded-[28px] text-white">
         {/* Brand */}
         <div
           className={`relative h-[72px] shrink-0 flex items-center border-b border-white/[0.06] ${
@@ -369,6 +373,7 @@ const Sidebar: React.FC<{
               </button>
             </div>
           </div>
+        </div>
         </div>
       </aside>
 
